@@ -43,7 +43,7 @@ public:
    void setPreviousPosition(Position C);
    Position getPreviousPosition();
    void calculatePath();
-   roadNode getPath();
+   roadNode* getPath();
 
 private:
    int Type, CurrentSpeed, DriverType, Acceleration;
