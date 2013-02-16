@@ -85,15 +85,10 @@ bool DChain<T>::Find(int k, T& x){
 template<class T>
 int DChain<T>::Search(T& x){
 	// Search for the element x and return it's position.
-	
-	int count = 0;
-	DChainNode<T> *p = first;
-	for(int k=0; k<Length(); k++) {
-		if(Find )
-		p = p->flink;
-		count++;
+	for(int k=1; k<Length(); k++) {
+		if(Find(k,x)) return k;
 	}
-	return count;
+	return -1;
 }
 
 template<class T>
@@ -152,7 +147,7 @@ DChain<T>& DChain<T>::Delete(int k, T& x){
 	// move p to k'th & remove from chain
 	if (k == 1)
 		first = p->flink;
-		/* Put your code here */
+	
 	else { 
 		DChainNode<T> *q = first;
 		for (int index = 1; index < k-1 && q; index++)
@@ -162,7 +157,7 @@ DChain<T>& DChain<T>::Delete(int k, T& x){
 		q->flink = p->flink;
 		q->blink = q;
 		p->blink = q;
-		/* Put your code here */
+
 	
 	}
 
