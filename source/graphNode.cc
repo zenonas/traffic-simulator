@@ -42,4 +42,14 @@ int graphNode::getType(){
 	return Type;
 }
 
+void graphNode::setTrafficLight(trafficLight* t){
+	trafficLights=t;
+}
+
+trafficLight* graphNode::getTrafficLight(){
+	return trafficLights;
+}
+
+
+
 

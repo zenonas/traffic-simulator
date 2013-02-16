@@ -11,6 +11,7 @@ Copyright (c) King's College London
 #ifndef graphNode_h
 #define graphNode_h
 
+#include "trafficLight.h"
 using namespace std;
 
 class graphNode
@@ -25,10 +26,14 @@ public:
    int getCartesianY();
    void setType(int type);
    int getType();
+   void setTrafficLight(trafficLight* t);
+   trafficLight* getTrafficLight();
 
 private:
    int CartesianX, CartesianY;
    int Type;
+   //trafficLight will be null if not trafficLight
+   trafficLight* trafficLights;
 };
 
 #endif
