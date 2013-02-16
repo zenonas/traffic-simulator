@@ -21,8 +21,8 @@ Copyright (c) King's College London
 #include "vehicle.cc"
 #include "graphNode.cc"
 #include "roadNode.cc"
-#include <ogdf/basic/Graph.h>
-#include <ogdf/basic/GraphAttributes.h>
+//#include <ogdf/basic/Graph.h>
+//#include <ogdf/basic/GraphAttributes.h>
 
 using namespace std;
 //using namespace ogdf;
