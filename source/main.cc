@@ -15,6 +15,12 @@ Copyright (c) King's College London
 #include "engine.cc"
 #include "sysio.cc"
 #include "mapcreate.cc"
+
+#include "vehicle.h"
+#include "roadNode.h"
+#include "graphNode.h"
+#include "map.h"
+
 #include <ogdf/basic/Graph.h>
 #include <ogdf/basic/GraphAttributes.h>
 
