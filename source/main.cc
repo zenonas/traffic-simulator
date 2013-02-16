@@ -21,6 +21,7 @@ Copyright (c) King's College London
 #include "vehicle.cc"
 #include "graphNode.cc"
 #include "roadNode.cc"
+#include "trafficLight.cc"
 //#include <ogdf/basic/Graph.h>
 //#include <ogdf/basic/GraphAttributes.h>
 
