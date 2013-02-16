@@ -8,6 +8,8 @@ Description: This file includes the definition for the roadNode class.
 
 Copyright (c) King's College London
 */
+#ifndef roadNode_h
+#define roadNode_h
 
 #include "roadNode.cc"
 #include "graphNode.h"
@@ -30,3 +32,5 @@ private:
    int Length;
    graphNode A,B;
 };
+
+#endif

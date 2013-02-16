@@ -8,6 +8,8 @@ Description: This file includes the definition for the graphNode class.
 
 Copyright (c) King's College London
 */
+#ifndef graphNode_h
+#define graphNode_h
 
 #include "graphNode.cc"
 using namespace std;
@@ -29,3 +31,5 @@ private:
    int CartesianX, CartesianY;
    int Type;
 };
+
+#endif

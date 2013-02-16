@@ -9,6 +9,9 @@ Description: This file includes the definition for the vehicle class.
 Copyright (c) King's College London
 */
 
+#ifndef vehicle_h
+#define vehicle_h
+
 #include "vehicle.cc"
 #include "roadNode.h"
 #include "graphNode.h"
@@ -50,3 +53,5 @@ private:
    Position CurrentPosition, PreviousPosition;
    roadNode Path[];
 };
+
+#endif

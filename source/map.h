@@ -8,9 +8,11 @@ Description: This file includes the definition for the map class.
 
 Copyright (c) King's College London
 */
+#ifndef map_h
+#define map_h
 
-using namespace std;
 #include "map.cc"
+using namespace std;
 
 class map
 {
@@ -27,3 +29,5 @@ private:
    roadNode Roads[];
    int MaxSpeed;
 };
+
+#endif
