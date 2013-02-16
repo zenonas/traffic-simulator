@@ -60,7 +60,7 @@ void map::ReadXMLFile()
                   	printf(" %s=%s\n",point_node->first_attribute("name")->value(), point_node->value());
 					graphNode newgraphNode;
 					if (point_node->first_attribute("name")->value()=="x")
-					newgraphNode.setCartesianX(point_node->value());
+					newgraphNode.setCartesianX(atoi(point_node->value()));
 					else
 					newgraphNode.setCartesianY(point_node->value());
               }
