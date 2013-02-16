@@ -9,8 +9,8 @@ Description: This file includes the implementation for the map class.
 Copyright (c) King's College London
 */
 
-map::map(int MaxSpeed){
-	setMaxSpeed();
+map::map(){
+
 }
 
 map::~map(){
