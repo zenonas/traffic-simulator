@@ -86,6 +86,6 @@ void vehicle::calculatePath(){
 	cout << "Calculate Path";
 }
 
-RoadNode vehicle::getPath(){
+roadNode vehicle::getPath(){
 	return Path;
 }
