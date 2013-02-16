@@ -20,9 +20,9 @@ roadNode::~roadNode(){
 }
 
 void roadNode::setgraphNodeA(graphNode a){
-	A.Type= a.Type;
-	A.CartesianX = a.CartesianX;
-	A.CartesianY = a.CartesianY;
+	A.Type = a.getType();
+	A.CartesianX = a.getCartesianX;
+	A.CartesianY = a.getCartesianY;
 }
 
 graphNode roadNode::getgraphNodeA(){
@@ -30,9 +30,9 @@ graphNode roadNode::getgraphNodeA(){
 }
 
 void roadNode::setgraphNodeB(graphNode b){
-	B.Type= b.Type;
-	B.CartesianX = b.CartesianX;
-	B.CartesianY = b.CartesianY;
+	B.Type= b.setType;
+	B.CartesianX = b.getCartesianX;
+	B.CartesianY = b.getCartesianY;
 }
 
 graphNode roadNode::getgraphNodeA(){
