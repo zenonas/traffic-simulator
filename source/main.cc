@@ -15,6 +15,7 @@ Copyright (c) King's College London
 #include "engine.cc"
 #include "sysio.cc"
 #include "mapcreate.cc"
+#include "../lib/DLList.cc"
 #include <ogdf/basic/Graph.h>
 #include <ogdf/basic/GraphAttributes.h>
 
@@ -53,10 +54,9 @@ Graph G;
 		p.pushBack(DPoint(20*(LEN-i),-10));
 	}
  
-	GA.writeGML("manual_graph.gml");
- 
-	//return 0;
-	/* test graph code */
+
+/* test graph code */
+
    // Initialize and set thread joinable
    pthread_attr_init(&attr);
    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);

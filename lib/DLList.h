@@ -30,9 +30,8 @@ class DChain{
 	   DChain();
 	   ~DChain();
 	   bool IsEmpty();
-	   int Length() const;
-	   bool Find(int k, T& x) const;
-	   int Search(const T& x) const;
+	   int Length();
+	   bool Find(int k, T& x);
 	   DChain<T>& Delete(int k, T& x);
 	   DChain<T>& Insert(int k, const T& x);
 	   void Output();

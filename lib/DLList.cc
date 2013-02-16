@@ -15,6 +15,9 @@ Copyright (c) King's College London
 #include "xcept.h"
 using namespace std;
 
+
+
+
 template<class T>
 DChain<T>::DChain()
 {
@@ -69,7 +72,7 @@ bool DChain<T>::Find(int k, T& x){
 
 	else { 
 
-		for (int index = 1; index < k-1 && q; index++)
+		for (int index = 1; index < k && p; index++)
 			p = p->flink;
 		if (!p || !p->flink) return false; //no k element	
 	}
@@ -79,16 +82,6 @@ bool DChain<T>::Find(int k, T& x){
 
 	//Return true if k is found
 	return true;
-}
-
-
-template<class T>
-int DChain<T>::Search(T& x){
-	// Search for the element x and return it's position.
-	for(int k=1; k<Length(); k++) {
-		if(Find(k,x)) return k;
-	}
-	return -1;
 }
 
 template<class T>
