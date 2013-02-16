@@ -15,19 +15,18 @@ Copyright (c) King's College London
 #include "graphNode.h"
 #include "roadNode.h"
 using namespace std;
+struct Position
+    {
+        graphNode x;
+        graphNode y;
+        int p;
+    };
 
 class vehicle
 {
 public:
    vehicle();   
    ~vehicle();
-   
-   struct Position
-    {
-        graphNode x;
-        graphNode y;
-        int p;
-    };
    
    void setType(int type);
    int getType();
