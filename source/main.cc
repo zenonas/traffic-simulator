@@ -15,11 +15,16 @@ Copyright (c) King's College London
 #include "engine.cc"
 #include "sysio.cc"
 #include "mapcreate.cc"
-#include <ogdf/basic/Graph.h>
-#include <ogdf/basic/GraphAttributes.h>
+
+#include "map.h"
+#include "vehicle.h"
+#include "graphNode.h"
+#include "roadNode.h"
+//#include <ogdf/basic/Graph.h>
+//#include <ogdf/basic/GraphAttributes.h>
 
 using namespace std;
-using namespace ogdf;
+//using namespace ogdf;
 
 
 int main ()
@@ -28,7 +33,7 @@ int main ()
    pthread_t threads[3];
    pthread_attr_t attr;
    void *status;
-
+/*
 Graph G;
 	GraphAttributes GA(G, GraphAttributes::nodeGraphics |	
 		GraphAttributes::edgeGraphics );
@@ -56,7 +61,7 @@ Graph G;
 	GA.writeGML("manual_graph.gml");
  
 	return 0;
-	
+*/	
    // Initialize and set thread joinable
    pthread_attr_init(&attr);
    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
