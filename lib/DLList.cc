@@ -11,6 +11,7 @@ Copyright (c) King's College London
 */
 
 #include <iostream>
+#include "DLList.h"
 #include "xcept.h"
 using namespace std;
 
@@ -35,6 +36,65 @@ DChain<T>::~DChain()
 
 // Length, Find, Search are similar to the definition of corresponding
 // methods in Chain class (Use flink instead of link)
+
+template<class T>
+bool DChain<T>::IsEmpty(){
+	return first == 0; 
+}
+
+template<class T>
+int DChain<T>::Length(){
+	int count = 0;
+	DChainNode<T> *p = first;
+	while(!p || !p->flink) {
+		p = p->flink;
+		count++;
+	}
+	return count;
+}
+
+template<class T>
+bool DChain<T>::Find(int k, T& x){
+	// Set x to the k'th element and delete it.
+	// Throw OutOfBounds exception if no k'th element.
+	
+	if (k < 1 || !first)	throw OutOfBounds();
+
+	// p will eventually point to k'th node
+	DChainNode<T> *p = first;
+
+	// move p to k'th & remove from chain
+	if (k == 1)
+		first = p->flink;
+
+	else { 
+
+		for (int index = 1; index < k-1 && q; index++)
+			p = p->flink;
+		if (!p || !p->flink) return false; //no k element	
+	}
+
+	// save k'th element
+	x = p->data;
+
+	//Return true if k is found
+	return true;
+}
+
+
+template<class T>
+int DChain<T>::Search(T& x){
+	// Search for the element x and return it's position.
+	
+	int count = 0;
+	DChainNode<T> *p = first;
+	for(int k=0; k<Length(); k++) {
+		if(Find )
+		p = p->flink;
+		count++;
+	}
+	return count;
+}
 
 template<class T>
 DChain<T>& DChain<T>::Insert(int k, const T& x){

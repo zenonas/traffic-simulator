@@ -10,15 +10,17 @@ Copyright (c) King's College London
 
 */
 
-#include "DLList.cc"
+
 using namespace std;
 
 template <class T> class DChain;
 template <class T>
+
 class DChainNode{
     friend class DChain<T>;
     private:
 		T data;
+		int SortValue;
 		DChainNode<T> *flink;
 		DChainNode<T> *blink;
 };
@@ -27,7 +29,7 @@ class DChain{
    public:
 	   DChain();
 	   ~DChain();
-	   bool IsEmpty() const {return first == 0;}
+	   bool IsEmpty();
 	   int Length() const;
 	   bool Find(int k, T& x) const;
 	   int Search(const T& x) const;
