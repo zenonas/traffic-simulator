@@ -10,8 +10,8 @@ Copyright (c) King's College London
 */
 
 #include "vehicle.h"
-#include "roadNode.h"
-#include "graphNode.h"
+#include "roadNode.cc"
+#include "graphNode.cc"
 
 vehicle::vehicle(){
 	

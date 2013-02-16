@@ -9,7 +9,7 @@ Description: This file includes the implementation for the roadNode class.
 Copyright (c) King's College London
 */
 #include "roadNode.h"
-#include "graphNode.h"
+#include "graphNode.cc"
 
 roadNode::roadNode(){
 	
