@@ -8,6 +8,9 @@ Description: This file includes the implementation for the vehicle class.
 
 Copyright (c) King's College London
 */
+#include "vehicle.h"
+#include "roadNode.h"
+#include "graphNode.h"
 
 vehicle::vehicle(){
 	

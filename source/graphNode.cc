@@ -8,6 +8,7 @@ Description: This file includes the implementation for the graphNode class.
 
 Copyright (c) King's College London
 */
+#include "graphNode.h"
 
 graphNode::graphNode(){
 	

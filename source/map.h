@@ -11,7 +11,6 @@ Copyright (c) King's College London
 #ifndef map_h
 #define map_h
 
-#include "map.cc"
 using namespace std;
 
 class map

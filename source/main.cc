@@ -17,10 +17,10 @@ Copyright (c) King's College London
 #include "mapcreate.cc"
 
 
-#include "map.h"
-#include "vehicle.h"
-#include "graphNode.h"
-#include "roadNode.h"
+#include "map.cc"
+#include "vehicle.cc"
+#include "graphNode.cc"
+#include "roadNode.cc"
 //#include <ogdf/basic/Graph.h>
 //#include <ogdf/basic/GraphAttributes.h>
 

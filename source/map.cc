@@ -8,6 +8,7 @@ Description: This file includes the implementation for the map class.
 
 Copyright (c) King's College London
 */
+#include "map.h"
 
 map::map(){
 

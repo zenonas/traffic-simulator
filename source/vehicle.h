@@ -12,9 +12,6 @@ Copyright (c) King's College London
 #ifndef vehicle_h
 #define vehicle_h
 
-#include "vehicle.cc"
-#include "roadNode.h"
-#include "graphNode.h"
 using namespace std;
 
 class vehicle

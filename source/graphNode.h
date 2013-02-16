@@ -11,7 +11,6 @@ Copyright (c) King's College London
 #ifndef graphNode_h
 #define graphNode_h
 
-#include "graphNode.cc"
 using namespace std;
 
 class graphNode

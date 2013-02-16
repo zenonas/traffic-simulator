@@ -11,8 +11,6 @@ Copyright (c) King's College London
 #ifndef roadNode_h
 #define roadNode_h
 
-#include "roadNode.cc"
-#include "graphNode.h"
 using namespace std;
 
 class roadNode
