@@ -28,7 +28,7 @@ int main ()
    pthread_t threads[3];
    pthread_attr_t attr;
    void *status;
-
+/* test graph code */
 Graph G;
 	GraphAttributes GA(G, GraphAttributes::nodeGraphics |	
 		GraphAttributes::edgeGraphics );
@@ -55,8 +55,8 @@ Graph G;
  
 	GA.writeGML("manual_graph.gml");
  
-	return 0;
-	
+	//return 0;
+	/* test graph code */
    // Initialize and set thread joinable
    pthread_attr_init(&attr);
    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
