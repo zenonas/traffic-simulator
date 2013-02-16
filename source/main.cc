@@ -18,6 +18,7 @@ Copyright (c) King's College London
 #include "../lib/DLList.cc"
 #include <ogdf/basic/Graph.h>
 #include <ogdf/basic/GraphAttributes.h>
+#include <queue>
 
 using namespace std;
 using namespace ogdf;
@@ -53,7 +54,6 @@ Graph G;
 		p.pushBack(DPoint(10,-20*i));
 		p.pushBack(DPoint(20*(LEN-i),-10));
 	}
- 
 
 /* test graph code */
 
