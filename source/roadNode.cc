@@ -20,7 +20,7 @@ roadNode::~roadNode(){
 }
 
 void roadNode::setgraphNodeA(graphNode a){
-	A.Type= a.Type;
+	A.Type = a.Type;
 	A.CartesianX = a.CartesianX;
 	A.CartesianY = a.CartesianY;
 }

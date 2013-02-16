@@ -13,6 +13,7 @@ Copyright (c) King's College London
 #define vehicle_h
 
 #include "graphNode.h"
+#include "roadNode.h"
 using namespace std;
 
 class vehicle
@@ -37,7 +38,7 @@ public:
    void setAcceleration(int x);
    int getAcceleration();
    void setCartesianPosition(int CartesianPosition[]);
-   int getCartesianPosition();
+   int* getCartesianPosition();
    void setCurrentPosition(Position C);
    Position getCurrentPosition();
    void setPreviousPosition(Position C);
