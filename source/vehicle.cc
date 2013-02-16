@@ -8,6 +8,7 @@ Description: This file includes the implementation for the vehicle class.
 
 Copyright (c) King's College London
 */
+
 #include "vehicle.h"
 #include "roadNode.h"
 #include "graphNode.h"
@@ -57,7 +58,7 @@ void vehicle::setCartesianPosition(int cartesianPosition[]){
 	CartesianPosition[1]=cartesianPosition[1];
 }
 
-int vehicle::getCartesianPosition(){
+int* vehicle::getCartesianPosition(){
 	return CartesianPosition;
 }
 

@@ -11,6 +11,7 @@ Copyright (c) King's College London
 #ifndef map_h
 #define map_h
 
+#include "roadNode.h"
 using namespace std;
 
 class map
