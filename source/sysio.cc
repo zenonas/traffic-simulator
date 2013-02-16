@@ -9,6 +9,7 @@ Description: This file specifies the input and output thread of the system
 Copyright (c) King's College London
 
 */
+using namespace std;
 
 void *inout(void *t)
 {
