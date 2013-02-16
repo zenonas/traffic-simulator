@@ -16,18 +16,13 @@ Copyright (c) King's College London
 #include "sysio.cc"
 #include "mapcreate.cc"
 
-<<<<<<< HEAD
+
 #include "map.h"
 #include "vehicle.h"
 #include "graphNode.h"
 #include "roadNode.h"
 //#include <ogdf/basic/Graph.h>
 //#include <ogdf/basic/GraphAttributes.h>
-=======
-
-#include <ogdf/basic/Graph.h>
-#include <ogdf/basic/GraphAttributes.h>
->>>>>>> 00748f7275106470fe90e91b5772fefe2e1a8716
 
 using namespace std;
 //using namespace ogdf;
