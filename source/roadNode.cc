@@ -9,7 +9,7 @@ Description: This file includes the implementation for the roadNode class.
 Copyright (c) King's College London
 */
 #include "roadNode.h"
-#include "graphNode.cc"
+#include "graphNode.h"
 
 roadNode::roadNode(){
 	
@@ -20,7 +20,7 @@ roadNode::~roadNode(){
 }
 
 void roadNode::setgraphNodeA(graphNode a){
-	A.Type = a.Type;
+	A.Type= a.Type;
 	A.CartesianX = a.CartesianX;
 	A.CartesianY = a.CartesianY;
 }
