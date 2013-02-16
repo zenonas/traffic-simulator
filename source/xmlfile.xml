@@ -1,0 +1,52 @@
+<?xml version= "1.0" encoding="utf-8"?>
+<Map>
+<Road name="A">
+<Node name="Aa">
+<Point name="x">22</Point>
+<Point name="y">66</Point>
+<Type name="type">1</Type>
+</Node>
+
+<Node name="Ab">
+<Point name="x">34</Point>
+<Point name="y">66</Point>
+<Type name="type">2</Type>
+</Node>
+<Length name="length">50</Length>
+</Road>
+
+<Road name="B">
+<Node name="Ba">
+<Point name="x">55</Point>
+<Point name="y">80</Point>
+<Type name="type">1</Type>
+</Node>
+
+<Node name="Bb">
+<Point name="x">34</Point>
+<Point name="y">67</Point>
+<Type name="type">2</Type>
+</Node>
+<Length name="length">40</Length>
+</Road>
+
+<Road name="C">
+<Node name="Ca">
+<Point name="x">55</Point>
+<Point name="y">60</Point>
+<Type name="type">1</Type>
+</Node>
+
+<Node name="Cb">
+<Point name="x">34</Point>
+<Point name="y">66</Point>
+<Type name="type">2</Type>
+</Node>
+
+
+<Length name="length">45</Length>
+</Road>
+
+
+
+</Map>
