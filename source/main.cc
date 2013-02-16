@@ -15,15 +15,16 @@ Copyright (c) King's College London
 #include "engine.cc"
 #include "sysio.cc"
 #include "mapcreate.cc"
-
-
 #include "map.cc"
 #include "vehicle.cc"
 #include "graphNode.cc"
 #include "roadNode.cc"
 #include "trafficLight.cc"
-//#include <ogdf/basic/Graph.h>
-//#include <ogdf/basic/GraphAttributes.h>
+#include <ogdf/basic/Graph.h>
+#include <ogdf/basic/GraphAttributes.h>
+#include "../lib/DLList.cc"
+#include <queue>
+
 
 using namespace std;
 //using namespace ogdf;
@@ -35,7 +36,11 @@ int main ()
    pthread_t threads[3];
    pthread_attr_t attr;
    void *status;
+<<<<<<< HEAD
 /*
+=======
+/* test graph code */
+>>>>>>> feature-llists
 Graph G;
 	GraphAttributes GA(G, GraphAttributes::nodeGraphics |	
 		GraphAttributes::edgeGraphics );
@@ -59,11 +64,17 @@ Graph G;
 		p.pushBack(DPoint(10,-20*i));
 		p.pushBack(DPoint(20*(LEN-i),-10));
 	}
+<<<<<<< HEAD
  
 	GA.writeGML("manual_graph.gml");
  
 	return 0;
 */	
+=======
+
+/* test graph code */
+
+>>>>>>> feature-llists
    // Initialize and set thread joinable
    pthread_attr_init(&attr);
    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
