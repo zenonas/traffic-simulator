@@ -15,6 +15,8 @@ Copyright (c) King's College London
 
 vehicle::vehicle(){
 	
+	
+
 }
 
 vehicle::~vehicle(){

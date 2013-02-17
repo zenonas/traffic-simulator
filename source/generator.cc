@@ -8,13 +8,23 @@ Description: This file specifies the car generator thead of the system. Please t
 Copyright (c) King's College London
 
 */
+#include "th_structs.h"
+
 using namespace std;
 
-void *generator(void *t)
-{
-   long tid;
-   tid = (long)t;
-   sleep(10);
-   cout << "Generator Thread with id : " << tid << "  ...exiting " << endl;
+
+void *generator(void *arguments)
+{  
+   struct gen_thread *p;
+   p = (struct gen_thread *)arguments;
+   
+   bool finished = p->gen_finished;
+   p->k = 3;
+
+   cout << "Generator Thread with id : " << "1" << "  is created" << endl;
+   
+
+   if (finished == false) cout << "alo\n";
+
    pthread_exit(NULL);
 }

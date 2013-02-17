@@ -2,7 +2,7 @@
 
 Group Project 7CCSMGPR - Team B
 Created: 15/2/2013
-Updated: 15/2/2013
+Updated: 16/2/2013
 File: main.cc
 Description: This file includes the main function of the system, handling our different threads.
 
@@ -24,23 +24,24 @@ Copyright (c) King's College London
 #include <ogdf/basic/GraphAttributes.h>
 #include "../lib/DLList.cc"
 #include <queue>
-
+#include "th_structs.h"
 
 using namespace std;
-//using namespace ogdf;
-
+using namespace ogdf;
+ 
 
 int main ()
 {
+
+   gen_thread a;
    int rc;
    pthread_t threads[3];
    pthread_attr_t attr;
    void *status;
-<<<<<<< HEAD
-/*
-=======
+   bool finished = false;
+
 /* test graph code */
->>>>>>> feature-llists
+
 Graph G;
 	GraphAttributes GA(G, GraphAttributes::nodeGraphics |	
 		GraphAttributes::edgeGraphics );
@@ -64,32 +65,29 @@ Graph G;
 		p.pushBack(DPoint(10,-20*i));
 		p.pushBack(DPoint(20*(LEN-i),-10));
 	}
-<<<<<<< HEAD
  
 	GA.writeGML("manual_graph.gml");
- 
-	return 0;
-*/	
-=======
+
 
 /* test graph code */
 
->>>>>>> feature-llists
    // Initialize and set thread joinable
    pthread_attr_init(&attr);
    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
    
       cout << "Creating thread: Vehicle Generator... ";
-      rc = pthread_create(&threads[0], NULL, generator, (void*)0);
+      a.gen_finished = false;
+      a.k = 10;
+      rc = pthread_create(&threads[0], NULL, generator, (void*)&a);
       if (rc){
          cout << "Error:unable to create thread," << rc << endl;
          return(-1);
       }
       cout << "OK!" << endl;
-      
+
       cout << "Creating thread: Engine... ";
-      rc = pthread_create(&threads[1], NULL, engine, (void*)1);
+      rc = pthread_create(&threads[1], NULL, engine, (void*)&a);
       if (rc){
          cout << "Error:unable to create thread," << rc << endl;
          return(-1);
@@ -133,4 +131,5 @@ Graph G;
    cout << "Main program exiting." << endl;
    pthread_exit(NULL);
 }
+
 
