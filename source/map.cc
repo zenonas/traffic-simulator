@@ -12,10 +12,11 @@ Copyright (c) King's College London
 #include <string.h>
 #include <stdio.h>
 #include <iostream>
+#include <stdlib.h>
 #include <fstream>
 #include <vector>
 #include "rapidxml.hpp"
- 
+
 using namespace rapidxml;
 using namespace std;
 
@@ -51,24 +52,77 @@ void map::ReadXMLFile()
 	// Iterate over the brewerys
 	for (xml_node<> * road_node = root_node->first_node("Road"); road_node; road_node =road_node->next_sibling("Road"))
 	{
+		 roadNode newroadNode;
+		 graphNode newgraphNodeA;
+		 graphNode newgraphNodeB;
+		 
         printf("This is the road %s\n",road_node->first_attribute("name")->value());
+        
+		int i=0;	
         for (xml_node<> * node_node = road_node->first_node("Node"); node_node; node_node =node_node->next_sibling("Node"))
 	    {  
              printf("This is node %s \n",node_node->first_attribute("name")->value());
-     	      for (xml_node<> * point_node = node_node->first_node("Point"); point_node; point_node =point_node->next_sibling("Point"))
-	          {
-                  	printf(" %s=%s\n",point_node->first_attribute("name")->value(), point_node->value());
-					graphNode newgraphNode;
-					if (point_node->first_attribute("name")->value()=="x")
-					newgraphNode.setCartesianX(atoi(point_node->value()));
-					else
-					newgraphNode.setCartesianY(atoi(point_node->value()));
-              }
-      
+             if (i%2==0)
+			 {
+				for (xml_node<> * point_node = node_node->first_node("Point"); point_node; point_node =point_node->next_sibling("Point"))
+				{
+					if (strcmp(point_node->first_attribute("name")->value(),"x")==0)
+					{
+						newgraphNodeB.setCartesianX(atoi(point_node->value()));
+					}
+					else if(strcmp(point_node->first_attribute("name")->value(),"y")==0)
+						newgraphNodeB.setCartesianY(atoi(point_node->value()));
+				}
+						
+			}
+			else
+			{
+				for (xml_node<> * point_node = node_node->first_node("Point"); point_node; point_node =point_node->next_sibling("Point"))
+				{
+					if (strcmp(point_node->first_attribute("name")->value(),"x")==0)
+					{
+						newgraphNodeA.setCartesianX(atoi(point_node->value()));
+					}
+					else if(strcmp(point_node->first_attribute("name")->value(),"y")==0)
+							newgraphNodeA.setCartesianY(atoi(point_node->value()));
+				}
+              
+            }
+              	i++;
+              	
+              	if(i%2==0)
+              	{
+				cout <<"XB="<<newgraphNodeA.getCartesianX()<<endl;
+				cout<<"YB="<<newgraphNodeA.getCartesianY()<<endl;
+				 for (xml_node<> * type_node = node_node->first_node("Type"); type_node; type_node =type_node->next_sibling("Type"))
+				{ 
+					newgraphNodeB.setType(atoi(type_node->value()));
+					cout <<"Type="<<newgraphNodeB.getType()<<endl;
+				}
+				}	
+				else
+				{
+					cout <<"XA="<<newgraphNodeB.getCartesianX()<<endl;
+					cout<<"YA="<<newgraphNodeB.getCartesianY()<<endl;
+					for (xml_node<> * type_node = node_node->first_node("Type"); type_node; type_node =type_node->next_sibling("Type"))
+					{ 
+						newgraphNodeA.setType(atoi(type_node->value()));
+						cout <<"Type="<<newgraphNodeA.getType()<<endl;
+					}
+				}
+				
+				
+		    newroadNode.setgraphNodeA(newgraphNodeA);
+	        newroadNode.setgraphNodeB(newgraphNodeB);
+	      
        }
-        for (xml_node<> * length= road_node->first_node("Length"); length; length=length->next_sibling())
-	        printf("Length :%s \n",length->value());
-     
+        for (xml_node<> * length= road_node->first_node("Length"); length; length=length->next_sibling()){
+	       
+	        newroadNode.setLength(atoi(length->value()));
+	       cout <<"New Length="<<newroadNode.getLength()<<endl;}
+	       
+	          
+	    
       cout<<endl;
 	}
 }
@@ -76,4 +130,5 @@ void map::ReadXMLFile()
 void map::ConstructMap(){
 	ReadXMLFile();
 }
+
 
