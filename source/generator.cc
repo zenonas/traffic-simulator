@@ -9,6 +9,7 @@ Copyright (c) King's College London
 
 */
 #include "th_structs.h"
+#include "vehicle.h"
 
 using namespace std;
 
@@ -20,6 +21,8 @@ void *generator(void *arguments)
    
    cout << "Generator Thread with id : " << "1" << "  is created" << endl;
    srand(time(NULL));
+
+   vehicle **temp_array;
 
   while(!thread_args->gen_finished) {
 
@@ -39,33 +42,41 @@ void *generator(void *arguments)
 		if (actual_no_to_create < 10) actual_no_to_create = 10; //maybe revise
 	/*
 		STEP 3 DECIDE BASED RATIOS HOW MANY OF EACH VEHICLE TYPE YOU WILL CREATE
+		STEP 4 CREATE THE VEHICLES AND STORE IN AN TEMP ARRAY OF OBJECTS
 	*/
+		temp_array = new vehicle*[actual_no_to_create];
+		for (int z=0; z<actual_no_to_create;z++) temp_array[z] = NULL; //initalize array to null pointers
+
 		for (int i=1; i<=actual_no_to_create;i++) {
-		//	Vehicle new_vehicle;
+			vehicle *new_vehicle = new vehicle();
 			int type_no = rand() % 100 + 1;
 			cout << "MY TYPE NO IS:" << type_no << endl;
 			if (type_no <= thread_args->vehicle_ratios[0]*100) {
-		//		new_vehicle.setType(0); // car
-				cout << "I AM A CAR\n";
+				new_vehicle->setType(0); // car
 			} else if ((type_no > thread_args->vehicle_ratios[0]*100) && (type_no <= ((thread_args->vehicle_ratios[0]*100) + (thread_args->vehicle_ratios[1]*100))) ) {
-		//		new_vehicle.setType(1); //bus
-				cout << "I AM A BUS\n";
+				new_vehicle->setType(1); //bus
 			} else if (type_no > ((thread_args->vehicle_ratios[0]*100) + (thread_args->vehicle_ratios[1]*100))) {
-		//		new_vehicle.setType(2);
-				cout << "I AM A LORRY\n";
+				new_vehicle->setType(2);
+			}
+	/*
+		STEP 5 SAVE IN TEMP ARRAY AND SHUFFLE
+	*/
+			for (int j=0; j<actual_no_to_create; j++) {
+				if (temp_array[j] != NULL) temp_array[j] = new_vehicle;
 			}
 		}
 
 
 	/*
-		STEP 4 CREATE THE VEHICLES AND STORE IN AN TEMP ARRAY OF OBJECTS
+		
 
-		STEP 5 RANDOMIZE THE OBJECTS IN THE ARRAY
+		
 
 		STEP 6 POP AND PUT IN THE QUEUE
 
   	*/
 	/* STEP 7: WAIT FOR THE NEXT ROUND DEPENDING ON THE SLEEP TIMER */
+		delete[] temp_array;
 		sleep(thread_args->sleep_time);
 
   }

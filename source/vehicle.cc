@@ -14,9 +14,7 @@ Copyright (c) King's College London
 #include "graphNode.h"
 
 vehicle::vehicle(){
-	
-	
-
+	cout << "CREATED\n";
 }
 
 vehicle::~vehicle(){
