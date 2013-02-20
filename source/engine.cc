@@ -18,7 +18,7 @@ void *engine(void *arguments)
    struct gen_thread *p;
    p = (struct gen_thread *)arguments;
    sleep(5);
-   cout << p->k << endl;
+
   
    pthread_exit(NULL);
 }

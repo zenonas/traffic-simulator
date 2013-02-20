@@ -105,7 +105,7 @@ Graph G;
       cout << "OK!" << endl;
 
       cout << "Creating thread: Engine... ";
-      rc = pthread_create(&threads[1], NULL, engine, (void*)&a);
+      rc = pthread_create(&threads[1], NULL, engine, (void*)&generator_args);
       if (rc){
          cout << "Error:unable to create thread," << rc << endl;
          return(-1);

@@ -15,19 +15,16 @@ using namespace std;
 
 void *generator(void *arguments)
 {  
-   struct gen_thread *p;
-   p = (struct gen_thread *)arguments;
+   struct gen_thread *thread_args;
+   thread_args = (struct gen_thread *)arguments;
    
-   bool finished = p->gen_finished;
-   p->k = 3;
-
    cout << "Generator Thread with id : " << "1" << "  is created" << endl;
    
 
-  while(!finished) {
+  while(!thread_args->gen_finished) {
 
   	/*
-  	
+
   		STEP: 1 GET RATIOS
   		(NO OF VEHICLES, DRIVER TYPE RATIO, VEHICLE TYPE RATIO)
 
