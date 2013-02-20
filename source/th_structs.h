@@ -14,7 +14,10 @@ Copyright (c) King's College London
 
 struct gen_thread {
       bool gen_finished;
-      int k;
+      int max_no_vehicles;
+      double vehicle_ratios[3];
+      double driver_ratios[3];
+      bool arg_changed;
 };
 
 #endif

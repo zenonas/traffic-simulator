@@ -24,7 +24,26 @@ void *generator(void *arguments)
    cout << "Generator Thread with id : " << "1" << "  is created" << endl;
    
 
-   if (finished == false) cout << "alo\n";
+  while(!finished) {
 
+  	/*
+  	
+  		STEP: 1 GET RATIOS
+  		(NO OF VEHICLES, DRIVER TYPE RATIO, VEHICLE TYPE RATIO)
+
+  		STEP 2 GET NUMBER OF VEHICLES/H NEEDED
+		BASED ON THIS DECIDE HOW MANY VEHICLES NEED TO BE CREATE IN THIS ROUND
+
+		STEP 3 DECIDE BASED RATIOS HOW MANY OF EACH VEHICLE TYPE YOU WILL CREATE
+
+		STEP 4 CREATE THE VEHICLES AND STORE IN AN TEMP ARRAY OF OBJECTS
+
+		STEP 5 RANDOMIZE THE OBJECTS IN THE ARRAY
+
+		STEP 6 POP AND PUT IN THE QUEUE
+
+  	*/
+
+  }
    pthread_exit(NULL);
 }

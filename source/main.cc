@@ -20,6 +20,7 @@ Copyright (c) King's College London
 #include "graphNode.cc"
 #include "roadNode.cc"
 #include "trafficLight.cc"
+
 #include <ogdf/basic/Graph.h>
 #include <ogdf/basic/GraphAttributes.h>
 #include "../lib/DLList.cc"
@@ -33,14 +34,33 @@ using namespace ogdf;
 int main ()
 {
 
-   gen_thread a;
+/* DEFINING GENERATOR THREAD ARGUMENTS */
+
+   gen_thread generator_args;
+   generator_args.gen_finished = false;
+   generator_args.max_no_vehicles = 50;
+   generator_args.vehicle_ratios[0] = 0.9; // cars
+   generator_args.vehicle_ratios[1] = 0.1; // bus
+   generator_args.vehicle_ratios[2] = 0.05; // lorries
+   generator_args.driver_ratios[0] = 0.7; //normal
+   generator_args.driver_ratios[1] = 0.4; //cautious
+   generator_args.driver_ratios[2] = 0.2; //aggressive (nai stin ellada imaste)
+   generator_args.arg_changed = false;
+
+/* DEFINING ENGINE THREAD ARGUEMENTS */
+
+/* DEFINING I/O THREAD ARGUEMENT */
+
+/* test graph code */
+
+
+
+/* MULTI-THREADING STUFF */
+
    int rc;
    pthread_t threads[3];
    pthread_attr_t attr;
    void *status;
-   bool finished = false;
-
-/* test graph code */
 
 Graph G;
 	GraphAttributes GA(G, GraphAttributes::nodeGraphics |	
@@ -77,9 +97,7 @@ Graph G;
 
    
       cout << "Creating thread: Vehicle Generator... ";
-      a.gen_finished = false;
-      a.k = 10;
-      rc = pthread_create(&threads[0], NULL, generator, (void*)&a);
+      rc = pthread_create(&threads[0], NULL, generator, (void*)&generator_args);
       if (rc){
          cout << "Error:unable to create thread," << rc << endl;
          return(-1);
