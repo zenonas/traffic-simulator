@@ -11,6 +11,8 @@ Copyright (c) King's College London
 */
 #include <iostream>
 #include <pthread.h>
+#include <stdlib.h>
+#include <time.h>
 #include "generator.cc"
 #include "engine.cc"
 #include "sysio.cc"
@@ -38,14 +40,15 @@ int main ()
 
    gen_thread generator_args;
    generator_args.gen_finished = false;
-   generator_args.max_no_vehicles = 50;
-   generator_args.vehicle_ratios[0] = 0.9; // cars
+   generator_args.max_no_vehicles = 20;
+   generator_args.vehicle_ratios[0] = 0.85; // cars
    generator_args.vehicle_ratios[1] = 0.1; // bus
    generator_args.vehicle_ratios[2] = 0.05; // lorries
-   generator_args.driver_ratios[0] = 0.7; //normal
-   generator_args.driver_ratios[1] = 0.4; //cautious
-   generator_args.driver_ratios[2] = 0.2; //aggressive (nai stin ellada imaste)
+   generator_args.driver_ratios[0] = 0.65; //normal
+   generator_args.driver_ratios[1] = 0.2; //cautious
+   generator_args.driver_ratios[2] = 0.15; //aggressive (nai stin ellada imaste)
    generator_args.arg_changed = false;
+   generator_args.sleep_time = 3; // this may change
 
 /* DEFINING ENGINE THREAD ARGUEMENTS */
 

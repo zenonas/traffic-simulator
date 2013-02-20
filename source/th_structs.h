@@ -18,6 +18,7 @@ struct gen_thread {
       double vehicle_ratios[3];
       double driver_ratios[3];
       bool arg_changed;
+      int sleep_time;
 };
 
 #endif
