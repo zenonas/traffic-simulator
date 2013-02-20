@@ -58,6 +58,16 @@ void *generator(void *arguments)
 				temp_array[i]->setType(2);
 			}
 		}
+		for (i=0; i<actual_no_to_create; i++) {
+			int driver_type = rand() % 100 + 1;
+			if (driver_type <= thread_args->driver_ratios[0]*100) {
+				temp_array[i]->setDriverType(0); // normal
+			} else if ((driver_type > thread_args->driver_ratios[0]*100) && (driver_type <= ((thread_args->driver_ratios[0]*100) + (thread_args->driver_ratios[1]*100))) ) {
+				temp_array[i]->setDriverType(1); // cautious
+			} else if (driver_type > ((thread_args->driver_ratios[0]*100) + (thread_args->driver_ratios[1]*100))) {
+				temp_array[i]->setDriverType(2); //aggressive
+			}
+		}
 	/*
 		STEP 5 PICK VEHICLES AT RANDOM AND PUSH IN QUEUE
 	*/
@@ -75,7 +85,7 @@ void *generator(void *arguments)
 
 	/* STEP 7: WAIT FOR THE NEXT ROUND DEPENDING ON THE SLEEP TIMER */
 		sleep(thread_args->sleep_time);
-		break;
+
 
   }
    pthread_exit(NULL);

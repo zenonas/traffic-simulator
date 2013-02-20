@@ -65,6 +65,7 @@ int main ()
    pthread_attr_t attr;
    void *status;
 
+/*
 Graph G;
 	GraphAttributes GA(G, GraphAttributes::nodeGraphics |	
 		GraphAttributes::edgeGraphics );
@@ -90,7 +91,7 @@ Graph G;
 	}
  
 	GA.writeGML("manual_graph.gml");
-
+*/
 
 /* test graph code */
 
