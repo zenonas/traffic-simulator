@@ -13,8 +13,8 @@ Copyright (c) King's College London
 #include "roadNode.h"
 #include "graphNode.h"
 
-vehicle::vehicle(){
-	cout << "CREATED\n";
+vehicle::vehicle(int id){
+	vehi_id = id;
 }
 
 vehicle::~vehicle(){

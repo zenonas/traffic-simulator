@@ -9,8 +9,11 @@ Description: This file includes the main function of the system, handling our di
 Copyright (c) King's College London
 
 */
+
 #ifndef A_TH_STRC
 #define A_TH_STRC
+#include <queue>
+#include "vehicle.h"
 
 struct gen_thread {
       bool gen_finished;
@@ -19,7 +22,10 @@ struct gen_thread {
       double driver_ratios[3];
       bool arg_changed;
       int sleep_time;
+      queue<vehicle *> VWaitingQ;
 };
+
+
 
 #endif
 

@@ -25,7 +25,7 @@ struct Position
 class vehicle
 {
 public:
-   vehicle();   
+   vehicle(int id);   
    ~vehicle();
    
    void setType(int type);
@@ -44,6 +44,8 @@ public:
    Position getPreviousPosition();
    void calculatePath();
    roadNode* getPath();
+
+   int vehi_id;
 
 private:
    int Type, CurrentSpeed, DriverType, Acceleration;
