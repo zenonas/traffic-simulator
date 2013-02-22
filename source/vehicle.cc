@@ -17,7 +17,7 @@ vehicle::vehicle(int id){
 	vehi_id = id;
 	CurrentSpeed = 0;
 	Acceleration = 0;
-	calculatePath();
+	//calculatePath();
 }
 
 vehicle::~vehicle(){

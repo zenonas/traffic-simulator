@@ -51,7 +51,7 @@ private:
    int Type, CurrentSpeed, DriverType, Acceleration;
    int CartesianPosition[2];
    Position CurrentPosition, PreviousPosition;
-   roadNode *Path[];
+   roadNode Path[];
 };
 
 #endif

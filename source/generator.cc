@@ -58,14 +58,14 @@ void *generator(void *arguments)
 				temp_array[i]->setType(2);
 			}
 		}
-		for (i=0; i<actual_no_to_create; i++) {
+		for (int y=0; y<actual_no_to_create; y++) {
 			int driver_type = rand() % 100 + 1;
 			if (driver_type <= thread_args->driver_ratios[0]*100) {
-				temp_array[i]->setDriverType(0); // normal
+				temp_array[y]->setDriverType(0); // normal
 			} else if ((driver_type > thread_args->driver_ratios[0]*100) && (driver_type <= ((thread_args->driver_ratios[0]*100) + (thread_args->driver_ratios[1]*100))) ) {
-				temp_array[i]->setDriverType(1); // cautious
+				temp_array[y]->setDriverType(1); // cautious
 			} else if (driver_type > ((thread_args->driver_ratios[0]*100) + (thread_args->driver_ratios[1]*100))) {
-				temp_array[i]->setDriverType(2); //aggressive
+				temp_array[y]->setDriverType(2); //aggressive
 			}
 		}
 	/*
