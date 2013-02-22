@@ -27,7 +27,6 @@ public:
 
 private:
    roadNode Roads[];
-   int MaxSpeed;
 };
 
 #endif

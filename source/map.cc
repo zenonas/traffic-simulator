@@ -17,7 +17,6 @@ Copyright (c) King's College London
 #include <vector>
 #include "rapidxml.hpp"
 
- 
 using namespace rapidxml;
 using namespace std;
 
@@ -27,14 +26,6 @@ map::map(){
 
 map::~map(){
 
-}
-
-void map::setMaxSpeed(int x){
-	MaxSpeed=x;
-}
-
-int map::getMaxSpeed(){
-	return MaxSpeed;
 }
 
 void map::ReadXMLFile()
@@ -56,9 +47,9 @@ void map::ReadXMLFile()
 		 roadNode newroadNode;
 		 graphNode newgraphNodeA;
 		 graphNode newgraphNodeB;
-		 
+
         printf("This is the road %s\n",road_node->first_attribute("name")->value());
-        
+
 		int i=0;	
         for (xml_node<> * node_node = road_node->first_node("Node"); node_node; node_node =node_node->next_sibling("Node"))
 	    {  
@@ -103,6 +94,7 @@ void map::ReadXMLFile()
 				}	
 				else
 				{
+
 				cout <<"XA="<<newgraphNodeB.getCartesianX()<<endl;
 				cout<<"YA="<<newgraphNodeB.getCartesianY()<<endl;
 				 for (xml_node<> * type_node = node_node->first_node("Type"); type_node; type_node =type_node->next_sibling("Type"))
@@ -110,6 +102,14 @@ void map::ReadXMLFile()
 					newgraphNodeA.setType(atoi(type_node->value()));
 					cout <<"Type="<<newgraphNodeA.getType()<<endl;
 				}
+
+					cout <<"XA="<<newgraphNodeB.getCartesianX()<<endl;
+					cout<<"YA="<<newgraphNodeB.getCartesianY()<<endl;
+					for (xml_node<> * type_node = node_node->first_node("Type"); type_node; type_node =type_node->next_sibling("Type"))
+					{ 
+						newgraphNodeA.setType(atoi(type_node->value()));
+						cout <<"Type="<<newgraphNodeA.getType()<<endl;
+					}
 				}
 				
 				
@@ -131,4 +131,5 @@ void map::ReadXMLFile()
 void map::ConstructMap(){
 	ReadXMLFile();
 }
+
 
