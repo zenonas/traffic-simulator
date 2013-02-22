@@ -13,8 +13,11 @@ Copyright (c) King's College London
 #include "roadNode.h"
 #include "graphNode.h"
 
-vehicle::vehicle(){
-	
+vehicle::vehicle(int id){
+	vehi_id = id;
+	CurrentSpeed = 0;
+	Acceleration = 0;
+	//calculatePath();
 }
 
 vehicle::~vehicle(){
@@ -83,7 +86,8 @@ Position vehicle::getPreviousPosition(){
 }
 
 void vehicle::calculatePath(){
-	cout << "Calculate Path";
+	//IN HERE WE NEED TO FILL ALL THE ATTRIBUTES 
+	// CONCERNING THE MAP
 }
 
 roadNode* vehicle::getPath(){

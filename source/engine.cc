@@ -9,13 +9,16 @@ Description: This file specifies the engine thread of the system. Please treat a
 Copyright (c) King's College London
 
 */
+#include "th_structs.h"
+
 using namespace std;
 
-void *engine(void *t)
+void *engine(void *arguments)
 {
-   long tid;
-   tid = (long)t;
+   struct gen_thread *p;
+   p = (struct gen_thread *)arguments;
    sleep(5);
-   cout << "Engine Thread with id : " << tid << "  ...exiting " << endl;
+
+  
    pthread_exit(NULL);
 }

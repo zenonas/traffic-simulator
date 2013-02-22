@@ -2,7 +2,7 @@
 
 Group Project 7CCSMGPR - Team B
 Created: 15/2/2013
-Updated: 15/2/2013
+Updated: 16/2/2013
 File: main.cc
 Description: This file includes the main function of the system, handling our different threads.
 
@@ -11,6 +11,8 @@ Copyright (c) King's College London
 */
 #include <iostream>
 #include <pthread.h>
+#include <stdlib.h>
+#include <time.h>
 #include "generator.cc"
 #include "engine.cc"
 #include "sysio.cc"
@@ -20,27 +22,58 @@ Copyright (c) King's College London
 #include "graphNode.cc"
 #include "roadNode.cc"
 #include "trafficLight.cc"
+<<<<<<< HEAD
 //#include <ogdf/basic/Graph.h>
 //#include <ogdf/basic/GraphAttributes.h>
 //#include "../lib/DLList.cc"
 //#include <queue>
 
+=======
+
+#include <ogdf/basic/Graph.h>
+#include <ogdf/basic/GraphAttributes.h>
+#include "../lib/DLList.cc"
+#include <queue>
+#include "th_structs.h"
+>>>>>>> 0bfa94b708f521aa2ad779ec3c4d820d92337a55
 
 using namespace std;
-//using namespace ogdf;
+using namespace ogdf;
 
 
 int main ()
 {
+
+/* DEFINING GENERATOR THREAD ARGUMENTS */
+
+   gen_thread generator_args;
+   generator_args.gen_finished = false;
+   generator_args.max_no_vehicles = 20;
+   generator_args.vehicle_ratios[0] = 0.7; // cars
+   generator_args.vehicle_ratios[1] = 0.25; // bus
+   generator_args.vehicle_ratios[2] = 0.05; // lorries
+   generator_args.driver_ratios[0] = 0.65; //normal
+   generator_args.driver_ratios[1] = 0.2; //cautious
+   generator_args.driver_ratios[2] = 0.15; //aggressive (nai stin ellada imaste)
+   generator_args.arg_changed = false;
+   generator_args.sleep_time = 3; // this may change
+
+//
+
+/* DEFINING ENGINE THREAD ARGUEMENTS */
+
+/* DEFINING I/O THREAD ARGUEMENT */
+
+/* test graph code */
+
+/* MULTI-THREADING STUFF */
+
    int rc;
    pthread_t threads[3];
    pthread_attr_t attr;
    void *status;
-<<<<<<< HEAD
+
 /*
-=======
-/* test graph code */
->>>>>>> feature-llists
 Graph G;
 	GraphAttributes GA(G, GraphAttributes::nodeGraphics |	
 		GraphAttributes::edgeGraphics );
@@ -64,32 +97,27 @@ Graph G;
 		p.pushBack(DPoint(10,-20*i));
 		p.pushBack(DPoint(20*(LEN-i),-10));
 	}
-<<<<<<< HEAD
  
 	GA.writeGML("manual_graph.gml");
- 
-	return 0;
-*/	
-=======
+*/
 
 /* test graph code */
 
->>>>>>> feature-llists
    // Initialize and set thread joinable
    pthread_attr_init(&attr);
    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
    
       cout << "Creating thread: Vehicle Generator... ";
-      rc = pthread_create(&threads[0], NULL, generator, (void*)0);
+      rc = pthread_create(&threads[0], NULL, generator, (void*)&generator_args);
       if (rc){
          cout << "Error:unable to create thread," << rc << endl;
          return(-1);
       }
       cout << "OK!" << endl;
-      
+
       cout << "Creating thread: Engine... ";
-      rc = pthread_create(&threads[1], NULL, engine, (void*)1);
+      rc = pthread_create(&threads[1], NULL, engine, (void*)&generator_args);
       if (rc){
          cout << "Error:unable to create thread," << rc << endl;
          return(-1);
@@ -129,8 +157,12 @@ Graph G;
       }
       cout << "I/O Thread completed and exiting with status :" << status << endl;
    
-
+      while (!generator_args.VWaitingQ.empty()) {
+         cout << "(OUTSIDE THREAD) TYPE: " << generator_args.VWaitingQ.front()->vehi_id << endl;
+         generator_args.VWaitingQ.pop();
+      }
    cout << "Main program exiting." << endl;
    pthread_exit(NULL);
 }
+
 
