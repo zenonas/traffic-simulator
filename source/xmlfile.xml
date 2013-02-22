@@ -23,8 +23,8 @@
 </Node>
 
 <Node name="Bb">
-<Point name="x">34</Point>
-<Point name="y">67</Point>
+<Point name="x">30</Point>
+<Point name="y">80</Point>
 <Type name="type">2</Type>
 </Node>
 <Length name="length">40</Length>
@@ -32,21 +32,17 @@
 
 <Road name="C">
 <Node name="Ca">
-<Point name="x">55</Point>
-<Point name="y">60</Point>
-<Type name="type">2</Type>
+<Point name="x">34</Point>
+<Point name="y">66</Point>
+<Type name="type">1</Type>
 </Node>
 
 <Node name="Cb">
-<Point name="x">34</Point>
-<Point name="y">66</Point>
+<Point name="x">55</Point>
+<Point name="y">80</Point>
 <Type name="type">2</Type>
 </Node>
-
-
-<Length name="length">45</Length>
+<Length name="length">80</Length>
 </Road>
-
-
 
 </Map>
