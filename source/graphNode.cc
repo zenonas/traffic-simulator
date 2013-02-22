@@ -32,7 +32,7 @@ void graphNode::setCartesianY(int y){
 }
 
 int graphNode::getCartesianY(){
-	return CartesianX;
+	return CartesianY;
 }
 
 void graphNode::setType(int type){

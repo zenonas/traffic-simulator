@@ -34,7 +34,7 @@
 <Node name="Ca">
 <Point name="x">55</Point>
 <Point name="y">60</Point>
-<Type name="type">1</Type>
+<Type name="type">2</Type>
 </Node>
 
 <Node name="Cb">
