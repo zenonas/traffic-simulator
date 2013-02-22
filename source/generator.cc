@@ -8,10 +8,9 @@ Description: This file specifies the car generator thead of the system. Please t
 Copyright (c) King's College London
 
 */
+
 #include "th_structs.h"
 #include "vehicle.h"
-
-
 using namespace std;
 
 
@@ -82,7 +81,6 @@ void *generator(void *arguments)
 			}
 			curr_vehicles--;
 		}	
-
 	/* STEP 7: WAIT FOR THE NEXT ROUND DEPENDING ON THE SLEEP TIMER */
 		sleep(thread_args->sleep_time);
 

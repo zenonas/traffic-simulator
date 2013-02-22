@@ -12,8 +12,9 @@ Copyright (c) King's College London
 
 #ifndef A_TH_STRC
 #define A_TH_STRC
-#include <queue>
+
 #include "vehicle.h"
+#include <queue>
 
 struct gen_thread {
       bool gen_finished;

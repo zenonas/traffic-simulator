@@ -16,13 +16,8 @@ Copyright (c) King's College London
 #include "generator.cc"
 #include "engine.cc"
 #include "sysio.cc"
-#include "mapcreate.cc"
-#include "map.cc"
-#include "vehicle.cc"
-#include "graphNode.cc"
-#include "roadNode.cc"
-#include "trafficLight.cc"
-#include "../lib/DLList.cc"
+#include "map.h"
+#include "../lib/DLList.h"
 #include <queue>
 #include "th_structs.h"
 

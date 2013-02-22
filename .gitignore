@@ -8,6 +8,7 @@
 *.dylib
 main
 fakemain
+trafficsim
 
 # Compiled Static libraries
 *.lai
