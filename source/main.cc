@@ -22,24 +22,11 @@ Copyright (c) King's College London
 #include "graphNode.cc"
 #include "roadNode.cc"
 #include "trafficLight.cc"
-<<<<<<< HEAD
-//#include <ogdf/basic/Graph.h>
-//#include <ogdf/basic/GraphAttributes.h>
-//#include "../lib/DLList.cc"
-//#include <queue>
-
-=======
-
-#include <ogdf/basic/Graph.h>
-#include <ogdf/basic/GraphAttributes.h>
 #include "../lib/DLList.cc"
 #include <queue>
 #include "th_structs.h"
->>>>>>> 0bfa94b708f521aa2ad779ec3c4d820d92337a55
 
 using namespace std;
-using namespace ogdf;
-
 
 int main ()
 {
@@ -73,33 +60,6 @@ int main ()
    pthread_attr_t attr;
    void *status;
 
-/*
-Graph G;
-	GraphAttributes GA(G, GraphAttributes::nodeGraphics |	
-		GraphAttributes::edgeGraphics );
- 
-	const int LEN = 11;
-	for(int i = 1; i<LEN; ++i) {
-		node left = G.newNode();
-		GA.x(left) = -5*(i+1);
-		GA.y(left) = -20*i;		
-		GA.width(left) = 10*(i+1);
-		GA.height(left) = 15;
- 
-		node bottom = G.newNode();
-		GA.x(bottom) = 20*(LEN-i);		
-		GA.y(bottom) = 5*(LEN+1-i);
-		GA.width(bottom) = 15;
-		GA.height(bottom) = 10*(LEN+1-i);
- 
-		edge e = G.newEdge(left,bottom);
-		DPolyline &p = GA.bends(e);
-		p.pushBack(DPoint(10,-20*i));
-		p.pushBack(DPoint(20*(LEN-i),-10));
-	}
- 
-	GA.writeGML("manual_graph.gml");
-*/
 
 /* test graph code */
 
