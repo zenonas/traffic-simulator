@@ -45,4 +45,49 @@
 <Length name="length">80</Length>
 </Road>
 
+<Road name="D">
+<Node name="Da">
+<Point name="x">30</Point>
+<Point name="y">80</Point>
+<Type name="type">1</Type>
+</Node>
+
+<Node name="Db">
+<Point name="x">0</Point>
+<Point name="y">80</Point>
+<Type name="type">2</Type>
+</Node>
+<Length name="length">80</Length>
+</Road>
+
+<Road name="E">
+<Node name="Ea">
+<Point name="x">30</Point>
+<Point name="y">80</Point>
+<Type name="type">1</Type>
+</Node>
+
+<Node name="Eb">
+<Point name="x">30</Point>
+<Point name="y">80</Point>
+<Type name="type">2</Type>
+</Node>
+<Length name="length">80</Length>
+</Road>
+
+<Road name="F">
+<Node name="Fa">
+<Point name="x">40</Point>
+<Point name="y">100</Point>
+<Type name="type">1</Type>
+</Node>
+
+<Node name="Fb">
+<Point name="x">60</Point>
+<Point name="y">100</Point>
+<Type name="type">2</Type>
+</Node>
+<Length name="length">80</Length>
+</Road>
+
 </Map>

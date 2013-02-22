@@ -20,6 +20,14 @@ Copyright (c) King's College London
 #include "graphNode.cc"
 #include "roadNode.cc"
 #include "trafficLight.cc"
+
+
+
+#include <stdlib.h>
+#include <time.h>
+#include "../lib/DLList.cc"
+#include <queue>
+#include "th_structs.h"
 //#include <ogdf/basic/Graph.h>
 //#include <ogdf/basic/GraphAttributes.h>
 //#include "../lib/DLList.cc"

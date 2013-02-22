@@ -34,7 +34,7 @@ int main ()
 /* DEFINING GENERATOR THREAD ARGUMENTS */
 
    gen_thread generator_args;
-   generator_args.gen_finished = false;
+/*   generator_args.gen_finished = false;
    generator_args.max_no_vehicles = 20;
    generator_args.vehicle_ratios[0] = 0.7; // cars
    generator_args.vehicle_ratios[1] = 0.25; // bus
@@ -44,9 +44,11 @@ int main ()
    generator_args.driver_ratios[2] = 0.15; //aggressive (nai stin ellada imaste)
    generator_args.arg_changed = false;
    generator_args.sleep_time = 3; // this may change
-
+*/
 //
-
+//read xml file to construct map
+   map mymap;
+   mymap.ReadXMLFile();
 /* DEFINING ENGINE THREAD ARGUEMENTS */
 
 /* DEFINING I/O THREAD ARGUEMENT */

@@ -27,7 +27,7 @@ map::map(){
 map::~map(){
 
 }
-roadNode arrayRoads[2];
+
 
 void map::ReadXMLFile()
 {
@@ -44,6 +44,12 @@ void map::ReadXMLFile()
 	root_node = doc.first_node("Map");
 	// Iterate over the brewerys
 	int j=0;
+	int l=0;
+	for (xml_node<> * road_node = root_node->first_node("Road"); road_node; road_node =road_node->next_sibling("Road"))
+	{
+	l++;
+	}
+	roadNode arrayRoads[l];
 	for (xml_node<> * road_node = root_node->first_node("Road"); road_node; road_node =road_node->next_sibling("Road"))
 	{
 		 roadNode newroadNode;
@@ -53,7 +59,6 @@ void map::ReadXMLFile()
 		int i=0;	
         for (xml_node<> * node_node = road_node->first_node("Node"); node_node; node_node =node_node->next_sibling("Node"))
 	    {  
-             printf("This is node %s \n",node_node->first_attribute("name")->value());
              if (i%2!=0)
 			 {
 				for (xml_node<> * point_node = node_node->first_node("Point"); point_node; point_node =point_node->next_sibling("Point"))
@@ -84,8 +89,6 @@ void map::ReadXMLFile()
               	
               	if(i%2!=0)
               	{
-				cout <<"XB="<<newgraphNodeA.getCartesianX()<<endl;
-				cout<<"YB="<<newgraphNodeA.getCartesianY()<<endl;
 				 for (xml_node<> * type_node = node_node->first_node("Type"); type_node; type_node =type_node->next_sibling("Type"))
 				{ 
 					newgraphNodeB.setType(atoi(type_node->value()));
@@ -94,43 +97,37 @@ void map::ReadXMLFile()
 				}	
 				else
 				{
-
-				cout <<"XA="<<newgraphNodeB.getCartesianX()<<endl;
-				cout<<"YA="<<newgraphNodeB.getCartesianY()<<endl;
+				
 				 for (xml_node<> * type_node = node_node->first_node("Type"); type_node; type_node =type_node->next_sibling("Type"))
 				{ 
 					newgraphNodeA.setType(atoi(type_node->value()));
 					cout <<"Type="<<newgraphNodeA.getType()<<endl;
 				}	
-				}
-				
+				}			
 				
 		    newroadNode.setgraphNodeA(newgraphNodeA);
 			newroadNode.setgraphNodeB(newgraphNodeB);
 			
 			graphNode newgraphNodeAnew;
 			newgraphNodeAnew = newroadNode.getgraphNodeA();
-			cout <<"XAnewwww="<<newgraphNodeAnew.getCartesianX()<<endl;
-			cout<<"YAnewww="<<newgraphNodeAnew.getCartesianY()<<endl;		
 	      
        }
         for (xml_node<> * length= road_node->first_node("Length"); length; length=length->next_sibling()){
-	       
 	       newroadNode.setLength(atoi(length->value()));
-	       cout <<"New Length="<<newroadNode.getLength()<<endl;
 		   }
     
 	arrayRoads[j]=newroadNode;
     cout<<endl;
 	j++;
 	}
-	for (int i=0; i<2; i++){
+	
+	for (int i=0; i<l; i++){
 	graphNode newgraphNodeAa;
 	graphNode newgraphNodeAb;
 	newgraphNodeAa = arrayRoads[i].getgraphNodeA();
-	cout<< "X: " << newgraphNodeAa.getCartesianX() << "B: " <<newgraphNodeAa.getCartesianY();
+	cout<< "A(" << newgraphNodeAa.getCartesianX() << "," <<newgraphNodeAa.getCartesianY()<<") Type:"<<newgraphNodeAa.getType() <<"  -  ";
 	newgraphNodeAb = arrayRoads[i].getgraphNodeB();
-	cout<< "X: " << newgraphNodeAb.getCartesianX() << "B: " <<newgraphNodeAb.getCartesianY() << endl<<"L: " << arrayRoads[i].getLength() <<endl;
+	cout<< "B(" << newgraphNodeAb.getCartesianX() << "," <<newgraphNodeAb.getCartesianY() << ") Type:"<<newgraphNodeAb.getType() << "\nL: " << arrayRoads[i].getLength() <<endl;
 	}
 }
 
