@@ -48,6 +48,7 @@ public:
 private:
    int Type, CurrentSpeed, DriverType, Acceleration;
    int CartesianPosition[2];
+   int Timer;
    Position CurrentPosition, PreviousPosition;
    roadNode Path[];
 };

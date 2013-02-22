@@ -29,6 +29,7 @@ public:
 
 private:
    int Length;
+   int MaxSpeed;
    graphNode A,B;
 };
 

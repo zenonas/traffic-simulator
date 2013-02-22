@@ -24,6 +24,7 @@ public:
 
 private:
    int State;
+   int Timer;
 };
 
 #endif
