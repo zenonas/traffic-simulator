@@ -15,8 +15,8 @@ using namespace std;
 
 void *engine(void *arguments)
 {
-   struct gen_thread *p;
-   p = (struct gen_thread *)arguments;
+   struct thread_arguments *p;
+   p = (struct thread_arguments *)arguments;
    sleep(5);
 
   

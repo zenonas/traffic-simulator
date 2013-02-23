@@ -16,13 +16,13 @@ using namespace std;
 
 void *generator(void *arguments)
 {  
-   struct gen_thread *thread_args;
-   thread_args = (struct gen_thread *)arguments;
+   struct thread_arguments *thread_args;
+   thread_args = (struct thread_arguments *)arguments;
    
    cout << "Generator Thread with id : " << "1" << "  is created" << endl;
    srand(time(NULL));
 
-  while(!thread_args->gen_finished) {
+  while(!thread_args->finished) {
 
   	/*
 

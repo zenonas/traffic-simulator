@@ -28,10 +28,10 @@ void *inout(void *arguments)
     string stp;
     string show;
 
-    struct gen_thread *thread_args;
-    thread_args = (struct gen_thread *)arguments;
+    struct thread_arguments *thread_args;
+    thread_args = (struct thread_arguments *)arguments;
 
-    while(!thread_args->gen_finished)
+    while(!thread_args->finished)
     {
 	cout << "Input a Command: ";
 	cin >> command;
@@ -133,7 +133,7 @@ void *inout(void *arguments)
 	}
 
 	if (command == "StopSimulation"){
-		thread_args->gen_finished = true;
+		thread_args->finished = true;
 	}
 	if (command == "ShowStatistics"){
 		//ShowStatistics(w);
