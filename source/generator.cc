@@ -2,7 +2,7 @@
 
 Group Project 7CCSMGPR - Team B
 Created: 15/2/2013
-Updated: 15/2/2013
+Updated: 23/2/2013
 File: generator.cc
 Description: This file specifies the car generator thead of the system. Please treat as a main file and avoid appending code here but rather include any classes you want to use.
 Copyright (c) King's College London
@@ -39,7 +39,7 @@ void *generator(void *arguments)
 		int actual_no_to_create = rand() % thread_args->max_no_vehicles + 1;
 		if (actual_no_to_create < 10) actual_no_to_create = 10; //maybe revise
 		vehicle* temp_array[actual_no_to_create];
-		cout << "I SHALL CREATE: " << actual_no_to_create << endl;
+		//cout << "I SHALL CREATE: " << actual_no_to_create << endl;
 	/*	
 		STEP 3 DECIDE BASED RATIOS HOW MANY OF EACH VEHICLE TYPE YOU WILL CREATE
 		STEP 4 CREATE THE VEHICLES AND STORE IN AN TEMP ARRAY OF OBJECTS
@@ -71,7 +71,7 @@ void *generator(void *arguments)
 		STEP 5 PICK VEHICLES AT RANDOM AND PUSH IN QUEUE
 	*/
 		int curr_vehicles = actual_no_to_create;
-		for (int p=0; p<actual_no_to_create; p++) cout << "IN THREAD: " << temp_array[p]->vehi_id << endl;
+		//for (int p=0; p<actual_no_to_create; p++) cout << "IN THREAD: " << temp_array[p]->vehi_id << endl;
 		while (curr_vehicles > 0) {
 			int rand_pick = rand() % curr_vehicles;
 			thread_args->VWaitingQ.push(temp_array[rand_pick]);
