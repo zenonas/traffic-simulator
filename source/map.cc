@@ -2,7 +2,7 @@
 
 Group Project 7CCSMGPR - Team B
 Created: 16/2/2013
-Updated: 16/2/2013
+Updated: 23/2/2013
 File: map.cc
 Description: This file includes the implementation for the map class.
 
@@ -93,7 +93,6 @@ void map::ReadXMLFile()
 				 for (xml_node<> * type_node = node_node->first_node("Type"); type_node; type_node =type_node->next_sibling("Type"))
 				{ 
 					newgraphNodeB.setType(atoi(type_node->value()));
-					cout <<"Type="<<newgraphNodeB.getType()<<endl;
 				}
 				}	
 				else
@@ -102,7 +101,6 @@ void map::ReadXMLFile()
 				 for (xml_node<> * type_node = node_node->first_node("Type"); type_node; type_node =type_node->next_sibling("Type"))
 				{ 
 					newgraphNodeA.setType(atoi(type_node->value()));
-					cout <<"Type="<<newgraphNodeA.getType()<<endl;
 				}	
 				}			
 				
@@ -121,7 +119,6 @@ void map::ReadXMLFile()
 	       newroadNode.setMaxSpeed(atoi(maxSpeed->value()));
 		   }
 	arrayRoads[j]=newroadNode;
-    cout<<endl;
 	j++;
 	}
 	
@@ -131,7 +128,7 @@ void map::ReadXMLFile()
 	newgraphNodeAa = arrayRoads[i].getgraphNodeA();
 	cout<< "A(" << newgraphNodeAa.getCartesianX() << "," <<newgraphNodeAa.getCartesianY()<<") Type:"<<newgraphNodeAa.getType() <<"  -  ";
 	newgraphNodeAb = arrayRoads[i].getgraphNodeB();
-	cout<< "B(" << newgraphNodeAb.getCartesianX() << "," <<newgraphNodeAb.getCartesianY() << ") Type:"<<newgraphNodeAb.getType() << "\nL: " << arrayRoads[i].getLength() << " Speed: " << arrayRoads[i].getMaxSpeed() <<endl;
+	cout<< "B(" << newgraphNodeAb.getCartesianX() << "," <<newgraphNodeAb.getCartesianY() << ") Type:"<<newgraphNodeAb.getType() << "\nL: " << arrayRoads[i].getLength() << " Speed: " << arrayRoads[i].getMaxSpeed();
 	}
 }
 

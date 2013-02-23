@@ -82,7 +82,9 @@ void *generator(void *arguments)
 			curr_vehicles--;
 		}	
 	/* STEP 7: WAIT FOR THE NEXT ROUND DEPENDING ON THE SLEEP TIMER */
+
 		sleep(thread_args->sleep_time);
+
 
 
   }
