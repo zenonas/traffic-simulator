@@ -23,14 +23,14 @@ Copyright (c) King's College London
 #include "roadNode.cc"
 #include "trafficLight.cc"
 
-#include <ogdf/basic/Graph.h>
-#include <ogdf/basic/GraphAttributes.h>
+//#include <ogdf/basic/Graph.h>
+//#include <ogdf/basic/GraphAttributes.h>
 #include "../lib/DLList.cc"
 #include <queue>
 #include "th_structs.h"
 
 using namespace std;
-using namespace ogdf;
+//using namespace ogdf;
 
 
 int main ()
@@ -117,7 +117,7 @@ Graph G;
       cout << "OK!" << endl;
       
       cout << "Creating thread: I/O... ";
-      rc = pthread_create(&threads[2], NULL, inout, (void*)2);
+      rc = pthread_create(&threads[2], NULL, inout, (void*)&generator_args);
       if (rc){
          cout << "Error:unable to create thread," << rc << endl;
          return(-1);
@@ -149,10 +149,10 @@ Graph G;
       }
       cout << "I/O Thread completed and exiting with status :" << status << endl;
    
-      while (!generator_args.VWaitingQ.empty()) {
+     /* while (!generator_args.VWaitingQ.empty()) {
          cout << "(OUTSIDE THREAD) TYPE: " << generator_args.VWaitingQ.front()->vehi_id << endl;
          generator_args.VWaitingQ.pop();
-      }
+      }*/
    cout << "Main program exiting." << endl;
    pthread_exit(NULL);
 }
