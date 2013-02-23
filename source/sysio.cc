@@ -2,7 +2,7 @@
 
 Group Project 7CCSMGPR - Team B
 Created: 15/2/2013
-Updated: 22/2/2013
+Updated: 23/2/2013
 File: sysio.cc
 Description: This file specifies the input and output thread of the system
 
@@ -36,7 +36,7 @@ void *inout(void *arguments)
 	cout << "Input a Command: ";
 	cin >> command;
 	while ( command != "novehicles" && command != "vehicle-ratio" &&
-			command != "driver-ratio" && command != "SetMaxSpeed" && 
+			command != "driver-ratio" && 
 			command != "ToggleTrafficLights" && command != "stop" &&
             command != "ShowStatistics")
 	{
@@ -110,19 +110,6 @@ void *inout(void *arguments)
 		thread_args->driver_ratios[0] = normalr;
 		thread_args->driver_ratios[1] = cautiousr;
 		thread_args->driver_ratios[2] = aggressiver;
-	}
-
-	if (command == "SetMaxSpeed")
-	{
-		cout << "Insert Maximum Speed: ";
-		while (!(cin >> max)){
-				cin.clear();
-				cin.ignore(numeric_limits<streamsize>::max(), '\n');
-				cout << "Invalid input! Insert Maximum Speed: ";			
-		}
-
-
-		//SetMaxSpeed(speed);
 	}
 
 	if (command == "ToggleTrafficLights")

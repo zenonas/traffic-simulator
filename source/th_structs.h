@@ -2,7 +2,7 @@
 
 Group Project 7CCSMGPR - Team B
 Created: 16/2/2013
-Updated: 16/2/2013
+Updated: 23/2/2013
 File: th_structs.h
 Description: This file includes the main function of the system, handling our different threads.
 
