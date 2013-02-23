@@ -12,6 +12,8 @@ Copyright (c) King's College London
 #define map_h
 
 #include "roadNode.h"
+#include <DLList.h>
+# include <vector>
 using namespace std;
 
 class map
@@ -22,6 +24,7 @@ public:
  
    void ReadXMLFile();
    void ConstructMap();
+vector<DChain<int> > AllPaths; 
 
 private:
    roadNode Roads[];

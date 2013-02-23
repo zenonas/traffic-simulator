@@ -15,17 +15,18 @@ Copyright (c) King's College London
 #include <stdlib.h>
 #include <fstream>
 #include <vector>
+#include <DLList.cc>
 #include <rapidxml.hpp>
 
 using namespace rapidxml;
 using namespace std;
 
 map::map(){
-
+	  
 }
 
 map::~map(){
-
+ 
 }
 
 
@@ -118,6 +119,7 @@ void map::ReadXMLFile()
 	for (xml_node<> * maxSpeed= road_node->first_node("MaxSpeed"); maxSpeed; maxSpeed=maxSpeed->next_sibling()){
 	       newroadNode.setMaxSpeed(atoi(maxSpeed->value()));
 		   }
+		  newroadNode.setId(j+1);
 	arrayRoads[j]=newroadNode;
 	j++;
 	}
@@ -128,7 +130,8 @@ void map::ReadXMLFile()
 	newgraphNodeAa = arrayRoads[i].getgraphNodeA();
 	cout<< "A(" << newgraphNodeAa.getCartesianX() << "," <<newgraphNodeAa.getCartesianY()<<") Type:"<<newgraphNodeAa.getType() <<"  -  ";
 	newgraphNodeAb = arrayRoads[i].getgraphNodeB();
-	cout<< "B(" << newgraphNodeAb.getCartesianX() << "," <<newgraphNodeAb.getCartesianY() << ") Type:"<<newgraphNodeAb.getType() << "\nL: " << arrayRoads[i].getLength() << " Speed: " << arrayRoads[i].getMaxSpeed();
+	cout<< "B(" << newgraphNodeAb.getCartesianX() << "," <<newgraphNodeAb.getCartesianY() <<") Type:"<<newgraphNodeAb.getType() << " Id:"<< arrayRoads[i].getId()<<" L: " << arrayRoads[i].getLength() << " Speed: " << arrayRoads[i].getMaxSpeed()<<endl;
+	
 	}
 }
 

@@ -28,10 +28,13 @@ public:
    int getLength();
    void setMaxSpeed(int x);
    int getMaxSpeed();
+   void setId(int x);
+   int getId();
 
 private:
    int Length;
    int MaxSpeed;
+   int Id;
    graphNode A,B;
 };
 
