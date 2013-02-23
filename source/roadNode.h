@@ -26,6 +26,8 @@ public:
    graphNode getgraphNodeB();
    void setLength(int l);
    int getLength();
+   void setMaxSpeed(int x);
+   int getMaxSpeed();
 
 private:
    int Length;

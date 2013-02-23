@@ -47,4 +47,12 @@ int roadNode::getLength(){
 	return Length;
 }
 
+void roadNode::setMaxSpeed(int s){
+	MaxSpeed=s;
+}
+
+int roadNode::getMaxSpeed(){
+	return MaxSpeed;
+}
+
 

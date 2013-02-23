@@ -2,7 +2,7 @@
 
 Group Project 7CCSMGPR - Team B
 Created: 16/2/2013
-Updated: 16/2/2013
+Updated: 23/2/2013
 File: map.h
 Description: This file includes the definition for the map class.
 
@@ -19,9 +19,7 @@ class map
 public:
    map();   
    ~map();
-  
-   void setMaxSpeed(int x);
-   int getMaxSpeed();
+ 
    void ReadXMLFile();
    void ConstructMap();
 

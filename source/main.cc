@@ -40,7 +40,7 @@ int main ()
    generator_args.driver_ratios[2] = 0.15; //aggressive (nai stin ellada imaste)
    generator_args.arg_changed = false;
    generator_args.sleep_time = 3; // this may change
-
+   
 //
 //read xml file to construct map
    map mymap;

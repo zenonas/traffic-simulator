@@ -13,6 +13,7 @@
 <Type name="type">2</Type>
 </Node>
 <Length name="length">50</Length>
+<MaxSpeed name="maxSpeed">100</MaxSpeed>
 </Road>
 
 <Road name="B">
@@ -28,6 +29,7 @@
 <Type name="type">2</Type>
 </Node>
 <Length name="length">40</Length>
+<MaxSpeed name="maxSpeed">100</MaxSpeed>
 </Road>
 
 <Road name="C">
@@ -43,6 +45,7 @@
 <Type name="type">2</Type>
 </Node>
 <Length name="length">80</Length>
+<MaxSpeed name="maxSpeed">80</MaxSpeed>
 </Road>
 
 <Road name="D">
@@ -58,6 +61,7 @@
 <Type name="type">2</Type>
 </Node>
 <Length name="length">80</Length>
+<MaxSpeed name="maxSpeed">80</MaxSpeed>
 </Road>
 
 <Road name="E">
@@ -73,6 +77,7 @@
 <Type name="type">2</Type>
 </Node>
 <Length name="length">80</Length>
+<MaxSpeed name="maxSpeed">80</MaxSpeed>
 </Road>
 
 <Road name="F">
@@ -88,6 +93,7 @@
 <Type name="type">2</Type>
 </Node>
 <Length name="length">80</Length>
+<MaxSpeed name="maxSpeed">100</MaxSpeed>
 </Road>
 
 </Map>

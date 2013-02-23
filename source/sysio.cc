@@ -9,15 +9,16 @@ Description: This file specifies the input and output thread of the system
 Copyright (c) King's College London
 
 */
-#include<string.h>
-#include<stdlib.h>
-#include<iostream> 
-#include<limits>
+#include <string.h>
+#include <stdlib.h>
+#include <iostream> 
+#include <limits>
 
 using namespace std;
 
 void *inout(void *arguments)
 {
+
     string command;
     int num;
     double crat, brat, lrat;
@@ -138,7 +139,6 @@ void *inout(void *arguments)
 		//ShowStatistics(w);
 	}
   }
-
 
    pthread_exit(NULL);
 }

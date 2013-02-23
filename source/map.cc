@@ -47,7 +47,7 @@ void map::ReadXMLFile()
 	int l=0;
 	for (xml_node<> * road_node = root_node->first_node("Road"); road_node; road_node =road_node->next_sibling("Road"))
 	{
-	l++;
+		l++;
 	}
 	roadNode arrayRoads[l];
 	for (xml_node<> * road_node = root_node->first_node("Road"); road_node; road_node =road_node->next_sibling("Road"))
@@ -57,6 +57,7 @@ void map::ReadXMLFile()
 		 graphNode newgraphNodeB;
 
 		int i=0;	
+
         for (xml_node<> * node_node = road_node->first_node("Node"); node_node; node_node =node_node->next_sibling("Node"))
 	    {  
              if (i%2!=0)
@@ -116,6 +117,9 @@ void map::ReadXMLFile()
 	       newroadNode.setLength(atoi(length->value()));
 		   }
     
+	for (xml_node<> * maxSpeed= road_node->first_node("MaxSpeed"); maxSpeed; maxSpeed=maxSpeed->next_sibling()){
+	       newroadNode.setMaxSpeed(atoi(maxSpeed->value()));
+		   }
 	arrayRoads[j]=newroadNode;
     cout<<endl;
 	j++;
@@ -127,7 +131,7 @@ void map::ReadXMLFile()
 	newgraphNodeAa = arrayRoads[i].getgraphNodeA();
 	cout<< "A(" << newgraphNodeAa.getCartesianX() << "," <<newgraphNodeAa.getCartesianY()<<") Type:"<<newgraphNodeAa.getType() <<"  -  ";
 	newgraphNodeAb = arrayRoads[i].getgraphNodeB();
-	cout<< "B(" << newgraphNodeAb.getCartesianX() << "," <<newgraphNodeAb.getCartesianY() << ") Type:"<<newgraphNodeAb.getType() << "\nL: " << arrayRoads[i].getLength() <<endl;
+	cout<< "B(" << newgraphNodeAb.getCartesianX() << "," <<newgraphNodeAb.getCartesianY() << ") Type:"<<newgraphNodeAb.getType() << "\nL: " << arrayRoads[i].getLength() << " Speed: " << arrayRoads[i].getMaxSpeed() <<endl;
 	}
 }
 
