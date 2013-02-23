@@ -39,7 +39,7 @@ void *generator(void *arguments)
 		int actual_no_to_create = rand() % thread_args->max_no_vehicles + 1;
 		if (actual_no_to_create < 10) actual_no_to_create = 10; //maybe revise
 		vehicle* temp_array[actual_no_to_create];
-		//cout << "I SHALL CREATE: " << actual_no_to_create << endl;
+		cout << "I SHALL CREATE: " << actual_no_to_create << endl;
 	/*	
 		STEP 3 DECIDE BASED RATIOS HOW MANY OF EACH VEHICLE TYPE YOU WILL CREATE
 		STEP 4 CREATE THE VEHICLES AND STORE IN AN TEMP ARRAY OF OBJECTS

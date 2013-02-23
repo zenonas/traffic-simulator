@@ -35,26 +35,26 @@ void *inout(void *arguments)
     {
 	cout << "Input a Command: ";
 	cin >> command;
-	while ( command != "SetNoVehicles" && command != "SetVehicleTRatio" &&
-			command != "SetDriverTRatio" && command != "SetMaxSpeed" && 
-			command != "ToggleTrafficLights" && command != "StopSimulation" &&
+	while ( command != "novehicles" && command != "vehicle-ratio" &&
+			command != "driver-ratio" && command != "SetMaxSpeed" && 
+			command != "ToggleTrafficLights" && command != "stop" &&
             command != "ShowStatistics")
 	{
 		cout << "Invalid Command. Input another Command: "; 
 		cin >> command ; 
 	}
 
-	if (command == "SetNoVehicles")
+	if (command == "novehicles")
 	{
-		cout << "Insert number of Vehicles: " << endl;
+		cout << "Insert max number of Vehicles to be created: " << endl;
 		while (!(cin >> num)){
 			cin.clear();
 			cin.ignore(numeric_limits<streamsize>::max(), '\n');
-			cout << "Invalid input! Insert number of Vehicles: ";
+			cout << "Invalid input! Insert max number of Vehicles to be created: ";
 		}		
-		//SetNumVehicles(num);
+		thread_args->max_no_vehicles = num;
 	}
-	if (command == "SetVehicleTRatio")
+	if (command == "vehicle-ratio")
 	{
 		do{
 			cout << "Insert Car Ratio: ";
@@ -63,7 +63,7 @@ void *inout(void *arguments)
 				cin.ignore(numeric_limits<streamsize>::max(), '\n');
 				cout << "Invalid input! Insert Car Ratio: ";
 			}
-				
+					
 			cout << "Insert Bus Ratio: ";
 			while (!(cin >> brat)){
 				cin.clear();
@@ -78,10 +78,12 @@ void *inout(void *arguments)
 			}
 		}while (crat + brat + lrat != 1);
 		
-		//SetVehicleTypeRatio(cratio, bratio, lratio);
+		thread_args->vehicle_ratios[0] = crat;
+		thread_args->vehicle_ratios[1] = brat;
+		thread_args->vehicle_ratios[2] = lrat;
 	}
 
-	if (command == "SetDriverTRatio")
+	if (command == "driver-ratio")
 	{
 		do{
 			cout << "Insert Normal Driver Ratio: ";
@@ -105,7 +107,9 @@ void *inout(void *arguments)
 
 		} while (normalr + cautiousr + aggressiver != 1);
 
-		//SetDriverRatio(normalratio, cautiousratio, aggressiveratio);
+		thread_args->driver_ratios[0] = normalr;
+		thread_args->driver_ratios[1] = cautiousr;
+		thread_args->driver_ratios[2] = aggressiver;
 	}
 
 	if (command == "SetMaxSpeed")
@@ -132,7 +136,8 @@ void *inout(void *arguments)
 		//SetTrafficLights(tdelay);
 	}
 
-	if (command == "StopSimulation"){
+	if (command == "stop"){
+		//call for statistics
 		thread_args->finished = true;
 	}
 	if (command == "ShowStatistics"){

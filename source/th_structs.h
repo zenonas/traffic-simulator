@@ -17,8 +17,9 @@ Copyright (c) King's College London
 #include <queue>
 
 struct thread_arguments {
-      bool finished;
-      int max_no_vehicles;
+      bool finished; //global finished
+      bool engine_change;
+      int max_no_vehicles; 
       double vehicle_ratios[3];
       double driver_ratios[3];
       bool arg_changed;
