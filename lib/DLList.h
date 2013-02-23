@@ -9,7 +9,8 @@ Description: This is the header file describing the Doubly Linked List Class.
 Copyright (c) King's College London
 
 */
-
+#ifndef DLList_H
+#define DLList_H
 
 using namespace std;
 
@@ -39,3 +40,5 @@ class DChain{
    private:
 	   DChainNode<T> *first; // pointer to first node
 };
+
+#endif

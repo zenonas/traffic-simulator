@@ -15,7 +15,7 @@ Copyright (c) King's College London
 
 vehicle::vehicle(int id){
 	vehi_id = id;
-	CurrentSpeed = 0;
+	CurrentSpeed = 1;
 	Acceleration = 0;
 	//calculatePath();
 }
