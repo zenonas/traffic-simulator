@@ -2,7 +2,7 @@
 
 Group Project 7CCSMGPR - Team B
 Created: 16/2/2013
-Updated: 23/2/2013
+Updated: 24/2/2013
 File: map.cc
 Description: This file includes the implementation for the map class.
 
@@ -15,7 +15,6 @@ Copyright (c) King's College London
 #include <stdlib.h>
 #include <fstream>
 #include <vector>
-#include <DLList.cc>
 #include <rapidxml.hpp>
 
 using namespace rapidxml;
@@ -32,6 +31,13 @@ map::~map(){
 
 void map::ReadXMLFile()
 {
+	for (int i = 0; i < 10; i++) {
+    vector<int> onePath; // Create an empty row
+    for (int j = 0; j < 20; j++) {
+        onePath.push_back(i * j); // Add an element (column) to the row
+    }
+    allPaths.push_back(onePath); // Add the row to the main vector
+}
 	cout << "Parsing my road..." << endl;
 	xml_document<> doc;
 	xml_node<> * root_node;
@@ -50,7 +56,6 @@ void map::ReadXMLFile()
 	{
 		l++;
 	}
-	roadNode arrayRoads[l];
 	for (xml_node<> * road_node = root_node->first_node("Road"); road_node; road_node =road_node->next_sibling("Road"))
 	{
 		 roadNode newroadNode;
@@ -120,23 +125,53 @@ void map::ReadXMLFile()
 	       newroadNode.setMaxSpeed(atoi(maxSpeed->value()));
 		   }
 		  newroadNode.setId(j+1);
-	arrayRoads[j]=newroadNode;
+	unfRoads.push_back(newroadNode);
 	j++;
 	}
 	
 	for (int i=0; i<l; i++){
 	graphNode newgraphNodeAa;
 	graphNode newgraphNodeAb;
-	newgraphNodeAa = arrayRoads[i].getgraphNodeA();
+	newgraphNodeAa = unfRoads[i].getgraphNodeA();
 //	cout<< "A(" << newgraphNodeAa.getCartesianX() << "," <<newgraphNodeAa.getCartesianY()<<") Type:"<<newgraphNodeAa.getType() <<"  -  ";
-	newgraphNodeAb = arrayRoads[i].getgraphNodeB();
+	newgraphNodeAb = unfRoads[i].getgraphNodeB();
 //	cout<< "B(" << newgraphNodeAb.getCartesianX() << "," <<newgraphNodeAb.getCartesianY() << ") Type:"<<newgraphNodeAb.getType() << "\nL: " << arrayRoads[i].getLength() << " Speed: " << arrayRoads[i].getMaxSpeed();
-	cout<< "B(" << newgraphNodeAb.getCartesianX() << "," <<newgraphNodeAb.getCartesianY() <<") Type:"<<newgraphNodeAb.getType() << " Id:"<< arrayRoads[i].getId()<<" L: " << arrayRoads[i].getLength() << " Speed: " << arrayRoads[i].getMaxSpeed()<<endl;
+	cout<< "B(" << newgraphNodeAb.getCartesianX() << "," <<newgraphNodeAb.getCartesianY() <<") Type:"<<newgraphNodeAb.getType() << " Id:"<< unfRoads[i].getId()<<" L: " << unfRoads[i].getLength() << " Speed: " << unfRoads[i].getMaxSpeed()<<endl;
 	}
+	ConstructMap();
 }
 
 void map::ConstructMap(){
-	ReadXMLFile();
+
+for (int i=0; i<unfRoads.size(); i++){
+	graphNode graphNodeATestFirst;
+	graphNode graphNodeBTestFirst;
+	graphNodeATestFirst = unfRoads[i].getgraphNodeA();
+	graphNodeBTestFirst = unfRoads[i].getgraphNodeB();
+	for (int j=0; i<unfRoads.size(); i++){
+		graphNode graphNodeAMatcher;
+		graphNode graphNodeBMatcher;
+		graphNodeAMatcher = unfRoads[j].getgraphNodeA();
+		graphNodeBMatcher = unfRoads[j].getgraphNodeB();
+		if (i != j) { //so that we don't match the same roadNodes
+			if ((graphNodeATestFirst.getCartesianX() == graphNodeAMatcher.getCartesianX() || graphNodeBTestFirst.getCartesianX() == graphNodeBMatcher.getCartesianX())) {
+				//we know that the x matches
+				if ((graphNodeATestFirst.getCartesianY() == graphNodeAMatcher.getCartesianY() || graphNodeBTestFirst.getCartesianY() == graphNodeBMatcher.getCartesianY())) {
+				 /*we now know we have have the two edges connected
+				HERE YOU NEED A VECTOR OR 2-DIMENSIONAL ARRAY
+				TO STORE THE 2 MATCHING IDS
+				FROM THAT HUGE TABLE WE WILL BUILD THE FILTERED PATHS IN THE allPaths vector i defined
+				*/
+					cout << "match: " << unfRoads[i].getId() << "with " << unfRoads[j].getId() << endl;
+				}					
+			}			
+		}
+			
+
+		
+			
+		}	
+	}
 }
 
 
