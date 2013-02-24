@@ -18,8 +18,19 @@ void *engine(void *arguments)
    struct thread_arguments *thread_args;
    thread_args = (struct thread_arguments *)arguments;
    
+
+
+
 while (!thread_args->finished) {
 
+	while(!thread_args->VWaitingQ.empty) {
+
+		//STEP 1: CALL THE SPLIT TO ENTRY POINT QUEUES FUNCTION
+
+		//STEP 2: 
+	
+
+	}
 
 
 	sleep(thread_args->sleep_time);

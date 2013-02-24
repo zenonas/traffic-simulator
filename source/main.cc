@@ -17,7 +17,6 @@ Copyright (c) King's College London
 #include "engine.cc"
 #include "sysio.cc"
 #include "map.h"
-#include "../lib/DLList.h"
 #include <queue>
 #include "th_structs.h"
 
@@ -44,8 +43,7 @@ int main ()
    
 //
 //read xml file to construct map
-   map mymap;
-   mymap.ReadXMLFile();
+   th_args.mymap.ReadXMLFile();
 /* DEFINING ENGINE THREAD ARGUEMENTS */
 
 /* DEFINING I/O THREAD ARGUEMENT */
@@ -67,29 +65,29 @@ int main ()
    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
    
-      cout << "Creating thread: Vehicle Generator... ";
+ //     cout << "Creating thread: Vehicle Generator... ";
       rc = pthread_create(&threads[0], NULL, generator, (void*)&th_args);
       if (rc){
-         cout << "Error:unable to create thread," << rc << endl;
+       cout << "Error:unable to create thread," << rc << endl;
          return(-1);
       }
-      cout << "OK!" << endl;
+     // cout << "OK!" << endl;
 
-      cout << "Creating thread: Engine... ";
+   //   cout << "Creating thread: Engine... ";
       rc = pthread_create(&threads[1], NULL, engine, (void*)&th_args);
       if (rc){
          cout << "Error:unable to create thread," << rc << endl;
          return(-1);
       }
-      cout << "OK!" << endl;
+      //cout << "OK!" << endl;
       
-      cout << "Creating thread: I/O... ";
+     // cout << "Creating thread: I/O... ";
       rc = pthread_create(&threads[2], NULL, inout, (void*)&th_args);
       if (rc){
          cout << "Error:unable to create thread," << rc << endl;
          return(-1);
       }
-      cout << "OK!" << endl;
+      //cout << "OK!" << endl;
    
 
    // free attribute and wait for the other threads

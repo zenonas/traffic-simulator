@@ -30,6 +30,8 @@ public:
    int getMaxSpeed();
 
 private:
+   int laneid;
+   int direction[];
    int Length;
    int MaxSpeed;
    graphNode A,B;

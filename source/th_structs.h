@@ -14,6 +14,8 @@ Copyright (c) King's College London
 #define A_TH_STRC
 
 #include "vehicle.h"
+#include "map.h"
+#include <DLList.h>
 #include <queue>
 
 struct thread_arguments {
@@ -25,6 +27,7 @@ struct thread_arguments {
       bool arg_changed;
       int sleep_time;
       queue<vehicle *> VWaitingQ;
+      map mymap;
 };
 
 

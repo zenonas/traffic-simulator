@@ -31,7 +31,7 @@ public:
 
 private:
    int CartesianX, CartesianY;
-   int Type;
+   int Type; // 0: nothing 1: entry/exit point and traffic light 2: only traffic light
    //trafficLight will be null if not trafficLight
    trafficLight* trafficLights;
 };
