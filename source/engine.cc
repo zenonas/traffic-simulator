@@ -22,7 +22,7 @@ void *engine(void *arguments)
 
 
 while (!thread_args->finished) {
-
+/*
 	while(!thread_args->VWaitingQ.empty) {
 
 		//STEP 1: CALL THE SPLIT TO ENTRY POINT QUEUES FUNCTION
@@ -31,7 +31,7 @@ while (!thread_args->finished) {
 	
 
 	}
-
+*/
 
 	sleep(thread_args->sleep_time);
 }
