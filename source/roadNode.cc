@@ -55,4 +55,11 @@ int roadNode::getMaxSpeed(){
 	return MaxSpeed;
 }
 
+void roadNode::setId(int id){
+	Id=id;
+}
+
+int roadNode::getId(){
+	return Id;
+}
 

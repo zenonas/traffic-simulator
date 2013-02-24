@@ -66,8 +66,8 @@ int* vehicle::getCartesianPosition(){
 }
 
 void vehicle::setCurrentPosition(Position pos){
-	CurrentPosition.x =pos.x;
-	CurrentPosition.y =pos.y;
+	CurrentPosition.roadNodeID=pos.roadNodeID;
+	CurrentPosition.lane =pos.lane;
 	CurrentPosition.p =pos.p;
 }
 
@@ -76,9 +76,9 @@ Position vehicle::getCurrentPosition(){
 }
 
 void vehicle::setPreviousPosition(Position pos){
-	PreviousPosition.x =pos.x;
-	PreviousPosition.y =pos.y;
-	PreviousPosition.p =pos.p;
+	CurrentPosition.roadNodeID=pos.roadNodeID;
+	CurrentPosition.lane =pos.lane;
+	CurrentPosition.p =pos.p;
 }
 
 Position vehicle::getPreviousPosition(){

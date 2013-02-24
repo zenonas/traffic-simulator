@@ -17,8 +17,8 @@ Copyright (c) King's College London
 using namespace std;
 struct Position
     {
-        graphNode x;
-        graphNode y;
+        int roadNodeID;
+        int lane;
         int p;
     };
 
