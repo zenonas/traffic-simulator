@@ -2,7 +2,7 @@
 
 Group Project 7CCSMGPR - Team B
 Created: 15/2/2013
-Updated: 23/2/2013
+Updated: 16/2/2013
 File: main.cc
 Description: This file includes the main function of the system, handling our different threads.
 
@@ -17,6 +17,7 @@ Copyright (c) King's College London
 #include "engine.cc"
 #include "sysio.cc"
 #include "map.h"
+#include "../lib/DLList.h"
 #include <queue>
 #include "th_structs.h"
 
@@ -25,25 +26,29 @@ using namespace std;
 
 int main ()
 {
+//construct map by reading XML File, find connected roadNodes, find all possible paths
+   map mymap;
+//print all paths
+   mymap.printAllPaths();
+//get vector with all paths
+   vector<vector<int> > paths = mymap.getAllPaths();
+
 
 /* DEFINING GENERATOR THREAD ARGUMENTS */
 
-   thread_arguments th_args;
-   th_args.finished = false;
-   th_args.max_no_vehicles = 20;
-   th_args.vehicle_ratios[0] = 0.7; // cars
-   th_args.vehicle_ratios[1] = 0.25; // bus
-   th_args.vehicle_ratios[2] = 0.05; // lorries
-   th_args.driver_ratios[0] = 0.65; //normal
-   th_args.driver_ratios[1] = 0.2; //cautious
-   th_args.driver_ratios[2] = 0.15; //aggressive (nai stin ellada imaste)
-   th_args.arg_changed = false;
-   th_args.sleep_time = 3; // this may change
-   th_args.engine_change = false;
-   
-//
-//read xml file to construct map
-   th_args.mymap.ReadXMLFile();
+   gen_thread generator_args;
+   generator_args.gen_finished = false;
+   generator_args.max_no_vehicles = 20;
+   generator_args.vehicle_ratios[0] = 0.7; // cars
+   generator_args.vehicle_ratios[1] = 0.25; // bus
+   generator_args.vehicle_ratios[2] = 0.05; // lorries
+   generator_args.driver_ratios[0] = 0.65; //normal
+   generator_args.driver_ratios[1] = 0.2; //cautious
+   generator_args.driver_ratios[2] = 0.15; //aggressive (nai stin ellada imaste)
+   generator_args.arg_changed = false;
+   generator_args.sleep_time = 3; // this may change
+   generator_args.mymap = mymap;   
+
 /* DEFINING ENGINE THREAD ARGUEMENTS */
 
 /* DEFINING I/O THREAD ARGUEMENT */
@@ -65,29 +70,29 @@ int main ()
    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
    
- //     cout << "Creating thread: Vehicle Generator... ";
-      rc = pthread_create(&threads[0], NULL, generator, (void*)&th_args);
+      cout << "Creating thread: Vehicle Generator... ";
+      rc = pthread_create(&threads[0], NULL, generator, (void*)&generator_args);
       if (rc){
-       cout << "Error:unable to create thread," << rc << endl;
+         cout << "Error:unable to create thread," << rc << endl;
          return(-1);
       }
-     // cout << "OK!" << endl;
+      cout << "OK!" << endl;
 
-   //   cout << "Creating thread: Engine... ";
-      rc = pthread_create(&threads[1], NULL, engine, (void*)&th_args);
+      cout << "Creating thread: Engine... ";
+      rc = pthread_create(&threads[1], NULL, engine, (void*)&generator_args);
       if (rc){
          cout << "Error:unable to create thread," << rc << endl;
          return(-1);
       }
-      //cout << "OK!" << endl;
+      cout << "OK!" << endl;
       
-     // cout << "Creating thread: I/O... ";
-      rc = pthread_create(&threads[2], NULL, inout, (void*)&th_args);
+      cout << "Creating thread: I/O... ";
+      rc = pthread_create(&threads[2], NULL, inout, (void*)&generator_args);
       if (rc){
          cout << "Error:unable to create thread," << rc << endl;
          return(-1);
       }
-      //cout << "OK!" << endl;
+      cout << "OK!" << endl;
    
 
    // free attribute and wait for the other threads
@@ -114,9 +119,9 @@ int main ()
       }
       cout << "I/O Thread completed and exiting with status :" << status << endl;
    
-     /* while (!th_args.VWaitingQ.empty()) {
-         cout << "(OUTSIDE THREAD) TYPE: " << th_args.VWaitingQ.front()->vehi_id << endl;
-         th_args.VWaitingQ.pop();
+     /* while (!generator_args.VWaitingQ.empty()) {
+         cout << "(OUTSIDE THREAD) TYPE: " << generator_args.VWaitingQ.front()->vehi_id << endl;
+         generator_args.VWaitingQ.pop();
       }*/
    cout << "Main program exiting." << endl;
    pthread_exit(NULL);

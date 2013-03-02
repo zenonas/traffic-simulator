@@ -16,13 +16,13 @@ using namespace std;
 
 void *generator(void *arguments)
 {  
-   struct thread_arguments *thread_args;
-   thread_args = (struct thread_arguments *)arguments;
+   struct gen_thread *thread_args;
+   thread_args = (struct gen_thread *)arguments;
    
    cout << "Generator Thread with id : " << "1" << "  is created" << endl;
    srand(time(NULL));
 
-  while(!thread_args->finished) {
+  while(!thread_args->gen_finished) {
 
   	/*
 
@@ -39,15 +39,18 @@ void *generator(void *arguments)
 		int actual_no_to_create = rand() % thread_args->max_no_vehicles + 1;
 		if (actual_no_to_create < 10) actual_no_to_create = 10; //maybe revise
 		vehicle* temp_array[actual_no_to_create];
-		cout << "I SHALL CREATE: " << actual_no_to_create << endl;
+		//cout << "I SHALL CREATE: " << actual_no_to_create << endl;
 	/*	
 		STEP 3 DECIDE BASED RATIOS HOW MANY OF EACH VEHICLE TYPE YOU WILL CREATE
 		STEP 4 CREATE THE VEHICLES AND STORE IN AN TEMP ARRAY OF OBJECTS
 	*/
+		vector<roadNode> roads;
+		roads= thread_args->mymap.getunfRoads();
 		for (int z=0; z<actual_no_to_create;z++) temp_array[z] = NULL; //initalize array to null pointers
-
 		for (int i=0; i<actual_no_to_create;i++) {
-			temp_array[i] = new vehicle(i);
+			int entryP= rand() % roads.size() +1 ;
+			int exitP= rand() % roads.size() + 1;
+			temp_array[i] = new vehicle(i, entryP, exitP, thread_args->mymap);
 			int type_no = rand() % 100 + 1;
 			if (type_no <= thread_args->vehicle_ratios[0]*100) {
 				temp_array[i]->setType(0); // car

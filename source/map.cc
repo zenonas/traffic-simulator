@@ -21,28 +21,23 @@ using namespace rapidxml;
 using namespace std;
 
 map::map(){
-	  
+	ReadXMLFile();
+	findConnectedRoadNodes();
+	findAllPaths();
 }
 
 map::~map(){
- 
+
 }
 
-
+//Read XML file and construct roadNodes constisting of two graphNodes
 void map::ReadXMLFile()
 {
-	for (int i = 0; i < 10; i++) {
-    vector<int> onePath; // Create an empty row
-    for (int j = 0; j < 20; j++) {
-        onePath.push_back(i * j); // Add an element (column) to the row
-    }
-    allPaths.push_back(onePath); // Add the row to the main vector
-}
 	cout << "Parsing my road..." << endl;
 	xml_document<> doc;
 	xml_node<> * root_node;
 	// Read the xml file into a vector
-	ifstream theFile ("xmlfile.xml");
+	ifstream theFile ("xmlfile2.xml");
 	vector<char> buffer((istreambuf_iterator<char>(theFile)), istreambuf_iterator<char>());
 	buffer.push_back('\0');
 	// Parse the buffer using the xml file parsing library into doc 
@@ -52,22 +47,23 @@ void map::ReadXMLFile()
 	// Iterate over the brewerys
 	int j=0;
 	int l=0;
+
 	for (xml_node<> * road_node = root_node->first_node("Road"); road_node; road_node =road_node->next_sibling("Road"))
 	{
 		l++;
 	}
 	for (xml_node<> * road_node = root_node->first_node("Road"); road_node; road_node =road_node->next_sibling("Road"))
 	{
-		 roadNode newroadNode;
-		 graphNode newgraphNodeA;
-		 graphNode newgraphNodeB;
+		roadNode newroadNode;
+		graphNode newgraphNodeA;
+		graphNode newgraphNodeB;
 
 		int i=0;	
 
-        for (xml_node<> * node_node = road_node->first_node("Node"); node_node; node_node =node_node->next_sibling("Node"))
-	    {  
-             if (i%2!=0)
-			 {
+		for (xml_node<> * node_node = road_node->first_node("Node"); node_node; node_node =node_node->next_sibling("Node"))
+		{  
+			if (i%2!=0)
+			{
 				for (xml_node<> * point_node = node_node->first_node("Point"); point_node; point_node =point_node->next_sibling("Point"))
 				{
 					if (strcmp(point_node->first_attribute("name")->value(),"x")==0)
@@ -76,8 +72,7 @@ void map::ReadXMLFile()
 					}
 					else if(strcmp(point_node->first_attribute("name")->value(),"y")==0)
 						newgraphNodeB.setCartesianY(atoi(point_node->value()));
-				}
-						
+				}						
 			}
 			else
 			{
@@ -88,90 +83,161 @@ void map::ReadXMLFile()
 						newgraphNodeA.setCartesianX(atoi(point_node->value()));
 					}
 					else if(strcmp(point_node->first_attribute("name")->value(),"y")==0)
-							newgraphNodeA.setCartesianY(atoi(point_node->value()));
-				}
-              
-            }
-              	i++;
-              	
-              	if(i%2!=0)
-              	{
-				 for (xml_node<> * type_node = node_node->first_node("Type"); type_node; type_node =type_node->next_sibling("Type"))
+						newgraphNodeA.setCartesianY(atoi(point_node->value()));
+				}           
+			}
+			i++;            	
+			if(i%2!=0)
+			{
+				for (xml_node<> * type_node = node_node->first_node("Type"); type_node; type_node =type_node->next_sibling("Type"))
 				{ 
 					newgraphNodeB.setType(atoi(type_node->value()));
 				}
-				}	
-				else
-				{
-				
-				 for (xml_node<> * type_node = node_node->first_node("Type"); type_node; type_node =type_node->next_sibling("Type"))
+			}	
+			else
+			{
+				for (xml_node<> * type_node = node_node->first_node("Type"); type_node; type_node =type_node->next_sibling("Type"))
 				{ 
 					newgraphNodeA.setType(atoi(type_node->value()));
 				}	
-				}			
-				
-		    newroadNode.setgraphNodeA(newgraphNodeA);
+			}						
+			newroadNode.setgraphNodeA(newgraphNodeA);
 			newroadNode.setgraphNodeB(newgraphNodeB);
 			
 			graphNode newgraphNodeAnew;
-			newgraphNodeAnew = newroadNode.getgraphNodeA();
-	      
-       }
-        for (xml_node<> * length= road_node->first_node("Length"); length; length=length->next_sibling()){
-	       newroadNode.setLength(atoi(length->value()));
-		   }
-    
-	for (xml_node<> * maxSpeed= road_node->first_node("MaxSpeed"); maxSpeed; maxSpeed=maxSpeed->next_sibling()){
-	       newroadNode.setMaxSpeed(atoi(maxSpeed->value()));
-		   }
-		  newroadNode.setId(j+1);
-	unfRoads.push_back(newroadNode);
-	j++;
+			newgraphNodeAnew = newroadNode.getgraphNodeA();      
+		}
+		for (xml_node<> * length= road_node->first_node("Length"); length; length=length->next_sibling("Length")){
+			newroadNode.setLength(atoi(length->value()));
+		} 
+		for (xml_node<> * maxSpeed= road_node->first_node("MaxSpeed"); maxSpeed; maxSpeed=maxSpeed->next_sibling("MaxSpeed")){
+			newroadNode.setMaxSpeed(atoi(maxSpeed->value()));
+		}
+		newroadNode.setId(j+1);
+		unfRoads.push_back(newroadNode);
+		j++;
 	}
 	
 	for (int i=0; i<l; i++){
-	graphNode newgraphNodeAa;
-	graphNode newgraphNodeAb;
-	newgraphNodeAa = unfRoads[i].getgraphNodeA();
-//	cout<< "A(" << newgraphNodeAa.getCartesianX() << "," <<newgraphNodeAa.getCartesianY()<<") Type:"<<newgraphNodeAa.getType() <<"  -  ";
-	newgraphNodeAb = unfRoads[i].getgraphNodeB();
-//	cout<< "B(" << newgraphNodeAb.getCartesianX() << "," <<newgraphNodeAb.getCartesianY() << ") Type:"<<newgraphNodeAb.getType() << "\nL: " << arrayRoads[i].getLength() << " Speed: " << arrayRoads[i].getMaxSpeed();
-	cout<< "B(" << newgraphNodeAb.getCartesianX() << "," <<newgraphNodeAb.getCartesianY() <<") Type:"<<newgraphNodeAb.getType() << " Id:"<< unfRoads[i].getId()<<" L: " << unfRoads[i].getLength() << " Speed: " << unfRoads[i].getMaxSpeed()<<endl;
+		graphNode newgraphNodeAa;
+		graphNode newgraphNodeAb;
+		newgraphNodeAa = unfRoads[i].getgraphNodeA();
+		newgraphNodeAb = unfRoads[i].getgraphNodeB();
 	}
-	ConstructMap();
 }
 
-void map::ConstructMap(){
-
-for (int i=0; i<unfRoads.size(); i++){
+//find all connected roadnodes depending on x,y positions of their graphNodes
+void map::findConnectedRoadNodes(){
+	vector<int> temp;
 	graphNode graphNodeATestFirst;
 	graphNode graphNodeBTestFirst;
-	graphNodeATestFirst = unfRoads[i].getgraphNodeA();
-	graphNodeBTestFirst = unfRoads[i].getgraphNodeB();
-	for (int j=0; i<unfRoads.size(); i++){
-		graphNode graphNodeAMatcher;
-		graphNode graphNodeBMatcher;
-		graphNodeAMatcher = unfRoads[j].getgraphNodeA();
-		graphNodeBMatcher = unfRoads[j].getgraphNodeB();
+	graphNode graphNodeAMatcher;
+	graphNode graphNodeBMatcher;
+	for (int i=0; i<unfRoads.size(); i++){
+		graphNodeATestFirst = unfRoads[i].getgraphNodeA();
+		graphNodeBTestFirst = unfRoads[i].getgraphNodeB();
+		for (int j=0; j<unfRoads.size(); j++){
+			graphNodeAMatcher = unfRoads[j].getgraphNodeA();
+			graphNodeBMatcher = unfRoads[j].getgraphNodeB();
 		if (i != j) { //so that we don't match the same roadNodes
-			if ((graphNodeATestFirst.getCartesianX() == graphNodeAMatcher.getCartesianX() || graphNodeBTestFirst.getCartesianX() == graphNodeBMatcher.getCartesianX())) {
-				//we know that the x matches
-				if ((graphNodeATestFirst.getCartesianY() == graphNodeAMatcher.getCartesianY() || graphNodeBTestFirst.getCartesianY() == graphNodeBMatcher.getCartesianY())) {
-				 /*we now know we have have the two edges connected
-				HERE YOU NEED A VECTOR OR 2-DIMENSIONAL ARRAY
-				TO STORE THE 2 MATCHING IDS
-				FROM THAT HUGE TABLE WE WILL BUILD THE FILTERED PATHS IN THE allPaths vector i defined
-				*/
-					cout << "match: " << unfRoads[i].getId() << "with " << unfRoads[j].getId() << endl;
-				}					
+			if ((graphNodeATestFirst.getCartesianX() == graphNodeAMatcher.getCartesianX() && graphNodeATestFirst.getCartesianY() == graphNodeAMatcher.getCartesianY())) 
+			{
+				temp.push_back(unfRoads[i].getId());
+				temp.push_back(unfRoads[j].getId());
+				array.push_back( temp);
+			}
+			if ((graphNodeATestFirst.getCartesianX() == graphNodeBMatcher.getCartesianX() && graphNodeATestFirst.getCartesianY() == graphNodeBMatcher.getCartesianY()))
+			{
+				temp.push_back(unfRoads[i].getId());
+				temp.push_back(unfRoads[j].getId());
+				array.push_back( temp);
 			}			
-		}
-			
-
-		
-			
+			if ((graphNodeBTestFirst.getCartesianX() == graphNodeBMatcher.getCartesianX() && graphNodeBTestFirst.getCartesianY() == graphNodeBMatcher.getCartesianY()))
+			{
+				temp.push_back(unfRoads[i].getId());
+				temp.push_back(unfRoads[j].getId());
+				array.push_back( temp);
+			}			
+			if ((graphNodeBTestFirst.getCartesianX() == graphNodeAMatcher.getCartesianX() && graphNodeBTestFirst.getCartesianY() == graphNodeAMatcher.getCartesianY()))
+			{
+				temp.push_back(unfRoads[i].getId());
+				temp.push_back(unfRoads[j].getId());
+				array.push_back( temp);
+			}
+			temp.clear();
 		}	
 	}
 }
+//print our array with connected roadnodes
+/*for(int k=0; k<array.size(); k++){
+	for(int l=0; l<2; l++)
+		cout << array[k][l] << " ";
+cout << endl;
+}*/
+}
 
 
+//find all paths
+void map::findAllPaths (){
+	allPaths.clear();
+	vector<int> initial;
+	cout << "Find all possible paths...\n";
+	//call function that finds all possible paths
+	for (int s=0; s<unfRoads.size(); s++){
+		initial.push_back(unfRoads[s].getId());
+		find_childs(initial,unfRoads[s].getId(),array);
+		initial.clear();
+	}
+}
+
+//find all connected roadNodes with 'value' and contruct a path
+void map::find_childs(vector<int> initial, int value,vector<vector<int> > array){
+	vector<int> childs;
+	for(int k=0; k<array.size(); k++){
+		if(array[k][0] == value){
+			bool loop = false;
+			for(int j=0; j<initial.size(); j++)
+				if(initial[j]==array[k][1])
+					loop = true;
+                //prevent from going back
+				if(!loop){
+					childs.push_back(array[k][1]);
+					initial.push_back(array[k][1]);
+					find_childs(initial,array[k][1],array);
+					initial.pop_back();
+				}               
+		}
+	}
+	if(childs.size()==0){
+		allPaths.push_back(initial);
+		return;
+	}
+}
+
+
+//print all possible paths
+void map::printAllPaths(){
+	int length=0, speed=0;
+	cout << "Print all possible paths for every entry roadNode...\n";
+	for(int k=0; k<allPaths.size(); k++){
+		cout << k << ": ";
+		for(int l=0; l<allPaths[k].size(); l++){
+			cout << allPaths[k][l] << " ";
+			for (int i=0; i<unfRoads.size(); i++)
+				if (unfRoads[i].getId() == allPaths[k][l])
+					length = length + unfRoads[allPaths[k][l]-1].getLength();				
+		}
+		cout << "\t\tTotalLength:" << length << endl;
+		length=0;
+		speed=0;
+	}
+}
+
+//return vector that contains allPaths
+vector<vector<int> > map::getAllPaths (){
+	return allPaths;
+}
+
+vector<roadNode > map::getunfRoads(){
+	return unfRoads;
+}

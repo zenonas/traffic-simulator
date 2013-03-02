@@ -21,13 +21,21 @@ public:
    map();   
    ~map();
  
-   void ReadXMLFile();
-   void ConstructMap();
-   vector< vector<int> > allPaths;
+   void constructMap();
+   map returnMap();
+   void printAllPaths();
+   vector<vector<int> > getAllPaths();
+   vector<roadNode> getunfRoads();
 
 private:
-   roadNode Roads[];
+   void ReadXMLFile();
+   void findConnectedRoadNodes();
+   void findAllPaths();
+   void find_childs(vector<int> initial,int value,vector<vector<int> > array);
+
+   vector<vector<int> > array;
    vector<roadNode> unfRoads;
+   vector<vector<int> > allPaths;
 };
 
 #endif

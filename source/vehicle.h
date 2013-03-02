@@ -14,6 +14,9 @@ Copyright (c) King's College London
 
 #include "graphNode.h"
 #include "roadNode.h"
+#include "map.h"
+#include <vector>
+
 using namespace std;
 struct Position
     {
@@ -25,9 +28,13 @@ struct Position
 class vehicle
 {
 public:
-   vehicle(int id);   
+   vehicle(int id, int entryP, int exitP, map mymap);   
    ~vehicle();
    
+   void setEntryPoint(int entryP);
+   int getEntryPoint();
+   void setExitPoint(int exitP);
+   int getExitPoint();
    void setType(int type);
    int getType();
    void setCurrentSpeed(int x);
@@ -42,17 +49,19 @@ public:
    Position getCurrentPosition();
    void setPreviousPosition(Position C);
    Position getPreviousPosition();
-   void calculatePath();
-   roadNode* getPath();
-
+   void calculatePath(map mymap);
+   vector<int> getPath();
+   void printPath(map mymap);
    int vehi_id;
 
 private:
    int Type, CurrentSpeed, DriverType, Acceleration;
    int CartesianPosition[2];
    int Timer;
+   int entryPoint;
+   int exitPoint;
    Position CurrentPosition, PreviousPosition;
-   roadNode Path[];
+   vector<int> Path;
 };
 
 #endif
