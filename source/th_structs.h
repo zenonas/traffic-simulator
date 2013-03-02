@@ -16,8 +16,8 @@ Copyright (c) King's College London
 #include "vehicle.h"
 #include <queue>
 
-struct gen_thread {
-      bool gen_finished;
+struct thread_arguments {
+      bool finished;
       int max_no_vehicles;
       double vehicle_ratios[3];
       double driver_ratios[3];

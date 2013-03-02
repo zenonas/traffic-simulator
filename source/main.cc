@@ -17,7 +17,7 @@ Copyright (c) King's College London
 #include "engine.cc"
 #include "sysio.cc"
 #include "map.h"
-#include "../lib/DLList.h"
+
 #include <queue>
 #include "th_structs.h"
 
@@ -36,18 +36,18 @@ int main ()
 
 /* DEFINING GENERATOR THREAD ARGUMENTS */
 
-   gen_thread generator_args;
-   generator_args.gen_finished = false;
-   generator_args.max_no_vehicles = 20;
-   generator_args.vehicle_ratios[0] = 0.7; // cars
-   generator_args.vehicle_ratios[1] = 0.25; // bus
-   generator_args.vehicle_ratios[2] = 0.05; // lorries
-   generator_args.driver_ratios[0] = 0.65; //normal
-   generator_args.driver_ratios[1] = 0.2; //cautious
-   generator_args.driver_ratios[2] = 0.15; //aggressive (nai stin ellada imaste)
-   generator_args.arg_changed = false;
-   generator_args.sleep_time = 3; // this may change
-   generator_args.mymap = mymap;   
+   thread_arguments thread_args;
+   thread_args.finished = false;
+   thread_args.max_no_vehicles = 20;
+   thread_args.vehicle_ratios[0] = 0.7; // cars
+   thread_args.vehicle_ratios[1] = 0.25; // bus
+   thread_args.vehicle_ratios[2] = 0.05; // lorries
+   thread_args.driver_ratios[0] = 0.65; //normal
+   thread_args.driver_ratios[1] = 0.2; //cautious
+   thread_args.driver_ratios[2] = 0.15; //aggressive (nai stin ellada imaste)
+   thread_args.arg_changed = false;
+   thread_args.sleep_time = 3; // this may change
+   thread_args.mymap = mymap;   
 
 /* DEFINING ENGINE THREAD ARGUEMENTS */
 
@@ -63,15 +63,13 @@ int main ()
    void *status;
 
 
-/* test graph code */
-
    // Initialize and set thread joinable
    pthread_attr_init(&attr);
    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
    
       cout << "Creating thread: Vehicle Generator... ";
-      rc = pthread_create(&threads[0], NULL, generator, (void*)&generator_args);
+      rc = pthread_create(&threads[0], NULL, generator, (void*)&thread_args);
       if (rc){
          cout << "Error:unable to create thread," << rc << endl;
          return(-1);
@@ -79,7 +77,7 @@ int main ()
       cout << "OK!" << endl;
 
       cout << "Creating thread: Engine... ";
-      rc = pthread_create(&threads[1], NULL, engine, (void*)&generator_args);
+      rc = pthread_create(&threads[1], NULL, engine, (void*)&thread_args);
       if (rc){
          cout << "Error:unable to create thread," << rc << endl;
          return(-1);
@@ -87,7 +85,7 @@ int main ()
       cout << "OK!" << endl;
       
       cout << "Creating thread: I/O... ";
-      rc = pthread_create(&threads[2], NULL, inout, (void*)&generator_args);
+      rc = pthread_create(&threads[2], NULL, inout, (void*)&thread_args);
       if (rc){
          cout << "Error:unable to create thread," << rc << endl;
          return(-1);
@@ -119,9 +117,9 @@ int main ()
       }
       cout << "I/O Thread completed and exiting with status :" << status << endl;
    
-     /* while (!generator_args.VWaitingQ.empty()) {
-         cout << "(OUTSIDE THREAD) TYPE: " << generator_args.VWaitingQ.front()->vehi_id << endl;
-         generator_args.VWaitingQ.pop();
+     /* while (!thread_args.VWaitingQ.empty()) {
+         cout << "(OUTSIDE THREAD) TYPE: " << thread_args.VWaitingQ.front()->vehi_id << endl;
+         thread_args.VWaitingQ.pop();
       }*/
    cout << "Main program exiting." << endl;
    pthread_exit(NULL);
