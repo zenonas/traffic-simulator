@@ -10,20 +10,25 @@ Copyright (c) King's College London
 */
 #ifndef trafficLight_h
 #define trafficLight_h
+#include <iostream>
 
 using namespace std;
 
 class trafficLight
 {
 public:
-   trafficLight();   
+ 
+   trafficLight(); 
+     
    ~trafficLight();
-   
-   void setState(int state);
+   void Wait();
+   void setState();
    int getState();
 
 private:
-   int State;
+  
+
+
    int Timer;
 };
 

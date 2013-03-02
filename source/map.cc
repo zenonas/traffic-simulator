@@ -27,10 +27,10 @@ map::map(){
 }
 
 map::~map(){
-
+ 
 }
 
-//Read XML file and construct roadNodes constisting of two graphNodes
+
 void map::ReadXMLFile()
 {
 	cout << "Parsing my road..." << endl;
@@ -126,7 +126,6 @@ void map::ReadXMLFile()
 	}
 }
 
-//find all connected roadnodes depending on x,y positions of their graphNodes
 void map::findConnectedRoadNodes(){
 	vector<int> temp;
 	graphNode graphNodeATestFirst;
@@ -176,7 +175,6 @@ cout << endl;
 }*/
 }
 
-
 //find all paths
 void map::findAllPaths (){
 	allPaths.clear();
@@ -189,7 +187,6 @@ void map::findAllPaths (){
 		initial.clear();
 	}
 }
-
 //find all connected roadNodes with 'value' and contruct a path
 void map::find_childs(vector<int> initial, int value,vector<vector<int> > array){
 	vector<int> childs;

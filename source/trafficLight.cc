@@ -18,12 +18,10 @@ trafficLight::~trafficLight(){
 
 }
 
-void trafficLight::setState(int state){
-	State=state;
+void trafficLight::setState(){
 }
 
 int trafficLight::getState(){
-	return State;
 }
 
 

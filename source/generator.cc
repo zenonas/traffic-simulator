@@ -2,7 +2,7 @@
 
 Group Project 7CCSMGPR - Team B
 Created: 15/2/2013
-Updated: 23/2/2013
+Updated: 2/3/2013
 File: generator.cc
 Description: This file specifies the car generator thead of the system. Please treat as a main file and avoid appending code here but rather include any classes you want to use.
 Copyright (c) King's College London
@@ -16,7 +16,7 @@ using namespace std;
 
 void *generator(void *arguments)
 {  
-   struct gen_thread *thread_args;
+   struct thread_arguments *thread_args;
    thread_args = (struct thread_arguments *)arguments;
    
    cout << "Generator Thread with id : " << "1" << "  is created" << endl;
@@ -39,7 +39,7 @@ void *generator(void *arguments)
 		int actual_no_to_create = rand() % thread_args->max_no_vehicles + 1;
 		if (actual_no_to_create < 10) actual_no_to_create = 10; //maybe revise
 		vehicle* temp_array[actual_no_to_create];
-		//cout << "I SHALL CREATE: " << actual_no_to_create << endl;
+		cout << "I SHALL CREATE: " << actual_no_to_create << endl;
 	/*	
 		STEP 3 DECIDE BASED RATIOS HOW MANY OF EACH VEHICLE TYPE YOU WILL CREATE
 		STEP 4 CREATE THE VEHICLES AND STORE IN AN TEMP ARRAY OF OBJECTS
