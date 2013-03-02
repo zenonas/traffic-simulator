@@ -243,15 +243,4 @@ vector<roadNode > map::getunfRoads(){
 
 void map::findTrafficLights(){
 
-
-	for (int i=0; i<unfRoads.size(); i++)
-	{
-		graphNodeAa = unfRoads[i].getgraphNodeA();
-		graphNodeBb = unfRoads[i].getgraphNodeB();
-		trafficLight newTrafficLight;
-		
-		if(graphNodeAa.getType==1||graphNodeBb.getType==1||graphNodeAa.getType==2||graphNodeBb.getType==2)
-		trafficLights.push_back(newTrafficLight);
-	 
-
 }

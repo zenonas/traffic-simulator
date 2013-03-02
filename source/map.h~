@@ -35,6 +35,7 @@ private:
    void find_childs(vector<int> initial,int value,vector<vector<int> > array);
 
    vector<vector<int> > array;
+   vector<trafficLight> trafficLights;
    vector<roadNode> unfRoads;
    vector<vector<int> > allPaths;
 };
