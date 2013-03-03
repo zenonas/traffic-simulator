@@ -5,13 +5,13 @@
 <Node name="1a">
 <Point name="x">0</Point>
 <Point name="y">0</Point>
-<Type name="type">1</Type>
+<Type name="type">0</Type>
 </Node>
 
 <Node name="1b">
 <Point name="x">50</Point>
 <Point name="y">0</Point>
-<Type name="type">1</Type>
+<Type name="type">0</Type>
 </Node>
 <Length name="length">50</Length>
 <MaxSpeed name="maxSpeed">100</MaxSpeed>
@@ -27,7 +27,7 @@
 <Node name="2b">
 <Point name="x">50</Point>
 <Point name="y">100</Point>
-<Type name="type">2</Type>
+<Type name="type">1</Type>
 </Node>
 <Length name="length">100</Length>
 <MaxSpeed name="maxSpeed">50</MaxSpeed>
@@ -43,7 +43,7 @@
 <Node name="3b">
 <Point name="x">25</Point>
 <Point name="y">100</Point>
-<Type name="type">1</Type>
+<Type name="type">0</Type>
 </Node>
 <Length name="length">50</Length>
 <MaxSpeed name="maxSpeed">100</MaxSpeed>
@@ -69,13 +69,13 @@
 <Node name="5a">
 <Point name="x">0</Point>
 <Point name="y">100</Point>
-<Type name="type">1</Type>
+<Type name="type">0</Type>
 </Node>
 
 <Node name="5b">
 <Point name="x">0</Point>
 <Point name="y">50</Point>
-<Type name="type">1</Type>
+<Type name="type">0</Type>
 </Node>
 <Length name="length">50</Length>
 <MaxSpeed name="maxSpeed">100</MaxSpeed>
@@ -101,7 +101,7 @@
 <Node name="7a">
 <Point name="x">0</Point>
 <Point name="y">0</Point>
-<Type name="type">1</Type>
+<Type name="type">0</Type>
 </Node>
 
 <Node name="7b">

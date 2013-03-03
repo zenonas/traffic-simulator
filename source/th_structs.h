@@ -15,7 +15,6 @@ Copyright (c) King's College London
 
 #include "vehicle.h"
 #include "map.h"
-#include <DLList.h>
 #include <queue>
 
 struct thread_arguments {

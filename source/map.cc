@@ -24,6 +24,7 @@ map::map(){
 	ReadXMLFile();
 	findConnectedRoadNodes();
 	findAllPaths();
+	created = true;
 }
 
 map::~map(){
@@ -37,7 +38,7 @@ void map::ReadXMLFile()
 	xml_document<> doc;
 	xml_node<> * root_node;
 	// Read the xml file into a vector
-	ifstream theFile ("xmlfile2.xml");
+	ifstream theFile ("xmlfile3.xml");
 	vector<char> buffer((istreambuf_iterator<char>(theFile)), istreambuf_iterator<char>());
 	buffer.push_back('\0');
 	// Parse the buffer using the xml file parsing library into doc 
@@ -47,6 +48,7 @@ void map::ReadXMLFile()
 	// Iterate over the brewerys
 	int j=0;
 	int l=0;
+	
 
 	for (xml_node<> * road_node = root_node->first_node("Road"); road_node; road_node =road_node->next_sibling("Road"))
 	{
@@ -91,14 +93,22 @@ void map::ReadXMLFile()
 			{
 				for (xml_node<> * type_node = node_node->first_node("Type"); type_node; type_node =type_node->next_sibling("Type"))
 				{ 
-					newgraphNodeB.setType(atoi(type_node->value()));
+					newgraphNodeA.setType(atoi(type_node->value()));
+					if(newgraphNodeA.getType() == 1) {
+						cout << "COORDS: " << newgraphNodeA.getCartesianX() << "and " << newgraphNodeA.getCartesianY() << endl;
+						if (checkRoad(&newgraphNodeA) == true) entryGraphNodes.push_back(&newgraphNodeA);
+					}
 				}
 			}	
 			else
 			{
 				for (xml_node<> * type_node = node_node->first_node("Type"); type_node; type_node =type_node->next_sibling("Type"))
 				{ 
-					newgraphNodeA.setType(atoi(type_node->value()));
+					newgraphNodeB.setType(atoi(type_node->value()));
+					if(newgraphNodeB.getType() == 1) {
+						cout << "COORDS: " << newgraphNodeB.getCartesianX() << "and " << newgraphNodeB.getCartesianY() << endl;
+						if (checkRoad(&newgraphNodeB) == true) entryGraphNodes.push_back(&newgraphNodeB);
+					}
 				}	
 			}						
 			newroadNode.setgraphNodeA(newgraphNodeA);
@@ -124,6 +134,18 @@ void map::ReadXMLFile()
 		newgraphNodeAa = unfRoads[i].getgraphNodeA();
 		newgraphNodeAb = unfRoads[i].getgraphNodeB();
 	}
+}
+
+bool map::checkRoad(graphNode *g){
+cout << "SIZE! " << entryGraphNodes.size() << endl;
+	for (int i = 0; i<entryGraphNodes.size(); i++) {
+		if ((g->getCartesianX() == entryGraphNodes[i]->getCartesianX()) && (g->getCartesianY() == entryGraphNodes[i]->getCartesianY())) {
+			cout << "MOMOMOO: " << g->getCartesianX() << "and " << g->getCartesianY() << endl;
+			return false;
+		}
+	}
+	
+	return true;
 }
 
 void map::findConnectedRoadNodes(){

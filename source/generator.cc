@@ -19,7 +19,7 @@ void *generator(void *arguments)
    struct thread_arguments *thread_args;
    thread_args = (struct thread_arguments *)arguments;
    
-   cout << "Generator Thread with id : " << "1" << "  is created" << endl;
+  // cout << "Generator Thread with id : " << "1" << "  is created" << endl;
    srand(time(NULL));
 
   while(!thread_args->finished) {

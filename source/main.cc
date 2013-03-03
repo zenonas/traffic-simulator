@@ -22,7 +22,6 @@ Copyright (c) King's College London
 
 using namespace std;
 
-
 int main ()
 {
 
@@ -43,7 +42,7 @@ int main ()
    
 //
 //read xml file to construct map
-   th_args.mymap.printAllPaths();
+   //th_args.mymap.printAllPaths();
 //get vector with all paths
    vector<vector<int> > paths = th_args.mymap.getAllPaths();
 /* DEFINING ENGINE THREAD ARGUEMENTS */
@@ -75,7 +74,7 @@ int main ()
       }
      // cout << "OK!" << endl;
 
-   //   cout << "Creating thread: Engine... ";
+   //   cout << "Creating thread: Engine... "; 
       rc = pthread_create(&threads[1], NULL, engine, (void*)&th_args);
       if (rc){
          cout << "Error:unable to create thread," << rc << endl;
