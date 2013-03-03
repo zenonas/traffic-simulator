@@ -25,6 +25,7 @@ map::map(){
 	findConnectedRoadNodes();
 	findAllPaths();
 	findTrafficLights();
+	cout << "TRAFFIC LIGHTS #: " << trafficlights.size() << endl;
 }
 
 map::~map(){
@@ -38,7 +39,7 @@ void map::ReadXMLFile()
 	xml_document<> doc;
 	xml_node<> * root_node;
 	// Read the xml file into a vector
-	ifstream theFile ("xmlfile2.xml");
+	ifstream theFile ("xmlfile.xml");
 	vector<char> buffer((istreambuf_iterator<char>(theFile)), istreambuf_iterator<char>());
 	buffer.push_back('\0');
 	// Parse the buffer using the xml file parsing library into doc 
@@ -242,16 +243,38 @@ vector<roadNode > map::getunfRoads(){
 
 
 void map::findTrafficLights(){
-
+	graphNode a;
+	graphNode b;
 
 	for (int i=0; i<unfRoads.size(); i++)
 	{
-		graphNodeAa = unfRoads[i].getgraphNodeA();
-		graphNodeBb = unfRoads[i].getgraphNodeB();
-		trafficLight newTrafficLight;
+		a = unfRoads[i].getgraphNodeA();
+		b = unfRoads[i].getgraphNodeB();
+
 		
-		if(graphNodeAa.getType==1||graphNodeBb.getType==1||graphNodeAa.getType==2||graphNodeBb.getType==2)
-		trafficLights.push_back(newTrafficLight);
-	 
+		if(a.getType()==1 || a.getType()==2)
+			if(!inTrafficLights(&a))
+			{
+				cout << "x: " << a.getCartesianX() << " y: " << a.getCartesianY() <<endl;
+				trafficlights.push_back(&a);
+			}
+		if(b.getType()==1 || b.getType()==2)
+			if(!inTrafficLights(&b))
+			{
+				cout << "x: " << b.getCartesianX() << " y: " << b.getCartesianY() <<endl;
+				trafficlights.push_back(&b);
+			}
+	}
 
 }
+
+bool map::inTrafficLights(graphNode* g)
+{
+	for(int i=0; i<trafficlights.size(); i++)
+	{
+		if(g->getCartesianX() == trafficlights[i]->getCartesianX() && g->getCartesianY() == trafficlights[i]->getCartesianY() )
+			return true;
+	}
+	return false;
+}
+

@@ -12,8 +12,9 @@ Copyright (c) King's College London
 #define map_h
 
 #include "roadNode.h"
-#includ "trafficLight.h"
-# include <vector>
+#include "trafficLight.h"
+#include <vector>
+
 using namespace std;
 
 class map
@@ -31,9 +32,11 @@ public:
 private:
    void ReadXMLFile();
    void findConnectedRoadNodes();
+   void findTrafficLights();
+   bool inTrafficLights(graphNode* g);
    void findAllPaths();
    void find_childs(vector<int> initial,int value,vector<vector<int> > array);
-
+   vector<graphNode* > trafficlights;
    vector<vector<int> > array;
    vector<roadNode> unfRoads;
    vector<vector<int> > allPaths;
