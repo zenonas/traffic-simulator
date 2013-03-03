@@ -43,6 +43,14 @@ int graphNode::getType(){
 	return Type;
 }
 
+void graphNode::setTimer(int timer){
+	Timer=timer;
+}
+
+int graphNode::getTimer(){
+	return Timer;
+}
+
 
 
 

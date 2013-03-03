@@ -27,11 +27,14 @@ public:
    int getCartesianY();
    void setType(int type);
    int getType();
+   void setTimer(int timer);
+   int getTimer();
    void setTrafficLight(trafficLight* t);
    //trafficLight* getTrafficLight(); //???????
 
 private:
    int CartesianX, CartesianY;
+   int Timer;
    int Type; // 0: nothing 1: entry/exit point and traffic light 2: only traffic light
    //trafficLight will be null if not trafficLight
     vector<trafficLight*> trafficLights;

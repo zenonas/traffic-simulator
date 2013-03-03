@@ -95,6 +95,13 @@ void map::ReadXMLFile()
 				{ 
 					newgraphNodeB.setType(atoi(type_node->value()));
 				}
+				
+				for (xml_node<> * timer_node = node_node->first_node("Timer"); timer_node; timer_node =timer_node->next_sibling("Timer"))
+				{ 
+					newgraphNodeB.setTimer(atoi(timer_node->value()));
+					//cout << "time: " << newgraphNodeB.getTimer() <<endl;
+				}
+				
 			}	
 			else
 			{
@@ -102,6 +109,12 @@ void map::ReadXMLFile()
 				{ 
 					newgraphNodeA.setType(atoi(type_node->value()));
 				}	
+				
+				for (xml_node<> * timer_node = node_node->first_node("Timer"); timer_node; timer_node =timer_node->next_sibling("Timer"))
+				{ 
+					newgraphNodeA.setTimer(atoi(timer_node->value()));
+					//cout << "time: " << newgraphNodeA.getTimer() <<endl;
+				}
 			}						
 			newroadNode.setgraphNodeA(newgraphNodeA);
 			newroadNode.setgraphNodeB(newgraphNodeB);
@@ -250,18 +263,18 @@ void map::findTrafficLights(){
 	{
 		a = unfRoads[i].getgraphNodeA();
 		b = unfRoads[i].getgraphNodeB();
+				cout << "A | x: " << a.getCartesianX() << " y: " << a.getCartesianY() <<endl;
+				cout << "B | x: " << b.getCartesianX() << " y: " << b.getCartesianY() <<endl;
 
 		
 		if(a.getType()==1 || a.getType()==2)
 			if(!inTrafficLights(&a))
 			{
-				cout << "x: " << a.getCartesianX() << " y: " << a.getCartesianY() <<endl;
 				trafficlights.push_back(&a);
 			}
 		if(b.getType()==1 || b.getType()==2)
 			if(!inTrafficLights(&b))
 			{
-				cout << "x: " << b.getCartesianX() << " y: " << b.getCartesianY() <<endl;
 				trafficlights.push_back(&b);
 			}
 	}
@@ -272,9 +285,13 @@ bool map::inTrafficLights(graphNode* g)
 {
 	for(int i=0; i<trafficlights.size(); i++)
 	{
-		if(g->getCartesianX() == trafficlights[i]->getCartesianX() && g->getCartesianY() == trafficlights[i]->getCartesianY() )
+		if((g->getCartesianX() == trafficlights[i]->getCartesianX()) && (g->getCartesianY() == trafficlights[i]->getCartesianY()) )
+		{
+			cout << "Einai mesa!" << endl;
 			return true;
+		}
 	}
+	cout << "Den einai mesa!" << endl;
 	return false;
 }
 
