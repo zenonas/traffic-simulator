@@ -35,9 +35,9 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
 	 	int queueToBe = currentV->getEntryPoint();
 	 	entryQueues[queueToBe].push_back(currentV);
 	 		for(int k=0; k<entryQueues.size(); k++)
-				for(int l=0; l<entryQueues[k].size(); l++)
+				for(int l=0; l<entryQueues[k].size(); l++) {
 				cout << "THIS IS IT:" << entryQueues[k][l]->getEntryPoint() << endl;
-	 	
+	 	}
 		//STEP 1: CALL THE SPLIT TO ENTRY POINT QUEUES FUNCTION
 
 		//STEP 2: 
