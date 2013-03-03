@@ -44,7 +44,7 @@ void *generator(void *arguments)
 		STEP 3 DECIDE BASED RATIOS HOW MANY OF EACH VEHICLE TYPE YOU WILL CREATE
 		STEP 4 CREATE THE VEHICLES AND STORE IN AN TEMP ARRAY OF OBJECTS
 	*/
-		vector<roadNode> roads;
+		vector<roadNode *> roads;
 		roads= thread_args->mymap.getunfRoads();
 		for (int z=0; z<actual_no_to_create;z++) temp_array[z] = NULL; //initalize array to null pointers
 		for (int i=0; i<actual_no_to_create;i++) {
