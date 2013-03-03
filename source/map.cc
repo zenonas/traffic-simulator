@@ -140,7 +140,7 @@ bool map::checkRoad(graphNode *g){
 cout << "SIZE! " << entryGraphNodes.size() << endl;
 	for (int i = 0; i<entryGraphNodes.size(); i++) {
 		if ((g->getCartesianX() == entryGraphNodes[i]->getCartesianX()) && (g->getCartesianY() == entryGraphNodes[i]->getCartesianY())) {
-			cout << "MOMOMOO: " << g->getCartesianX() << "and " << g->getCartesianY() << endl;
+//			cout << "MOMOMOO: " << g->getCartesianX() << "and " << g->getCartesianY() << endl;
 			return false;
 		}
 	}

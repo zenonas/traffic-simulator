@@ -27,20 +27,17 @@ void *engine(void *arguments)
    	entryQueues.push_back(currentQueue);
    }
 
-   cout << "MY SIZE IS: " << entryQueues.size();
 while (!thread_args->finished && thread_args->mymap.created == true) {
 
 	while(!thread_args->VWaitingQ.empty()) {
 	 	vehicle *currentV = thread_args->VWaitingQ.front();
 	 	
-	 	int queueToBe = currentV->getEntryPoint() - 1;
+	 	int queueToBe = currentV->getEntryPoint();
 	 	entryQueues[queueToBe].push_back(currentV);
 	 	sleep(5);
-	 	if (!entryQueues[queueToBe].empty()) {
 	 		for(int k=0; k<entryQueues.size(); k++)
 				for(int l=0; l<entryQueues[k].size(); l++)
-					cout << "THIS IS IT:" << entryQueues[k][l]->getEntryPoint() << endl;
-	 	}
+				cout << "THIS IS IT:" << entryQueues[k][l]->getEntryPoint() << endl;
 	 	
 		//STEP 1: CALL THE SPLIT TO ENTRY POINT QUEUES FUNCTION
 
