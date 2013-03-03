@@ -124,15 +124,15 @@ void map::ReadXMLFile()
 			newroadNode.setMaxSpeed(atoi(maxSpeed->value()));
 		}
 		newroadNode.setId(j+1);
-		unfRoads.push_back(newroadNode);
+		unfRoads.push_back(&newroadNode);
 		j++;
 	}
 	
 	for (int i=0; i<l; i++){
 		graphNode newgraphNodeAa;
 		graphNode newgraphNodeAb;
-		newgraphNodeAa = unfRoads[i].getgraphNodeA();
-		newgraphNodeAb = unfRoads[i].getgraphNodeB();
+		newgraphNodeAa = unfRoads[i]->getgraphNodeA();
+		newgraphNodeAb = unfRoads[i]->getgraphNodeB();
 	}
 }
 
@@ -155,34 +155,34 @@ void map::findConnectedRoadNodes(){
 	graphNode graphNodeAMatcher;
 	graphNode graphNodeBMatcher;
 	for (int i=0; i<unfRoads.size(); i++){
-		graphNodeATestFirst = unfRoads[i].getgraphNodeA();
-		graphNodeBTestFirst = unfRoads[i].getgraphNodeB();
+		graphNodeATestFirst = unfRoads[i]->getgraphNodeA();
+		graphNodeBTestFirst = unfRoads[i]->getgraphNodeB();
 		for (int j=0; j<unfRoads.size(); j++){
-			graphNodeAMatcher = unfRoads[j].getgraphNodeA();
-			graphNodeBMatcher = unfRoads[j].getgraphNodeB();
+			graphNodeAMatcher = unfRoads[j]->getgraphNodeA();
+			graphNodeBMatcher = unfRoads[j]->getgraphNodeB();
 		if (i != j) { //so that we don't match the same roadNodes
 			if ((graphNodeATestFirst.getCartesianX() == graphNodeAMatcher.getCartesianX() && graphNodeATestFirst.getCartesianY() == graphNodeAMatcher.getCartesianY())) 
 			{
-				temp.push_back(unfRoads[i].getId());
-				temp.push_back(unfRoads[j].getId());
+				temp.push_back(unfRoads[i]->getId());
+				temp.push_back(unfRoads[j]->getId());
 				array.push_back( temp);
 			}
 			if ((graphNodeATestFirst.getCartesianX() == graphNodeBMatcher.getCartesianX() && graphNodeATestFirst.getCartesianY() == graphNodeBMatcher.getCartesianY()))
 			{
-				temp.push_back(unfRoads[i].getId());
-				temp.push_back(unfRoads[j].getId());
+				temp.push_back(unfRoads[i]->getId());
+				temp.push_back(unfRoads[j]->getId());
 				array.push_back( temp);
 			}			
 			if ((graphNodeBTestFirst.getCartesianX() == graphNodeBMatcher.getCartesianX() && graphNodeBTestFirst.getCartesianY() == graphNodeBMatcher.getCartesianY()))
 			{
-				temp.push_back(unfRoads[i].getId());
-				temp.push_back(unfRoads[j].getId());
+				temp.push_back(unfRoads[i]->getId());
+				temp.push_back(unfRoads[j]->getId());
 				array.push_back( temp);
 			}			
 			if ((graphNodeBTestFirst.getCartesianX() == graphNodeAMatcher.getCartesianX() && graphNodeBTestFirst.getCartesianY() == graphNodeAMatcher.getCartesianY()))
 			{
-				temp.push_back(unfRoads[i].getId());
-				temp.push_back(unfRoads[j].getId());
+				temp.push_back(unfRoads[i]->getId());
+				temp.push_back(unfRoads[j]->getId());
 				array.push_back( temp);
 			}
 			temp.clear();
@@ -204,8 +204,8 @@ void map::findAllPaths (){
 	cout << "Find all possible paths...\n";
 	//call function that finds all possible paths
 	for (int s=0; s<unfRoads.size(); s++){
-		initial.push_back(unfRoads[s].getId());
-		find_childs(initial,unfRoads[s].getId(),array);
+		initial.push_back(unfRoads[s]->getId());
+		find_childs(initial,unfRoads[s]->getId(),array);
 		initial.clear();
 	}
 }
@@ -243,8 +243,8 @@ void map::printAllPaths(){
 		for(int l=0; l<allPaths[k].size(); l++){
 			cout << allPaths[k][l] << " ";
 			for (int i=0; i<unfRoads.size(); i++)
-				if (unfRoads[i].getId() == allPaths[k][l])
-					length = length + unfRoads[allPaths[k][l]-1].getLength();				
+				if (unfRoads[i]->getId() == allPaths[k][l])
+					length = length + unfRoads[allPaths[k][l]-1]->getLength();				
 		}
 		cout << "\t\tTotalLength:" << length << endl;
 		length=0;
@@ -257,6 +257,6 @@ vector<vector<int> > map::getAllPaths (){
 	return allPaths;
 }
 
-vector<roadNode > map::getunfRoads(){
+vector<roadNode *> map::getunfRoads(){
 	return unfRoads;
 }
