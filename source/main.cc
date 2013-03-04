@@ -42,8 +42,8 @@ int main ()
    th_args.engine_change = false;
    
 //
-//read xml file to construct map
-   th_args.mymap.printAllPaths();
+//print all paths... (construct map in th_args)
+  // th_args.mymap.printAllPaths();
 //get vector with all paths
    vector<vector<int> > paths = th_args.mymap.getAllPaths();
 /* DEFINING ENGINE THREAD ARGUEMENTS */

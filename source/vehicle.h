@@ -51,7 +51,7 @@ public:
    Position getPreviousPosition();
    void calculatePath(map mymap);
    vector<int> getPath();
-   void printPath(map mymap);
+   void printPath();
    int vehi_id;
 
 private:

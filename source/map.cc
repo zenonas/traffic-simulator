@@ -46,12 +46,8 @@ void map::ReadXMLFile()
 	root_node = doc.first_node("Map");
 	// Iterate over the brewerys
 	int j=0;
-	int l=0;
+	vector<int> entryP;
 
-	for (xml_node<> * road_node = root_node->first_node("Road"); road_node; road_node =road_node->next_sibling("Road"))
-	{
-		l++;
-	}
 	for (xml_node<> * road_node = root_node->first_node("Road"); road_node; road_node =road_node->next_sibling("Road"))
 	{
 		roadNode newroadNode;
@@ -86,7 +82,6 @@ void map::ReadXMLFile()
 						newgraphNodeA.setCartesianY(atoi(point_node->value()));
 				}           
 			}
-			i++;            	
 			if(i%2!=0)
 			{
 				for (xml_node<> * type_node = node_node->first_node("Type"); type_node; type_node =type_node->next_sibling("Type"))
@@ -100,12 +95,10 @@ void map::ReadXMLFile()
 				{ 
 					newgraphNodeA.setType(atoi(type_node->value()));
 				}	
-			}						
+			}	
+			i++;					
 			newroadNode.setgraphNodeA(newgraphNodeA);
-			newroadNode.setgraphNodeB(newgraphNodeB);
-			
-			graphNode newgraphNodeAnew;
-			newgraphNodeAnew = newroadNode.getgraphNodeA();      
+			newroadNode.setgraphNodeB(newgraphNodeB);   
 		}
 		for (xml_node<> * length= road_node->first_node("Length"); length; length=length->next_sibling("Length")){
 			newroadNode.setLength(atoi(length->value()));
@@ -116,13 +109,6 @@ void map::ReadXMLFile()
 		newroadNode.setId(j+1);
 		unfRoads.push_back(newroadNode);
 		j++;
-	}
-	
-	for (int i=0; i<l; i++){
-		graphNode newgraphNodeAa;
-		graphNode newgraphNodeAb;
-		newgraphNodeAa = unfRoads[i].getgraphNodeA();
-		newgraphNodeAb = unfRoads[i].getgraphNodeB();
 	}
 }
 
@@ -167,12 +153,6 @@ void map::findConnectedRoadNodes(){
 		}	
 	}
 }
-//print our array with connected roadnodes
-/*for(int k=0; k<array.size(); k++){
-	for(int l=0; l<2; l++)
-		cout << array[k][l] << " ";
-cout << endl;
-}*/
 }
 
 //find all paths

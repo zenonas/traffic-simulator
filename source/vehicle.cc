@@ -25,7 +25,7 @@ vehicle::vehicle(int id, int entryP, int exitP,map mymap){
 	setExitPoint(exitP);
 	//calculatePath() is called manually at the moment
 	calculatePath(mymap);
-	printPath(mymap);
+	//printPath();
 }
 
 vehicle::~vehicle(){
@@ -165,16 +165,12 @@ void vehicle::calculatePath(){
 	shortest=0;
 }
 */
-void vehicle::printPath(map mymap){
-	//map mymap;
-	vector<roadNode > unfRoads = mymap.getunfRoads();
+void vehicle::printPath(){
 	int length=0;
-	cout << "\nShortest path from " << entryPoint << " to " << exitPoint << ": ";
+	cout << "Path: ";
 	for (int i=0; i<Path.size(); i++){
 		cout << Path[i] << " ";
-		length += unfRoads[Path[i]-1].getLength();
 	}
-	cout <<"Total length: " << length;
 }
 
 vector<int> vehicle::getPath(){
