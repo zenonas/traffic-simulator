@@ -42,7 +42,9 @@ int main ()
    
 //
 //read xml file to construct map
+
    //th_args.mymap.printAllPaths();
+
 //get vector with all paths
    vector<vector<int> > paths = th_args.mymap.getAllPaths();
 /* DEFINING ENGINE THREAD ARGUEMENTS */

@@ -24,8 +24,7 @@ map::map(){
 	ReadXMLFile();
 	findConnectedRoadNodes();
 	findAllPaths();
-	//findTrafficLights();
-	//cout << "TRAFFIC LIGHTS #: " << trafficlights.size() << endl;
+	findTrafficLights();
 }
 
 map::~map(){
@@ -39,7 +38,7 @@ void map::ReadXMLFile()
 	xml_document<> doc;
 	xml_node<> * root_node;
 	// Read the xml file into a vector
-	ifstream theFile ("xmlfile3.xml");
+	ifstream theFile ("xmlfile2.xml");
 	vector<char> buffer((istreambuf_iterator<char>(theFile)), istreambuf_iterator<char>());
 	buffer.push_back('\0');
 	// Parse the buffer using the xml file parsing library into doc 
@@ -48,7 +47,12 @@ void map::ReadXMLFile()
 	root_node = doc.first_node("Map");
 	// Iterate over the brewerys
 	int j=0;
+	int l=0;
 
+	for (xml_node<> * road_node = root_node->first_node("Road"); road_node; road_node =road_node->next_sibling("Road"))
+	{
+		l++;
+	}
 	for (xml_node<> * road_node = root_node->first_node("Road"); road_node; road_node =road_node->next_sibling("Road"))
 	{
 		roadNode newroadNode;
@@ -82,34 +86,27 @@ void map::ReadXMLFile()
 					else if(strcmp(point_node->first_attribute("name")->value(),"y")==0)
 						newgraphNodeA.setCartesianY(atoi(point_node->value()));
 				}           
-			}           	
+			}
+			i++;            	
 			if(i%2!=0)
 			{
 				for (xml_node<> * type_node = node_node->first_node("Type"); type_node; type_node =type_node->next_sibling("Type"))
 				{ 
 					newgraphNodeB.setType(atoi(type_node->value()));
 				}
-				/*for (xml_node<> * timer_node = node_node->first_node("Timer"); timer_node; timer_node =timer_node->next_sibling("Timer"))
-				{ 
-					newgraphNodeB.setTimer(atoi(timer_node->value()));
-					//cout << "time: " << newgraphNodeB.getTimer() <<endl;
-				}*/
 			}	
 			else
 			{
 				for (xml_node<> * type_node = node_node->first_node("Type"); type_node; type_node =type_node->next_sibling("Type"))
 				{ 
-					newgraphNodeA.setType(atoi(type_node->value())); 
+					newgraphNodeA.setType(atoi(type_node->value()));
 				}	
-			/*	for (xml_node<> * timer_node = node_node->first_node("Timer"); timer_node; timer_node =timer_node->next_sibling("Timer"))
-				{ 
-					newgraphNodeA.setTimer(atoi(timer_node->value()));
-					//cout << "time: " << newgraphNodeA.getTimer() <<endl;
-				}*/
-			}
-			i++;				
+			}						
 			newroadNode.setgraphNodeA(newgraphNodeA);
-			newroadNode.setgraphNodeB(newgraphNodeB);   
+			newroadNode.setgraphNodeB(newgraphNodeB);
+			
+			graphNode newgraphNodeAnew;
+			newgraphNodeAnew = newroadNode.getgraphNodeA();      
 		}
 		for (xml_node<> * length= road_node->first_node("Length"); length; length=length->next_sibling("Length")){
 			newroadNode.setLength(atoi(length->value()));
@@ -121,36 +118,15 @@ void map::ReadXMLFile()
 		unfRoads.push_back(newroadNode);
 		j++;
 	}
-	for (int i=0; i<unfRoads.size(); i++){
-		cout << "MY A GRAPH NODE WITH ID: " << unfRoads[i].getId() << "HAS COORDS: " << unfRoads[i].getgraphNodeA().getCartesianX() << " AND: " << unfRoads[i].getgraphNodeA().getCartesianY() << " TYPE: " << unfRoads[i].getgraphNodeA().getType() << endl;
-		cout << "MY B GRAPH NODE WITH ID: " << unfRoads[i].getId() << "HAS COORDS: " << unfRoads[i].getgraphNodeB().getCartesianX() << " AND: " << unfRoads[i].getgraphNodeB().getCartesianY() << " TYPE: " << unfRoads[i].getgraphNodeB().getType() << endl;
-		for (int zz=0; zz<unfRoads.size(); zz++) {
-			if (i != zz) {
-				if (unfRoads[i].getgraphNodeA().getType() == 1)
-					if (unfRoads[i].getgraphNodeA().getCartesianX() == unfRoads[zz].getgraphNodeA().getCartesianX() && unfRoads[i].getgraphNodeA().getCartesianY() == unfRoads[i].getgraphNodeA().getCartesianY()) 
-						entryGraphNodes.push_back(unfRoads[i].getgraphNodeA());
-				if (unfRoads[i].getgraphNodeB().getType() == 1)
-					if (unfRoads[i].getgraphNodeB().getCartesianX() == unfRoads[zz].getgraphNodeB().getCartesianX() && unfRoads[i].getgraphNodeB().getCartesianY() == unfRoads[i].getgraphNodeB().getCartesianY()) 
-						entryGraphNodes.push_back(unfRoads[i].getgraphNodeB());
-			}
-		}
+	
+	for (int i=0; i<l; i++){
+		graphNode newgraphNodeAa;
+		graphNode newgraphNodeAb;
+		newgraphNodeAa = unfRoads[i].getgraphNodeA();
+		newgraphNodeAb = unfRoads[i].getgraphNodeB();
 	}
-		for (int zz=0; zz<entryGraphNodes.size(); zz++){
-		cout << "MY entry point is: " << entryGraphNodes[zz].getType() << endl;
-	}
-		cout << "TOTAL ENTRY POINTS: " << entryGraphNodes.size() << endl;
 }
-/*
-bool map::checkRoad(vector<roadNodes *unfRoads> ){
-	for (int i = 0; i<entryGraphNodes.size(); i++) {
-		if ((g.getCartesianX() == entryGraphNodes[i].getCartesianX()) && (g.getCartesianY() == entryGraphNodes[i].getCartesianY())) {
-			return false;
-		}
-	}
 
-	return true;
-}
-*/
 void map::findConnectedRoadNodes(){
 	vector<int> temp;
 	graphNode graphNodeATestFirst;
@@ -260,49 +236,11 @@ vector<vector<int> > map::getAllPaths (){
 	return allPaths;
 }
 
-vector<roadNode> map::getunfRoads(){
+vector<roadNode > map::getunfRoads(){
 	return unfRoads;
 }
 
-/*
+
 void map::findTrafficLights(){
-	graphNode a;
-	graphNode b;
-
-	for (int i=0; i<unfRoads.size(); i++)
-	{
-		a = unfRoads[i].getgraphNodeA();
-		b = unfRoads[i].getgraphNodeB();
-				cout << "A | x: " << a.getCartesianX() << " y: " << a.getCartesianY() <<endl;
-				cout << "B | x: " << b.getCartesianX() << " y: " << b.getCartesianY() <<endl;
-
-		
-		if(a.getType()==1 || a.getType()==2)
-			if(!inTrafficLights(a))
-			{
-				trafficlights.push_back(a);
-			}
-		if(b.getType()==1 || b.getType()==2)
-			if(!inTrafficLights(b))
-			{
-				trafficlights.push_back(b);
-			}
-	}
 
 }
-
-bool map::inTrafficLights(graphNode g)
-{
-	for(int i=0; i<trafficlights.size(); i++)
-	{
-		if((g.getCartesianX() == trafficlights[i].getCartesianX()) && (g.getCartesianY() == trafficlights[i].getCartesianY()) )
-		{
-			cout << "Einai mesa!" << endl;
-			return true;
-		}
-	}
-	cout << "Den einai mesa!" << endl;
-	return false;
-}
-*/
-

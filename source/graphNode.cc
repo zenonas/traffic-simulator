@@ -43,13 +43,15 @@ int graphNode::getType(){
 	return Type;
 }
 
-void graphNode::setTrafficLight(trafficLight* t){
-	trafficLights=t;
+void graphNode::setTimer(int timer){
+	Timer=timer;
 }
 
-trafficLight* graphNode::getTrafficLight(){
-	return trafficLights;
+int graphNode::getTimer(){
+	return Timer;
 }
+
+
 
 
 
