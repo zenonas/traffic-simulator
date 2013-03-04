@@ -47,16 +47,10 @@ void map::ReadXMLFile()
 	root_node = doc.first_node("Map");
 	// Iterate over the brewerys
 	int j=0;
-	int l=0;
-	
+
 
 	for (xml_node<> * road_node = root_node->first_node("Road"); road_node; road_node =road_node->next_sibling("Road"))
 	{
-		l++;
-	}
-	for (xml_node<> * road_node = root_node->first_node("Road"); road_node; road_node =road_node->next_sibling("Road"))
-	{
-		roadNode newroadNode;
 		graphNode newgraphNodeA;
 		graphNode newgraphNodeB;
 
@@ -93,46 +87,43 @@ void map::ReadXMLFile()
 			{
 				for (xml_node<> * type_node = node_node->first_node("Type"); type_node; type_node =type_node->next_sibling("Type"))
 				{ 
-					newgraphNodeA.setType(atoi(type_node->value()));
-					if(newgraphNodeA.getType() == 1) {
-						cout << "COORDS: " << newgraphNodeA.getCartesianX() << "and " << newgraphNodeA.getCartesianY() << endl;
-						if (checkRoad(&newgraphNodeA) == true) entryGraphNodes.push_back(&newgraphNodeA);
-					}
-				}
-			}	
-			else
-			{
-				for (xml_node<> * type_node = node_node->first_node("Type"); type_node; type_node =type_node->next_sibling("Type"))
-				{ 
 					newgraphNodeB.setType(atoi(type_node->value()));
 					if(newgraphNodeB.getType() == 1) {
 						cout << "COORDS: " << newgraphNodeB.getCartesianX() << "and " << newgraphNodeB.getCartesianY() << endl;
 						if (checkRoad(&newgraphNodeB) == true) entryGraphNodes.push_back(&newgraphNodeB);
 					}
 				}	
-			}						
-			newroadNode.setgraphNodeA(newgraphNodeA);
-			newroadNode.setgraphNodeB(newgraphNodeB);
-			
-			graphNode newgraphNodeAnew;
-			newgraphNodeAnew = newroadNode.getgraphNodeA();      
+			}
+			else	
+			{
+				for (xml_node<> * type_node = node_node->first_node("Type"); type_node; type_node =type_node->next_sibling("Type"))
+				{ 
+					newgraphNodeA.setType(atoi(type_node->value()));
+					if(newgraphNodeA.getType() == 1) {
+						cout << "COORDS: " << newgraphNodeA.getCartesianX() << "and " << newgraphNodeA.getCartesianY() << endl;
+						if (checkRoad(&newgraphNodeA) == true) entryGraphNodes.push_back(&newgraphNodeA);
+					}
+				}
+			}		
+			i++;				
+			unfRoads.push_back(new roadNode);
+			unfRoads.back()->setgraphNodeA(newgraphNodeA);
+			unfRoads.back()->setgraphNodeB(newgraphNodeB);
+
 		}
 		for (xml_node<> * length= road_node->first_node("Length"); length; length=length->next_sibling("Length")){
-			newroadNode.setLength(atoi(length->value()));
+			unfRoads.back()->setLength(atoi(length->value()));
 		} 
 		for (xml_node<> * maxSpeed= road_node->first_node("MaxSpeed"); maxSpeed; maxSpeed=maxSpeed->next_sibling("MaxSpeed")){
-			newroadNode.setMaxSpeed(atoi(maxSpeed->value()));
+			unfRoads.back()->setMaxSpeed(atoi(maxSpeed->value()));
 		}
-		newroadNode.setId(j+1);
-		unfRoads.push_back(&newroadNode);
+		unfRoads.back()->setId(j+1);
+		
 		j++;
 	}
-	
-	for (int i=0; i<l; i++){
-		graphNode newgraphNodeAa;
-		graphNode newgraphNodeAb;
-		newgraphNodeAa = unfRoads[i]->getgraphNodeA();
-		newgraphNodeAb = unfRoads[i]->getgraphNodeB();
+	cout << "my size is: " << unfRoads.size();
+	for (int i=0; i<unfRoads.size(); i++){
+		cout << "PRINTING ROAD NODES: " << unfRoads[i]->getId() << endl;
 	}
 }
 
@@ -144,7 +135,7 @@ cout << "SIZE! " << entryGraphNodes.size() << endl;
 			return false;
 		}
 	}
-	
+
 	return true;
 }
 
