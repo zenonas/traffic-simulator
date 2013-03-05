@@ -25,7 +25,8 @@ map::map(){
 	findConnectedRoadNodes();
 	findAllPaths();
 	findTrafficLights();
-	//cout << "TRAFFIC LIGHTS #: " << trafficlights.size() << endl;
+	cout << "TRAFFIC LIGHTS #: " << trafficlights.size() << endl;
+	created = true;
 }
 
 map::~map(){
@@ -35,7 +36,7 @@ map::~map(){
 
 void map::ReadXMLFile()
 {
-	cout << "Parsing my road..." << endl;
+	//cout << "Parsing my road..." << endl;
 	xml_document<> doc;
 	xml_node<> * root_node;
 	// Read the xml file into a vector
@@ -123,8 +124,8 @@ void map::ReadXMLFile()
 		j++;
 	}
 	for (int i=0; i<unfRoads.size(); i++){
-		cout << "MY A GRAPH NODE WITH ID: " << unfRoads[i].getId() << "HAS COORDS: " << unfRoads[i].getgraphNodeA().getCartesianX() << " AND: " << unfRoads[i].getgraphNodeA().getCartesianY() << " TYPE: " << unfRoads[i].getgraphNodeA().getType() << endl;
-		cout << "MY B GRAPH NODE WITH ID: " << unfRoads[i].getId() << "HAS COORDS: " << unfRoads[i].getgraphNodeB().getCartesianX() << " AND: " << unfRoads[i].getgraphNodeB().getCartesianY() << " TYPE: " << unfRoads[i].getgraphNodeB().getType() << endl;
+		//cout << "MY A GRAPH NODE WITH ID: " << unfRoads[i].getId() << "HAS COORDS: " << unfRoads[i].getgraphNodeA().getCartesianX() << " AND: " << unfRoads[i].getgraphNodeA().getCartesianY() << " TYPE: " << unfRoads[i].getgraphNodeA().getType() << endl;
+		//cout << "MY B GRAPH NODE WITH ID: " << unfRoads[i].getId() << "HAS COORDS: " << unfRoads[i].getgraphNodeB().getCartesianX() << " AND: " << unfRoads[i].getgraphNodeB().getCartesianY() << " TYPE: " << unfRoads[i].getgraphNodeB().getType() << endl;
 		if (entryGraphNodes.size() == 0) {
 			if (unfRoads[i].getgraphNodeA().getType() == 1) entryGraphNodes.push_back(unfRoads[i].getgraphNodeA());
 			if (unfRoads[i].getgraphNodeB().getType() == 1) entryGraphNodes.push_back(unfRoads[i].getgraphNodeB());
@@ -145,9 +146,9 @@ void map::ReadXMLFile()
  		}
 	}
 		for (int zz=0; zz<entryGraphNodes.size(); zz++){
-		cout << "MY entry point is: " << entryGraphNodes[zz].getType() << endl;
+		//cout << "MY entry point is: " << entryGraphNodes[zz].getType() << endl;
 	}	
-		cout << "TOTAL ENTRY POINTS: " << entryGraphNodes.size() << endl;
+		//cout << "TOTAL ENTRY POINTS: " << entryGraphNodes.size() << endl;
 }
 
 void map::findConnectedRoadNodes(){
@@ -197,7 +198,7 @@ void map::findConnectedRoadNodes(){
 void map::findAllPaths (){
 	allPaths.clear();
 	vector<int> initial;
-	cout << "Find all possible paths...\n";
+	//cout << "Find all possible paths...\n";
 	//call function that finds all possible paths
 	for (int s=0; s<unfRoads.size(); s++){
 		initial.push_back(unfRoads[s].getId());
@@ -233,7 +234,7 @@ void map::find_childs(vector<int> initial, int value,vector<vector<int> > array)
 //print all possible paths
 void map::printAllPaths(){
 	int length=0, speed=0;
-	cout << "Print all possible paths for every entry roadNode...\n";
+	//cout << "Print all possible paths for every entry roadNode...\n";
 	for(int k=0; k<allPaths.size(); k++){
 		cout << k << ": ";
 		for(int l=0; l<allPaths[k].size(); l++){
@@ -242,7 +243,7 @@ void map::printAllPaths(){
 				if (unfRoads[i].getId() == allPaths[k][l])
 					length = length + unfRoads[allPaths[k][l]-1].getLength();				
 		}
-		cout << "\t\tTotalLength:" << length << endl;
+		//cout << "\t\tTotalLength:" << length << endl;
 		length=0;
 		speed=0;
 	}
@@ -266,20 +267,16 @@ void map::findTrafficLights(){
 	{
 		a = unfRoads[i].getgraphNodeA();
 		b = unfRoads[i].getgraphNodeB();
-				cout << "A | x: " << a.getCartesianX() << " y: " << a.getCartesianY() <<endl;
-				cout << "B | x: " << b.getCartesianX() << " y: " << b.getCartesianY() <<endl;
+				//cout << "A | x: " << a.getCartesianX() << " y: " << a.getCartesianY() <<endl;
+				//cout << "B | x: " << b.getCartesianX() << " y: " << b.getCartesianY() <<endl;
 
 		
 		if(a.getType()==1 || a.getType()==2)
 			if(!inTrafficLights(a))
-			{
 				trafficlights.push_back(a);
-			}
 		if(b.getType()==1 || b.getType()==2)
 			if(!inTrafficLights(b))
-			{
 				trafficlights.push_back(b);
-			}
 	}
 
 }
@@ -287,14 +284,8 @@ void map::findTrafficLights(){
 bool map::inTrafficLights(graphNode g)
 {
 	for(int i=0; i<trafficlights.size(); i++)
-	{
 		if((g.getCartesianX() == trafficlights[i].getCartesianX()) && (g.getCartesianY() == trafficlights[i].getCartesianY()) )
-		{
-			cout << "Einai mesa!" << endl;
 			return true;
-		}
-	}
-	cout << "Den einai mesa!" << endl;
 	return false;
 }
 

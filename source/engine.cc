@@ -11,6 +11,7 @@ Copyright (c) King's College London
 */
 #include "th_structs.h"
 #include "map.h"
+#include "carFits.cc"
 #include <vector>
 #include <iostream>
 
@@ -47,14 +48,11 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
 				entryQueues[k].pop();
 				//updatePosition(vehiclesInEngine.back());
 			} else {
-				// DELETE THE NON COMMENTED LINES JUST FOR TESTS
-				vehiclesInEngine.push_back(entryQueues[k].front());
-				entryQueues[k].pop();
-				/*if (carFits() == true) {
-				vehiclesInEngine.push_back(entryQueues[k].front());
-				entryQueues[k].pop();
-				updatePosition(vehiclesInEngine.back());
-				}*/
+				if (carFits(entryQueues[k].front(), thread_args)) {
+				  vehiclesInEngine.push_back(entryQueues[k].front());
+				  entryQueues[k].pop();
+				//updatePosition(vehiclesInEngine.back());
+				}
 			}
 			maxe++;
 		}
@@ -104,8 +102,8 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
 
 
 	sleep(thread_args->sleep_time);
-	cout << thread_args->VWaitingQ.size() << " testing " << entryQueues.size() << " and " << entryQueues[0].size() << " and " << entryQueues[1].size() << " and " << entryQueues[2].size() << " and " << entryQueues[3].size() << endl;
-	cout << "CURRENT CARS IN MAP: " << vehiclesInEngine.size() << endl;
+	//cout << thread_args->VWaitingQ.size() << " testing " << entryQueues.size() << " and " << entryQueues[0].size() << " and " << entryQueues[1].size() << " and " << entryQueues[2].size() << " and " << entryQueues[3].size() << endl;
+	//cout << "CURRENT CARS IN MAP: " << vehiclesInEngine.size() << endl;
 }
    pthread_exit(NULL);
 }
