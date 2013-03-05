@@ -2,7 +2,7 @@
 
 Group Project 7CCSMGPR - Team B
 Created: 15/2/2013
-Updated: 2/3/2013
+Updated: 5/3/2013
 File: engine.cc
 Description: This file specifies the engine thread of the system. Please treat as a "main" file and include any additional stuff you create rather than appending here.
 
@@ -68,10 +68,12 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
 
    //STEP 3: for every car in the engine (vehiclesInEngine), check every other car
    //        and if they have part of same path do...
+  /*
    for (int i=0; i<vehiclesInEngine.size(); i++){
       cout << "\nVehicle " << i+1 << ": ";
       vehiclesInEngine[i]->printPath();
    }
+   */
    for(int i=0; i<vehiclesInEngine.size(); i++){    
       vector<int> vehicle1Path = vehiclesInEngine[i]->getPath();
       for (int k=0; k<vehiclesInEngine.size(); k++){

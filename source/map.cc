@@ -125,16 +125,24 @@ void map::ReadXMLFile()
 	for (int i=0; i<unfRoads.size(); i++){
 		cout << "MY A GRAPH NODE WITH ID: " << unfRoads[i].getId() << "HAS COORDS: " << unfRoads[i].getgraphNodeA().getCartesianX() << " AND: " << unfRoads[i].getgraphNodeA().getCartesianY() << " TYPE: " << unfRoads[i].getgraphNodeA().getType() << endl;
 		cout << "MY B GRAPH NODE WITH ID: " << unfRoads[i].getId() << "HAS COORDS: " << unfRoads[i].getgraphNodeB().getCartesianX() << " AND: " << unfRoads[i].getgraphNodeB().getCartesianY() << " TYPE: " << unfRoads[i].getgraphNodeB().getType() << endl;
-		for (int zz=0; zz<unfRoads.size(); zz++) {
-			if (i != zz) {
-				if (unfRoads[i].getgraphNodeA().getType() == 1)
-					if (unfRoads[i].getgraphNodeA().getCartesianX() == unfRoads[zz].getgraphNodeA().getCartesianX() && unfRoads[i].getgraphNodeA().getCartesianY() == unfRoads[i].getgraphNodeA().getCartesianY()) 
-						entryGraphNodes.push_back(unfRoads[i].getgraphNodeA());
-				if (unfRoads[i].getgraphNodeB().getType() == 1)
-					if (unfRoads[i].getgraphNodeB().getCartesianX() == unfRoads[zz].getgraphNodeB().getCartesianX() && unfRoads[i].getgraphNodeB().getCartesianY() == unfRoads[i].getgraphNodeB().getCartesianY()) 
-						entryGraphNodes.push_back(unfRoads[i].getgraphNodeB());
-			}
+		if (entryGraphNodes.size() == 0) {
+			if (unfRoads[i].getgraphNodeA().getType() == 1) entryGraphNodes.push_back(unfRoads[i].getgraphNodeA());
+			if (unfRoads[i].getgraphNodeB().getType() == 1) entryGraphNodes.push_back(unfRoads[i].getgraphNodeB());
+		} 
+		else {
+			int flagA=0;
+			int flagB=0;
+		for (int zz=0; zz<entryGraphNodes.size(); zz++) {
+			if (unfRoads[i].getgraphNodeA().getType() == 1)
+				if (unfRoads[i].getgraphNodeA().getCartesianX() == entryGraphNodes[zz].getCartesianX() && unfRoads[i].getgraphNodeA().getCartesianY() == entryGraphNodes[zz].getCartesianY()) 
+					flagA=1;
+			if (unfRoads[i].getgraphNodeB().getType() == 1)
+				if (unfRoads[i].getgraphNodeB().getCartesianX() == entryGraphNodes[zz].getCartesianX() && unfRoads[i].getgraphNodeB().getCartesianY() == entryGraphNodes[zz].getCartesianY())
+					flagB=1;
 		}
+		if (flagA == 0 && unfRoads[i].getgraphNodeA().getType() == 1) entryGraphNodes.push_back(unfRoads[i].getgraphNodeA());
+		if (flagB == 0 && unfRoads[i].getgraphNodeB().getType() == 1) entryGraphNodes.push_back(unfRoads[i].getgraphNodeB());
+ 		}
 	}
 		for (int zz=0; zz<entryGraphNodes.size(); zz++){
 		cout << "MY entry point is: " << entryGraphNodes[zz].getType() << endl;
