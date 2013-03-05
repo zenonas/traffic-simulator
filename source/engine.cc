@@ -129,7 +129,6 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
 */
 for(int i=0; i<thread_args->mymap.trafficlights.size(); i++)
 {
-    cout << "CURRENT TIMER: " << thread_args->CurrentTimer<<" STATE: " << thread_args->mymap.trafficlights[i].getState()<<endl;
 	if (thread_args->mymap.trafficlights[i].getTimer()!=0) {
 	if((thread_args->CurrentTimer % thread_args->mymap.trafficlights[i].getTimer())== 0 && thread_args->CurrentTimer !=0)
 	{
@@ -137,28 +136,18 @@ for(int i=0; i<thread_args->mymap.trafficlights.size(); i++)
 		{
 				thread_args->mymap.trafficlights[i].setState(0);
 				thread_args->mymap.trafficlights[i].setTimer(thread_args->mymap.trafficlights[i].getTimer()/2);
-
-				  cout << "TIMER: " << thread_args->CurrentTimer<<"STATE: " << thread_args->mymap.trafficlights[i].getState()<<endl;
-
 		}
 		else
 			{
 				thread_args->mymap.trafficlights[i].setState(1);
 				thread_args->mymap.trafficlights[i].setTimer(thread_args->mymap.trafficlights[i].getTimer()*2);
-
-				  cout << "TIMER: " << thread_args->CurrentTimer<<"STATE: " << thread_args->mymap.trafficlights[i].getState()<<endl;
-
 			}
 	} }
 }
-   thread_args->CurrentTimer++;
-
-
-
-
-	sleep(thread_args->sleep_time);
-	cout << thread_args->VWaitingQ.size() << " testing " << entryQueues.size() << " and " << entryQueues[0].size() << " and " << entryQueues[1].size() << " and " << entryQueues[2].size() << " and " << entryQueues[3].size() << endl;
-	cout << "CURRENT CARS IN MAP: " << vehiclesInEngine.size() << endl;
+  thread_args->CurrentTimer++;
+  sleep(thread_args->sleep_time);
+  cout << thread_args->VWaitingQ.size() << " testing " << entryQueues.size() << " and " << entryQueues[0].size() << " and " << entryQueues[1].size() << " and " << entryQueues[2].size() << " and " << entryQueues[3].size() << endl;
+  cout << "CURRENT CARS IN MAP: " << vehiclesInEngine.size() << endl;
 }
 
 
