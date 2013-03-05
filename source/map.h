@@ -26,6 +26,7 @@ public:
    void constructMap();
    map returnMap();
    void printAllPaths();
+   int checkTurn(int roadNode1Id, int roadNode2Id);
    vector<vector<int> > getAllPaths();
    vector<roadNode> getunfRoads();
    vector<graphNode > entryGraphNodes;
