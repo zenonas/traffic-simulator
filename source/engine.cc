@@ -11,6 +11,8 @@ Copyright (c) King's College London
 */
 #include "th_structs.h"
 #include "map.h"
+#include "roadNode.h"
+#include "graphNode.h"
 #include <vector>
 #include <iostream>
 
@@ -55,6 +57,7 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
 				entryQueues[k].pop();
 				updatePosition(vehiclesInEngine.back());
 				}*/
+
 			}
 			maxe++;
 		}
@@ -74,6 +77,7 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
       vehiclesInEngine[i]->printPath();
    }
    */
+   
    for(int i=0; i<vehiclesInEngine.size(); i++){    
       vector<int> vehicle1Path = vehiclesInEngine[i]->getPath();
       for (int k=0; k<vehiclesInEngine.size(); k++){
@@ -91,6 +95,8 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
                   int speedVehicle2 = vehiclesInEngine[k]->getCurrentSpeed();
                   int driver1 = vehiclesInEngine[i]->getDriverType();
                   int driver2 = vehiclesInEngine[k]->getDriverType();
+                 
+
                  // cout << " CAR: " << i << " and " << k << endl;
                    //  Do the appopriate checks in order to update position of car i
 
@@ -102,10 +108,49 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
       }
    }
 
+   cout << endl;
+   vector<roadNode> ROADS = thread_args->mymap.getunfRoads();
+
+   for(int i=0; i<vehiclesInEngine.size(); i++){    
+      vector<int> vehiclePath = vehiclesInEngine[i]->getPath();
+      vector<int> intersection;
+      cout << "\n\n\ncar:" << i<<endl;
+      vehiclesInEngine[i]->printPath();
+         for (int p=0; p<vehiclePath.size(); p++){
+            for (int k=0; k<ROADS.size(); k++)
+               if (ROADS[k].getId()==vehiclePath[p]){
+                  graphNode A1 = ROADS[k].getgraphNodeA();
+                  graphNode B1 = ROADS[k].getgraphNodeB();
+                  int count = 1;
+                  for (int s = 0; s < ROADS.size(); s++){
+                     graphNode A2 = ROADS[s].getgraphNodeA();
+                     graphNode B2 = ROADS[s].getgraphNodeB();
+                     if (s!=k){
+                        if ((A1.getCartesianX() == A2.getCartesianX() && A1.getCartesianY() == A2.getCartesianY()))                    
+                           count++;                
+                        if ((A1.getCartesianX() == B2.getCartesianX() && A1.getCartesianY() == B2.getCartesianY()))   
+                           count++;
+                        if ((B1.getCartesianX() == B2.getCartesianX() && B1.getCartesianY() == B2.getCartesianY()))     
+                           count++;
+                        if ((B1.getCartesianX() == A2.getCartesianX() && B1.getCartesianY() == A2.getCartesianY()))
+                           count++;
+                        if (count>2){
+                           cout << "\nintersection at "<< ROADS[k].getId() << endl;
+                           break;
+                        }
+                     }
+                  }
+                  if (ROADS[k].getgraphNodeA().getType()==1 || ROADS[k].getgraphNodeA().getType()==2 )
+                     cout << "\nTraffic Light A" << ROADS[k].getId();   
+                  if (ROADS[k].getgraphNodeB().getType()==1 || ROADS[k].getgraphNodeB().getType()==2 )
+                     cout << "\nTraffic Light B" << ROADS[k].getId();               
+                  break;  
+               }
+         }
+      }
+
 
 	sleep(thread_args->sleep_time);
-	cout << thread_args->VWaitingQ.size() << " testing " << entryQueues.size() << " and " << entryQueues[0].size() << " and " << entryQueues[1].size() << " and " << entryQueues[2].size() << " and " << entryQueues[3].size() << endl;
-	cout << "CURRENT CARS IN MAP: " << vehiclesInEngine.size() << endl;
 }
    pthread_exit(NULL);
 }
