@@ -24,7 +24,7 @@ map::map(){
 	ReadXMLFile();
 	findConnectedRoadNodes();
 	findAllPaths();
-	//findTrafficLights();
+	findTrafficLights();
 	//cout << "TRAFFIC LIGHTS #: " << trafficlights.size() << endl;
 }
 
@@ -39,7 +39,7 @@ void map::ReadXMLFile()
 	xml_document<> doc;
 	xml_node<> * root_node;
 	// Read the xml file into a vector
-	ifstream theFile ("xmlfile3.xml");
+	ifstream theFile ("xmlfile.xml");
 	vector<char> buffer((istreambuf_iterator<char>(theFile)), istreambuf_iterator<char>());
 	buffer.push_back('\0');
 	// Parse the buffer using the xml file parsing library into doc 
@@ -89,11 +89,11 @@ void map::ReadXMLFile()
 				{ 
 					newgraphNodeB.setType(atoi(type_node->value()));
 				}
-				/*for (xml_node<> * timer_node = node_node->first_node("Timer"); timer_node; timer_node =timer_node->next_sibling("Timer"))
+				for (xml_node<> * timer_node = node_node->first_node("Timer"); timer_node; timer_node =timer_node->next_sibling("Timer"))
 				{ 
 					newgraphNodeB.setTimer(atoi(timer_node->value()));
 					//cout << "time: " << newgraphNodeB.getTimer() <<endl;
-				}*/
+				}
 			}	
 			else
 			{
@@ -101,11 +101,11 @@ void map::ReadXMLFile()
 				{ 
 					newgraphNodeA.setType(atoi(type_node->value())); 
 				}	
-			/*	for (xml_node<> * timer_node = node_node->first_node("Timer"); timer_node; timer_node =timer_node->next_sibling("Timer"))
+				for (xml_node<> * timer_node = node_node->first_node("Timer"); timer_node; timer_node =timer_node->next_sibling("Timer"))
 				{ 
 					newgraphNodeA.setTimer(atoi(timer_node->value()));
 					//cout << "time: " << newgraphNodeA.getTimer() <<endl;
-				}*/
+				}
 			}
 			i++;				
 			newroadNode.setgraphNodeA(newgraphNodeA);
@@ -137,7 +137,7 @@ void map::ReadXMLFile()
 	}
 		for (int zz=0; zz<entryGraphNodes.size(); zz++){
 		cout << "MY entry point is: " << entryGraphNodes[zz].getType() << endl;
-	}
+	}	
 		cout << "TOTAL ENTRY POINTS: " << entryGraphNodes.size() << endl;
 }
 /*
@@ -264,7 +264,7 @@ vector<roadNode> map::getunfRoads(){
 	return unfRoads;
 }
 
-/*
+
 void map::findTrafficLights(){
 	graphNode a;
 	graphNode b;
@@ -304,5 +304,5 @@ bool map::inTrafficLights(graphNode g)
 	cout << "Den einai mesa!" << endl;
 	return false;
 }
-*/
+
 

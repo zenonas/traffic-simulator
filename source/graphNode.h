@@ -12,7 +12,7 @@ Copyright (c) King's College London
 #define graphNode_h
 
 #include "trafficLight.h"
-# include <vector>
+#include <vector>
 using namespace std;
 
 class graphNode
