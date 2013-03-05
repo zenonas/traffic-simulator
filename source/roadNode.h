@@ -30,10 +30,9 @@ public:
    int getMaxSpeed();
    void setId(int x);
    int getId();
+   
 
 private:
-   int laneid;
-   int direction[];
    int Length;
    int MaxSpeed;
    int Id;

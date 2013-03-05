@@ -48,7 +48,7 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
 				entryQueues[k].pop();
 				//updatePosition(vehiclesInEngine.back());
 			} else {
-				if (carFits(entryQueues[k].front(), thread_args)) {
+				if (carFits(entryQueues[k].front(), vehiclesInEngine, thread_args->mymap.getunfRoads(), thread_args)) {
 				  vehiclesInEngine.push_back(entryQueues[k].front());
 				  entryQueues[k].pop();
 				//updatePosition(vehiclesInEngine.back());

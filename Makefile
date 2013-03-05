@@ -22,6 +22,7 @@ trafficsim: bin/main.o bin/vehicle.o bin/map.o bin/graphNode.o bin/roadNode.o bi
 	$(CC) -o $@ $^ $(LDFLAG)
 
 bin/main.o: source/main.cc
+	clear
 	@echo "Compiling the Main file"
 	$(CC) -c $(CFLAGS) -o $@ $< 
 
@@ -42,6 +43,7 @@ bin/trafficLight.o: source/trafficLight.cc
 	$(CC) -c $(CFLAGS) -o $@ $< 
 
 clean:
+	clear
 	@echo "Make is cleaning object files and the trafficsim binary"
 	rm -f bin/*
 	rm -r trafficsim
