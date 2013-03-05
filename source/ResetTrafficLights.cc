@@ -24,18 +24,22 @@ void ToggleLights(void *arguments, int CurrentTimer)
 	{
 			if (thread_args->mymap.trafficlights[i].getState() == 1)
 			{
-			   cout << ">>CURRENT TIMER: " << thread_args->CurrentTimer<<"STATE: " << thread_args->mymap.trafficlights[i].getState()<<endl;
+			cout << ">>BEFORE TIMER: " << thread_args->CurrentTimer<<" BEFORE STATE: " << thread_args->mymap.trafficlights[i].getState()<<" TimerNode:"<<thread_args->mymap.trafficlights[i].getTimer()<<endl;
+
 				thread_args->mymap.trafficlights[i].setState(0);
 				thread_args->CurrentTimer=0;
-				cout << ">>AFTER TIMER: " << thread_args->CurrentTimer<<" AFTER STATE: " << thread_args->mymap.trafficlights[i].getState()<<endl;
+				thread_args->mymap.trafficlights[i].setTimer(thread_args->mymap.trafficlights[i].getTimer()/2);
+				cout << ">>AFTER TIMER: " << thread_args->CurrentTimer<<" AFTER STATE: " << thread_args->mymap.trafficlights[i].getState()<<" TimerNode:"<<thread_args->mymap.trafficlights[i].getTimer()<<endl;
 			}
 			else
 			{
-						cout << ">>CURRENT TIMER: " << thread_args->CurrentTimer<<"STATE: " << thread_args->mymap.trafficlights[i].getState()<<endl;
+							cout << ">>BEFORE TIMER: " << thread_args->CurrentTimer<<" BEFORE STATE: " << thread_args->mymap.trafficlights[i].getState()<<" TimerNode:"<<thread_args->mymap.trafficlights[i].getTimer()<<endl;
+
 
 					thread_args->mymap.trafficlights[i].setState(1);
 					thread_args->CurrentTimer=0;
-					cout << ">>AFTER TIMER: " << thread_args->CurrentTimer<<" AFTER STATE: " << thread_args->mymap.trafficlights[i].getState()<<endl;
+					thread_args->mymap.trafficlights[i].setTimer(thread_args->mymap.trafficlights[i].getTimer()*2);
+				cout << ">>AFTER TIMER: " << thread_args->CurrentTimer<<" AFTER STATE: " << thread_args->mymap.trafficlights[i].getState()<<" TimerNode:"<<thread_args->mymap.trafficlights[i].getTimer()<<endl;
 
 			}
 	}

@@ -126,8 +126,6 @@ void map::ReadXMLFile()
 		j++;
 	}
 	for (int i=0; i<unfRoads.size(); i++){
-		cout << "MY A GRAPH NODE WITH ID: " << unfRoads[i].getId() << "HAS COORDS: " << unfRoads[i].getgraphNodeA().getCartesianX() << " AND: " << unfRoads[i].getgraphNodeA().getCartesianY() << " TYPE: " << unfRoads[i].getgraphNodeA().getType() << endl;
-		cout << "MY B GRAPH NODE WITH ID: " << unfRoads[i].getId() << "HAS COORDS: " << unfRoads[i].getgraphNodeB().getCartesianX() << " AND: " << unfRoads[i].getgraphNodeB().getCartesianY() << " TYPE: " << unfRoads[i].getgraphNodeB().getType() << endl;
 		for (int zz=0; zz<unfRoads.size(); zz++) {
 			if (i != zz) {
 				if (unfRoads[i].getgraphNodeA().getType() == 1)
@@ -140,9 +138,7 @@ void map::ReadXMLFile()
 		}
 	}
 		for (int zz=0; zz<entryGraphNodes.size(); zz++){
-		cout << "MY entry point is: " << entryGraphNodes[zz].getType() << endl;
 	}	
-		cout << "TOTAL ENTRY POINTS: " << entryGraphNodes.size() << endl;
 		if (unfRoads[0].getgraphNodeA().getTimer() != 0) cout << "its not 0" << endl;
 }
 
@@ -287,11 +283,9 @@ bool map::inTrafficLights(graphNode g)
 	{
 		if((g.getCartesianX() == trafficlights[i].getCartesianX()) && (g.getCartesianY() == trafficlights[i].getCartesianY()) )
 		{
-			cout << "Einai mesa!" << endl;
 			return true;
 		}
 	}
-	cout << "Den einai mesa!" << endl;
 	return false;
 }
 
