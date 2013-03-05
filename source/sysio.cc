@@ -33,18 +33,29 @@ void *inout(void *arguments)
 
     while(!thread_args->finished)
     {
-	cout << "Input a Command: ";
+    cout << "Select one of the following commands:\n";
+	cout << "1. SetNoVehicles\n";
+	cout << "2. SetVehicleTRatio\n";
+	cout << "3. SetDriverTRatio\n";
+	cout << "4. ToggleTrafficLights\n";
+	cout << "5. StopSimulation\n";
+	cout << "6. ShowStatistics\n";
+	cout << "7. Exit\n";
+
 	cin >> command;
-	while ( command != "novehicles" && command != "vehicle-ratio" &&
-			command != "driver-ratio" && 
-			command != "ToggleTrafficLights" && command != "stop" &&
-            command != "ShowStatistics")
+	while ( command != "SetNoVehicles" && command != "1"
+			&& command != "SetVehicleTRatio" && command != "2"
+			&& command != "SetDriverTRatio" && command != "3"
+			&& command != "ToggleTrafficLights" && command != "4"
+			&& command != "StopSimulation" && command != "5"
+			&& command != "ShowStatistics" && command != "6"
+			&& command != "Exit" && command != "7")
 	{
 		cout << "Invalid Command. Input another Command: "; 
 		cin >> command ; 
 	}
 
-	if (command == "novehicles")
+	if (command == "novehicles" || command == "1")
 	{
 		cout << "Insert max number of Vehicles to be created: " << endl;
 		while (!(cin >> num)){
@@ -54,7 +65,7 @@ void *inout(void *arguments)
 		}		
 		thread_args->max_no_vehicles = num;
 	}
-	if (command == "vehicle-ratio")
+	if (command == "vehicle-ratio" || command == "2")
 	{
 		do{
 			cout << "Insert Car Ratio: ";
@@ -83,7 +94,7 @@ void *inout(void *arguments)
 		thread_args->vehicle_ratios[2] = lrat;
 	}
 
-	if (command == "driver-ratio")
+	if (command == "driver-ratio" || command == "3")
 	{
 		do{
 			cout << "Insert Normal Driver Ratio: ";
@@ -112,7 +123,7 @@ void *inout(void *arguments)
 		thread_args->driver_ratios[2] = aggressiver;
 	}
 
-	if (command == "ToggleTrafficLights")
+	if (command == "ToggleTrafficLights" || command == "4")
 	{
 		cout << "Insert Time Delay: ";
 		while (!(cin >> timedelay)){
@@ -123,12 +134,15 @@ void *inout(void *arguments)
 		//SetTrafficLights(tdelay);
 	}
 
-	if (command == "stop"){
+	if (command == "stop" || command == "5"){
 		//call for statistics
 		thread_args->finished = true;
 	}
-	if (command == "ShowStatistics"){
+	if (command == "ShowStatistics" || command == "6"){
 		//ShowStatistics(w);
+	}
+	if (command == "Exit" || command == "7"){
+		//Terminate Simulation
 	}
   }
 

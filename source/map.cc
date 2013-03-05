@@ -48,6 +48,7 @@ void map::ReadXMLFile()
 	root_node = doc.first_node("Map");
 	// Iterate over the brewerys
 	int j=0;
+	vector<int> entryP;
 
 	for (xml_node<> * road_node = root_node->first_node("Road"); road_node; road_node =road_node->next_sibling("Road"))
 	{
@@ -82,7 +83,7 @@ void map::ReadXMLFile()
 					else if(strcmp(point_node->first_attribute("name")->value(),"y")==0)
 						newgraphNodeA.setCartesianY(atoi(point_node->value()));
 				}           
-			}           	
+			}
 			if(i%2!=0)
 			{
 				for (xml_node<> * type_node = node_node->first_node("Type"); type_node; type_node =type_node->next_sibling("Type"))
@@ -140,17 +141,7 @@ void map::ReadXMLFile()
 	}	
 		cout << "TOTAL ENTRY POINTS: " << entryGraphNodes.size() << endl;
 }
-/*
-bool map::checkRoad(vector<roadNodes *unfRoads> ){
-	for (int i = 0; i<entryGraphNodes.size(); i++) {
-		if ((g.getCartesianX() == entryGraphNodes[i].getCartesianX()) && (g.getCartesianY() == entryGraphNodes[i].getCartesianY())) {
-			return false;
-		}
-	}
 
-	return true;
-}
-*/
 void map::findConnectedRoadNodes(){
 	vector<int> temp;
 	graphNode graphNodeATestFirst;
@@ -192,12 +183,6 @@ void map::findConnectedRoadNodes(){
 		}	
 	}
 }
-//print our array with connected roadnodes
-/*for(int k=0; k<array.size(); k++){
-	for(int l=0; l<2; l++)
-		cout << array[k][l] << " ";
-cout << endl;
-}*/
 }
 
 //find all paths
