@@ -33,7 +33,7 @@ void *inout(void *arguments)
 
     while(!thread_args->finished)
     {
-    cout << "Select one of the following commands:\n";
+    /*cout << "Select one of the following commands:\n";
 	cout << "1. SetNoVehicles\n";
 	cout << "2. SetVehicleTRatio\n";
 	cout << "3. SetDriverTRatio\n";
@@ -41,7 +41,7 @@ void *inout(void *arguments)
 	cout << "5. StopSimulation\n";
 	cout << "6. ShowStatistics\n";
 	cout << "7. Exit\n";
-
+*/
 	cin >> command;
 	while ( command != "SetNoVehicles" && command != "1"
 			&& command != "SetVehicleTRatio" && command != "2"

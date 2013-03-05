@@ -126,6 +126,7 @@ void map::ReadXMLFile()
 	for (int i=0; i<unfRoads.size(); i++){
 		//cout << "MY A GRAPH NODE WITH ID: " << unfRoads[i].getId() << "HAS COORDS: " << unfRoads[i].getgraphNodeA().getCartesianX() << " AND: " << unfRoads[i].getgraphNodeA().getCartesianY() << " TYPE: " << unfRoads[i].getgraphNodeA().getType() << endl;
 		//cout << "MY B GRAPH NODE WITH ID: " << unfRoads[i].getId() << "HAS COORDS: " << unfRoads[i].getgraphNodeB().getCartesianX() << " AND: " << unfRoads[i].getgraphNodeB().getCartesianY() << " TYPE: " << unfRoads[i].getgraphNodeB().getType() << endl;
+
 		if (entryGraphNodes.size() == 0) {
 			if (unfRoads[i].getgraphNodeA().getType() == 1) entryGraphNodes.push_back(unfRoads[i].getgraphNodeA());
 			if (unfRoads[i].getgraphNodeB().getType() == 1) entryGraphNodes.push_back(unfRoads[i].getgraphNodeB());
@@ -145,10 +146,6 @@ void map::ReadXMLFile()
 		if (flagB == 0 && unfRoads[i].getgraphNodeB().getType() == 1) entryGraphNodes.push_back(unfRoads[i].getgraphNodeB());
  		}
 	}
-		for (int zz=0; zz<entryGraphNodes.size(); zz++){
-		//cout << "MY entry point is: " << entryGraphNodes[zz].getType() << endl;
-	}	
-		//cout << "TOTAL ENTRY POINTS: " << entryGraphNodes.size() << endl;
 }
 
 void map::findConnectedRoadNodes(){
@@ -267,9 +264,6 @@ void map::findTrafficLights(){
 	{
 		a = unfRoads[i].getgraphNodeA();
 		b = unfRoads[i].getgraphNodeB();
-				//cout << "A | x: " << a.getCartesianX() << " y: " << a.getCartesianY() <<endl;
-				//cout << "B | x: " << b.getCartesianX() << " y: " << b.getCartesianY() <<endl;
-
 		
 		if(a.getType()==1 || a.getType()==2)
 			if(!inTrafficLights(a))
