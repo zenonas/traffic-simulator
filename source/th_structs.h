@@ -27,6 +27,7 @@ struct thread_arguments {
       int sleep_time;
       queue<vehicle *> VWaitingQ;
       map mymap;
+      int CurrentTimer;
 };
 
 

@@ -1,5 +1,4 @@
 /* Traffic Simulation System
-
 Group Project 7CCSMGPR - Team B
 Created: 15/2/2013
 Updated: 2/3/2013
@@ -23,6 +22,7 @@ void *engine(void *arguments)
    thread_args = (struct thread_arguments *)arguments;
    vector<queue <vehicle *> > entryQueues;
    vector<vehicle *> vehiclesInEngine;
+   thread_args->CurrentTimer=0;
    for (int i=0; i<thread_args->mymap.entryGraphNodes.size(); i++) {
    	queue<vehicle *> currentQueue;
    	entryQueues.push_back(currentQueue);
@@ -127,9 +127,37 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
    }
 
 */
+for(int i=0; i<thread_args->mymap.trafficlights.size(); i++)
+{
+  cout << "CURRENT TIMER: " << thread_args->CurrentTimer<<" STATE: " << thread_args->mymap.trafficlights[i].getState()<<endl;
+	if (thread_args->mymap.trafficlights[i].getTimer()!=0) {
+	if((thread_args->CurrentTimer % thread_args->mymap.trafficlights[i].getTimer())== 0  )
+	{
+		if (thread_args->mymap.trafficlights[i].getState() == 1)
+		{
+				thread_args->mymap.trafficlights[i].setState(0);
+				  cout << "TIMER: " << thread_args->CurrentTimer<<"STATE: " << thread_args->mymap.trafficlights[i].getState()<<endl;
+
+		}
+		else
+			{
+				thread_args->mymap.trafficlights[i].setState(1);
+				  cout << "TIMER: " << thread_args->CurrentTimer<<"STATE: " << thread_args->mymap.trafficlights[i].getState()<<endl;
+
+			}
+	} }
+}
+   thread_args->CurrentTimer++;
+
+
+
+
 	sleep(thread_args->sleep_time);
 	cout << thread_args->VWaitingQ.size() << " testing " << entryQueues.size() << " and " << entryQueues[0].size() << " and " << entryQueues[1].size() << " and " << entryQueues[2].size() << " and " << entryQueues[3].size() << endl;
 	cout << "CURRENT CARS IN MAP: " << vehiclesInEngine.size() << endl;
 }
+
+
    pthread_exit(NULL);
+   
 }

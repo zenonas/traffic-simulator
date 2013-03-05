@@ -29,6 +29,7 @@ public:
    vector<vector<int> > getAllPaths();
    vector<roadNode> getunfRoads();
    vector<graphNode > entryGraphNodes;
+   vector<graphNode > trafficlights;
    bool created;
 
 private:
@@ -39,7 +40,6 @@ private:
    bool inTrafficLights(graphNode g);
    void findAllPaths();
    void find_childs(vector<int> initial,int value,vector<vector<int> > array);
-   vector<graphNode > trafficlights;
    vector<vector<int> > array;
    vector<roadNode > unfRoads;
    vector<vector<int> > allPaths;

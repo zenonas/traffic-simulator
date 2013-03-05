@@ -93,7 +93,7 @@ void map::ReadXMLFile()
 				for (xml_node<> * timer_node = node_node->first_node("Timer"); timer_node; timer_node =timer_node->next_sibling("Timer"))
 				{ 
 					newgraphNodeB.setTimer(atoi(timer_node->value()));
-					//cout << "time: " << newgraphNodeB.getTimer() <<endl;
+						//cout << "time: " << newgraphNodeB.getTimer() <<endl;
 				}
 			}	
 			else
@@ -110,7 +110,10 @@ void map::ReadXMLFile()
 			}
 			i++;				
 			newroadNode.setgraphNodeA(newgraphNodeA);
-			newroadNode.setgraphNodeB(newgraphNodeB);   
+			newroadNode.setgraphNodeB(newgraphNodeB);
+			newroadNode.getgraphNodeA().setTimer(newgraphNodeA.getTimer());
+			newroadNode.getgraphNodeB().setTimer(newgraphNodeB.getTimer());
+		
 		}
 		for (xml_node<> * length= road_node->first_node("Length"); length; length=length->next_sibling("Length")){
 			newroadNode.setLength(atoi(length->value()));
@@ -140,6 +143,7 @@ void map::ReadXMLFile()
 		cout << "MY entry point is: " << entryGraphNodes[zz].getType() << endl;
 	}	
 		cout << "TOTAL ENTRY POINTS: " << entryGraphNodes.size() << endl;
+		if (unfRoads[0].getgraphNodeA().getTimer() != 0) cout << "its not 0" << endl;
 }
 
 void map::findConnectedRoadNodes(){
@@ -151,6 +155,7 @@ void map::findConnectedRoadNodes(){
 	for (int i=0; i<unfRoads.size(); i++){
 		graphNodeATestFirst = unfRoads[i].getgraphNodeA();
 		graphNodeBTestFirst = unfRoads[i].getgraphNodeB();
+		
 		for (int j=0; j<unfRoads.size(); j++){
 			graphNodeAMatcher = unfRoads[j].getgraphNodeA();
 			graphNodeBMatcher = unfRoads[j].getgraphNodeB();
