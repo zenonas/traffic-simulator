@@ -66,42 +66,16 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
 			cout << "CAR WITH ID:" << entryQueues[k][l]->vehi_id << " will enter queue: " << entryQueues[k][l]->getEntryPoint() << endl;
 */
 
-/*   
-   while (!thread_args->finished) {
-	/*while(!thread_args->VWaitingQ.empty) {
-
-		//STEP 1: CALL THE SPLIT TO ENTRY POINT QUEUES FUNCTION
-		
-	}
-
-      //STEP 2: manually create 5 vehicles
-   
-   vector<vehicle> tempVector;
-   vector<roadNode> roads;
-   roads= thread_args->mymap.getunfRoads();
-   for (int i=0; i<5; i++){
-      int entryP= rand() % roads.size() +1 ;
-      int exitP= rand() % roads.size() + 1;
-      vehicle myVehicle(i, entryP, exitP, thread_args->mymap);
-      Position position;
-      position.roadNodeID=entryP;
-      position.lane=1;
-      position.p=0;
-      myVehicle.setCurrentPosition(position);
-      tempVector.push_back(myVehicle);    
-   }
-   for (int i=0; i<tempVector.size(); i++){
-      cout << "\nVehicle " << i+1 << ": ";
-      tempVector[i].printPath();
-   }
-   cout << endl;
-
-   //STEP 3: for every car in the engine (tempVector), check every other car
+   //STEP 3: for every car in the engine (vehiclesInEngine), check every other car
    //        and if they have part of same path do...
-   for(int i=0; i<tempVector.size(); i++){    
-      vector<int> vehicle1Path = tempVector[i].getPath();
-      for (int k=0; k<tempVector.size(); k++){
-         vector<int> vehicle2Path = tempVector[k].getPath();
+   for (int i=0; i<vehiclesInEngine.size(); i++){
+      cout << "\nVehicle " << i+1 << ": ";
+      vehiclesInEngine[i]->printPath();
+   }
+   for(int i=0; i<vehiclesInEngine.size(); i++){    
+      vector<int> vehicle1Path = vehiclesInEngine[i]->getPath();
+      for (int k=0; k<vehiclesInEngine.size(); k++){
+         vector<int> vehicle2Path = vehiclesInEngine[k]->getPath();
          int flag=0;
          for (int p=0; p<vehicle1Path.size(); p++){
             for (int q=0; q<vehicle2Path.size(); q++){                            
@@ -109,14 +83,14 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
                   ///check current positions and calculate if affecting
                   Position positionVehicle1;
                   Position positionVehicle2;
-                  positionVehicle1= tempVector[i].getCurrentPosition();
-                  positionVehicle2= tempVector[k].getCurrentPosition();
-                  int speedVehicle1 = tempVector[i].getCurrentSpeed();
-                  int speedVehicle2 = tempVector[k].getCurrentSpeed();
-                  int driver1 = tempVector[i].getDriverType();
-                  int driver2 = tempVector[k].getDriverType();
-                  /*
-                     Do the appopriate checks in order to update position of car i
+                  positionVehicle1= vehiclesInEngine[i]->getCurrentPosition();
+                  positionVehicle2= vehiclesInEngine[k]->getCurrentPosition();
+                  int speedVehicle1 = vehiclesInEngine[i]->getCurrentSpeed();
+                  int speedVehicle2 = vehiclesInEngine[k]->getCurrentSpeed();
+                  int driver1 = vehiclesInEngine[i]->getDriverType();
+                  int driver2 = vehiclesInEngine[k]->getDriverType();
+                 // cout << " CAR: " << i << " and " << k << endl;
+                   //  Do the appopriate checks in order to update position of car i
 
                   
                   flag=1;
@@ -126,7 +100,7 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
       }
    }
 
-*/
+
 	sleep(thread_args->sleep_time);
 	cout << thread_args->VWaitingQ.size() << " testing " << entryQueues.size() << " and " << entryQueues[0].size() << " and " << entryQueues[1].size() << " and " << entryQueues[2].size() << " and " << entryQueues[3].size() << endl;
 	cout << "CURRENT CARS IN MAP: " << vehiclesInEngine.size() << endl;
