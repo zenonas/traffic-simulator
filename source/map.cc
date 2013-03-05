@@ -317,8 +317,11 @@ int map::checkTurn(int roadNode1Id, int roadNode2Id){
 							return 1;
 						}
 					}
-					else return -1;
-}
+					else {
+						cout << "not connected";
+						return -1;
+					}
+				}
 }
 
 //return vector that contains allPaths

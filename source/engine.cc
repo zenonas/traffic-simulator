@@ -108,6 +108,20 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
       }
    }
 
+   cout << "Check Turns!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
+   cout << "\n1, 2 ";
+   thread_args->mymap.checkTurn(1,2);
+   cout << "\n1, 5 ";
+   thread_args->mymap.checkTurn(1,5);
+     cout << "\n1, 6 ";
+     thread_args->mymap.checkTurn(1,6);
+     cout << "\n4, 1 ";
+     thread_args->mymap.checkTurn(4,1);
+     cout << "\n2, 4 ";
+     thread_args->mymap.checkTurn(2,4);
+
+
+
 
    cout << endl;
    vector<roadNode> ROADS = thread_args->mymap.getunfRoads();
