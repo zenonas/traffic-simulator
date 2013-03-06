@@ -105,14 +105,27 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
       }
    }
 
+   cout << "Check Turns!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
+   cout << "\n1, 2 ";
+   thread_args->mymap.checkTurn(1,2);
+   cout << "\n1, 5 ";
+   thread_args->mymap.checkTurn(1,5);
+     cout << "\n1, 6 ";
+     thread_args->mymap.checkTurn(1,6);
+     cout << "\n4, 1 ";
+     thread_args->mymap.checkTurn(4,1);
+     cout << "\n2, 4 ";
+     thread_args->mymap.checkTurn(2,4);
+
+
+
+
    cout << endl;
    vector<roadNode> ROADS = thread_args->mymap.getunfRoads();
 
    for(int i=0; i<vehiclesInEngine.size(); i++){    
       vector<int> vehiclePath = vehiclesInEngine[i]->getPath();
       vector<int> intersection;
-    //  cout << "\n\n\ncar:" << i<<endl;
-      vehiclesInEngine[i]->printPath();
          for (int p=0; p<vehiclePath.size(); p++){
             for (int k=0; k<ROADS.size(); k++)
                if (ROADS[k].getId()==vehiclePath[p]){
@@ -132,16 +145,15 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
                         if ((B1.getCartesianX() == A2.getCartesianX() && B1.getCartesianY() == A2.getCartesianY()))
                            count++;
                         if (count>2){
-          //                 cout << "\nintersection at "<< ROADS[k].getId() << endl;
                            break;
                         }
                      }
                   }
-            /*      if (ROADS[k].getgraphNodeA().getType()==1 || ROADS[k].getgraphNodeA().getType()==2 )
+              /*    if (ROADS[k].getgraphNodeA().getType()==1 || ROADS[k].getgraphNodeA().getType()==2 )
                      cout << "\nTraffic Light A" << ROADS[k].getId();   
                   if (ROADS[k].getgraphNodeB().getType()==1 || ROADS[k].getgraphNodeB().getType()==2 )
-                     cout << "\nTraffic Light B" << ROADS[k].getId();      */         
-                  break;  
+                     cout << "\nTraffic Light B" << ROADS[k].getId();               
+                */  break;  
                }
          }
       }

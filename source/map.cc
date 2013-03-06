@@ -16,9 +16,12 @@ Copyright (c) King's College London
 #include <fstream>
 #include <vector>
 #include <rapidxml.hpp>
+#include <math.h>
 
 using namespace rapidxml;
 using namespace std;
+
+#define PI 3.14159265
 
 map::map(){
 	ReadXMLFile();
@@ -244,6 +247,85 @@ void map::printAllPaths(){
 		length=0;
 		speed=0;
 	}
+}
+
+
+//get us input two roadNodes and returns 1 if they make turn and 0 if no.
+//if the two roadNodes are not connected then return -1;
+int map::checkTurn(int roadNode1Id, int roadNode2Id){
+	for (int i=0; i<unfRoads.size(); i++)
+		if (unfRoads[i].getId() == roadNode1Id)
+			for (int j=0; j<unfRoads.size(); j++)
+				if (unfRoads[j].getId() == roadNode2Id){
+					graphNode A1 = unfRoads[i].getgraphNodeA();
+					graphNode B1 = unfRoads[i].getgraphNodeB();
+					graphNode A2 = unfRoads[j].getgraphNodeA();
+					graphNode B2 = unfRoads[j].getgraphNodeB();
+					if ((A1.getCartesianX() == A2.getCartesianX() && A1.getCartesianY() == A2.getCartesianY())) 
+					{			
+						int deltaY = (B2.getCartesianY() - B1.getCartesianY());
+						int deltaX = (B2.getCartesianX() - B1.getCartesianX());
+						float angle = atan2(deltaY,deltaX) * 180 / PI;
+						if (angle == 180)
+						{
+							cout << "no turn";
+							return 0;
+						}
+						else {
+							cout << "turn";
+							return 1;
+						}
+					}
+					if ((A1.getCartesianX() == B2.getCartesianX() && A1.getCartesianY() == B2.getCartesianY()))
+					{
+						int deltaY = (B2.getCartesianY() - B1.getCartesianY());
+						int deltaX = (B2.getCartesianX() - B1.getCartesianX());
+						float angle = atan2(deltaY,deltaX) * 180 / PI;
+						if (angle == 180)
+						{
+							cout << "no turn";
+							return 0;
+						}
+						else {
+							cout << "turn";
+							return 1;
+						}	
+					}			
+					if ((B1.getCartesianX() == B2.getCartesianX() && B1.getCartesianY() == B2.getCartesianY()))
+					{
+						int deltaY = (B2.getCartesianY() - B1.getCartesianY());
+						int deltaX = (B2.getCartesianX() - B1.getCartesianX());
+						float angle = atan2(deltaY,deltaX) * 180 / PI;
+						if (angle == 180)
+						{
+							cout << "no turn";
+							return 0;
+						}
+						else {
+							cout << "turn";
+							return 1;
+						}
+					}			
+					if ((B1.getCartesianX() == A2.getCartesianX() && B1.getCartesianY() == A2.getCartesianY()))
+					{
+						int deltaY = (B2.getCartesianY() - B1.getCartesianY());
+						int deltaX = (B2.getCartesianX() - B1.getCartesianX());
+						float angle = atan2(deltaY,deltaX) * 180 / PI;
+						if (angle == 180)
+						{
+							cout << "no turn";
+							return 0;
+						}
+						else {
+							cout << "turn";
+							return 1;
+						}
+					}
+					else {
+						cout << "not connected";
+						return -1;
+					}
+				}
 }
 
 //return vector that contains allPaths
