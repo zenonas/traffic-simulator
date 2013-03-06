@@ -10,8 +10,13 @@ Copyright (c) King's College London
 */
 #include "graphNode.h"
 #include "trafficLight.h"
+#include <stdlib.h>
+#include <time.h>
 
 graphNode::graphNode(){
+
+
+State =rand()%2;
 	
 }
 
@@ -52,7 +57,13 @@ int graphNode::getTimer(){
 }
 
 
+void graphNode::setState(int state){
+	State=state;
+}
 
+int graphNode::getState(){
+	return State;
+}
 
 
 

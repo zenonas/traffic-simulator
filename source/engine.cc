@@ -1,5 +1,4 @@
 /* Traffic Simulation System
-
 Group Project 7CCSMGPR - Team B
 Created: 15/2/2013
 Updated: 5/3/2013
@@ -26,6 +25,7 @@ void *engine(void *arguments)
    thread_args = (struct thread_arguments *)arguments;
    vector<queue <vehicle *> > entryQueues;
    vector<vehicle *> vehiclesInEngine;
+   thread_args->CurrentTimer=0;
    for (int i=0; i<thread_args->mymap.entryGraphNodes.size(); i++) {
    	queue<vehicle *> currentQueue;
    	entryQueues.push_back(currentQueue);
@@ -104,7 +104,7 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
          }
       }
    }
-
+   // finding turns
    cout << "Check Turns!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
    cout << "\n1, 2 ";
    thread_args->mymap.checkTurn(1,2);
@@ -120,7 +120,7 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
 
 
 
-   cout << endl;
+   // same path handling
    vector<roadNode> ROADS = thread_args->mymap.getunfRoads();
 
    for(int i=0; i<vehiclesInEngine.size(); i++){    
@@ -149,17 +149,30 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
                         }
                      }
                   }
-              /*    if (ROADS[k].getgraphNodeA().getType()==1 || ROADS[k].getgraphNodeA().getType()==2 )
-                     cout << "\nTraffic Light A" << ROADS[k].getId();   
-                  if (ROADS[k].getgraphNodeB().getType()==1 || ROADS[k].getgraphNodeB().getType()==2 )
-                     cout << "\nTraffic Light B" << ROADS[k].getId();               
-                */  break;  
+                break;  
                }
          }
       }
-
-
-	sleep(thread_args->sleep_time);
+// traffic lights handling
+for(int i=0; i<thread_args->mymap.trafficlights.size(); i++) {
+  if (thread_args->mymap.trafficlights[i].getTimer()!=0) {
+    if((thread_args->CurrentTimer % thread_args->mymap.trafficlights[i].getTimer())== 0 && thread_args->CurrentTimer !=0) {
+		  if (thread_args->mymap.trafficlights[i].getState() == 1) {
+          thread_args->mymap.trafficlights[i].setState(0);
+          thread_args->mymap.trafficlights[i].setTimer(thread_args->mymap.trafficlights[i].getTimer()/2);
+		  } else {
+          thread_args->mymap.trafficlights[i].setState(1);
+          thread_args->mymap.trafficlights[i].setTimer(thread_args->mymap.trafficlights[i].getTimer()*2);
+		  }
+    } 
+  }
+  //cout << "TESTING CURRENT LIGHT: " << i << " STATE: " <<thread_args->mymap.trafficlights[i].getState() << endl;
 }
+  thread_args->CurrentTimer++;
+  sleep(thread_args->sleep_time);
+}
+
+
    pthread_exit(NULL);
+   
 }

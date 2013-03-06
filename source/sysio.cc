@@ -13,6 +13,8 @@ Copyright (c) King's College London
 #include <stdlib.h>
 #include <iostream> 
 #include <limits>
+#include "ResetTrafficLights.cc"
+
 
 using namespace std;
 
@@ -125,14 +127,11 @@ void *inout(void *arguments)
 
 	if (command == "ToggleTrafficLights" || command == "4")
 	{
-		cout << "Insert Time Delay: ";
-		while (!(cin >> timedelay)){
-				cin.clear();
-				cin.ignore(numeric_limits<streamsize>::max(), '\n');
-				cout << "Invalid input! Insert Time Delay: ";				
-		}
-		//SetTrafficLights(tdelay);
+
+		ToggleLights(thread_args,thread_args->CurrentTimer);
+		
 	}
+
 
 	if (command == "stop" || command == "5"){
 		//call for statistics

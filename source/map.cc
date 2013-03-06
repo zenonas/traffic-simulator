@@ -97,7 +97,7 @@ void map::ReadXMLFile()
 				for (xml_node<> * timer_node = node_node->first_node("Timer"); timer_node; timer_node =timer_node->next_sibling("Timer"))
 				{ 
 					newgraphNodeB.setTimer(atoi(timer_node->value()));
-					//cout << "time: " << newgraphNodeB.getTimer() <<endl;
+						//cout << "time: " << newgraphNodeB.getTimer() <<endl;
 				}
 			}	
 			else
@@ -114,7 +114,10 @@ void map::ReadXMLFile()
 			}
 			i++;				
 			newroadNode.setgraphNodeA(newgraphNodeA);
-			newroadNode.setgraphNodeB(newgraphNodeB);   
+			newroadNode.setgraphNodeB(newgraphNodeB);
+			newroadNode.getgraphNodeA().setTimer(newgraphNodeA.getTimer());
+			newroadNode.getgraphNodeB().setTimer(newgraphNodeB.getTimer());
+		
 		}
 		for (xml_node<> * length= road_node->first_node("Length"); length; length=length->next_sibling("Length")){
 			newroadNode.setLength(atoi(length->value()));
@@ -127,9 +130,7 @@ void map::ReadXMLFile()
 		j++;
 	}
 	for (int i=0; i<unfRoads.size(); i++){
-		//cout << "MY A GRAPH NODE WITH ID: " << unfRoads[i].getId() << "HAS COORDS: " << unfRoads[i].getgraphNodeA().getCartesianX() << " AND: " << unfRoads[i].getgraphNodeA().getCartesianY() << " TYPE: " << unfRoads[i].getgraphNodeA().getType() << endl;
-		//cout << "MY B GRAPH NODE WITH ID: " << unfRoads[i].getId() << "HAS COORDS: " << unfRoads[i].getgraphNodeB().getCartesianX() << " AND: " << unfRoads[i].getgraphNodeB().getCartesianY() << " TYPE: " << unfRoads[i].getgraphNodeB().getType() << endl;
-
+		
 		if (entryGraphNodes.size() == 0) {
 			if (unfRoads[i].getgraphNodeA().getType() == 1) entryGraphNodes.push_back(unfRoads[i].getgraphNodeA());
 			if (unfRoads[i].getgraphNodeB().getType() == 1) entryGraphNodes.push_back(unfRoads[i].getgraphNodeB());
@@ -145,10 +146,10 @@ void map::ReadXMLFile()
 				if (unfRoads[i].getgraphNodeB().getCartesianX() == entryGraphNodes[zz].getCartesianX() && unfRoads[i].getgraphNodeB().getCartesianY() == entryGraphNodes[zz].getCartesianY())
 					flagB=1;
 		}
-		if (flagA == 0 && unfRoads[i].getgraphNodeA().getType() == 1) entryGraphNodes.push_back(unfRoads[i].getgraphNodeA());
-		if (flagB == 0 && unfRoads[i].getgraphNodeB().getType() == 1) entryGraphNodes.push_back(unfRoads[i].getgraphNodeB());
+			if (flagA == 0 && unfRoads[i].getgraphNodeA().getType() == 1) entryGraphNodes.push_back(unfRoads[i].getgraphNodeA());
+			if (flagB == 0 && unfRoads[i].getgraphNodeB().getType() == 1) entryGraphNodes.push_back(unfRoads[i].getgraphNodeB());
  		}
-	}
+ 	}
 }
 
 void map::findConnectedRoadNodes(){
@@ -160,6 +161,7 @@ void map::findConnectedRoadNodes(){
 	for (int i=0; i<unfRoads.size(); i++){
 		graphNodeATestFirst = unfRoads[i].getgraphNodeA();
 		graphNodeBTestFirst = unfRoads[i].getgraphNodeB();
+		
 		for (int j=0; j<unfRoads.size(); j++){
 			graphNodeAMatcher = unfRoads[j].getgraphNodeA();
 			graphNodeBMatcher = unfRoads[j].getgraphNodeB();

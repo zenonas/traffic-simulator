@@ -5,14 +5,14 @@
 <Point name="x">0</Point>
 <Point name="y">0</Point>
 <Type name="type">1</Type>
-<Timer name="timer">20</Timer>
+<Timer name="timer">2</Timer>
 </Node>
 
 <Node name="1b">
 <Point name="x">50</Point>
 <Point name="y">0</Point>
 <Type name="type">2</Type>
-<Timer name="timer">20</Timer>
+<Timer name="timer">2</Timer>
 </Node>
 <Length name="length">50</Length>
 <MaxSpeed name="maxSpeed">100</MaxSpeed>
@@ -23,14 +23,14 @@
 <Point name="x">0</Point>
 <Point name="y">0</Point>
 <Type name="type">2</Type>
-<Timer name="timer">20</Timer>
+<Timer name="timer">2</Timer>
 </Node>
 
 <Node name="2b">
 <Point name="x">-50</Point>
 <Point name="y">0</Point>
 <Type name="type">2</Type>
-<Timer name="timer">20</Timer>
+<Timer name="timer">2</Timer>
 </Node>
 <Length name="length">40</Length>
 <MaxSpeed name="maxSpeed">100</MaxSpeed>
@@ -41,14 +41,14 @@
 <Point name="x">0</Point>
 <Point name="y">0</Point>
 <Type name="type">2</Type>
-<Timer name="timer">20</Timer>
+<Timer name="timer">2</Timer>
 </Node>
 
 <Node name="3b">
 <Point name="x">0</Point>
 <Point name="y">50</Point>
 <Type name="type">1</Type>
-<Timer name="timer">60</Timer>
+<Timer name="timer">6</Timer>
 </Node>
 <Length name="length">80</Length>
 <MaxSpeed name="maxSpeed">80</MaxSpeed>
@@ -59,14 +59,14 @@
 <Point name="x">0</Point>
 <Point name="y">0</Point>
 <Type name="type">1</Type>
-<Timer name="timer">60</Timer>
+<Timer name="timer">6</Timer>
 </Node>
 
 <Node name="4b">
 <Point name="x">0</Point>
 <Point name="y">-50</Point>
 <Type name="type">2</Type>
-<Timer name="timer">60</Timer>
+<Timer name="timer">6</Timer>
 </Node>
 <Length name="length">80</Length>
 <MaxSpeed name="maxSpeed">80</MaxSpeed>
@@ -77,14 +77,14 @@
 <Point name="x">50</Point>
 <Point name="y">0</Point>
 <Type name="type">2</Type>
-<Timer name="timer">60</Timer>
+<Timer name="timer">6</Timer>
 </Node>
 
 <Node name="5b">
 <Point name="x">75</Point>
 <Point name="y">25</Point>
 <Type name="type">2</Type>
-<Timer name="timer">60</Timer>
+<Timer name="timer">6</Timer>
 </Node>
 <Length name="length">80</Length>
 <MaxSpeed name="maxSpeed">100</MaxSpeed>
@@ -95,17 +95,125 @@
 <Point name="x">75</Point>
 <Point name="y">25</Point>
 <Type name="type">2</Type>
-<Timer name="timer">60</Timer>
+<Timer name="timer">6</Timer>
 </Node>
 
 <Node name="6b">
 <Point name="x">100</Point>
 <Point name="y">25</Point>
 <Type name="type">1</Type>
-<Timer name="timer">60</Timer>
+<Timer name="timer">6</Timer>
 </Node>
 <Length name="length">50</Length>
 <MaxSpeed name="maxSpeed">100</MaxSpeed>
+</Road>
+
+<Road name="7">
+<Node name="7a">
+<Point name="x">25</Point>
+<Point name="y">100</Point>
+<Type name="type">1</Type>
+<Timer name="timer">6</Timer>
+</Node>
+
+<Node name="7b">
+<Point name="x">25</Point>
+<Point name="y">50</Point>
+<Type name="type">1</Type>
+<Timer name="timer">6</Timer>
+</Node>
+<Length name="length">80</Length>
+<MaxSpeed name="maxSpeed">80</MaxSpeed>
+</Road>
+
+<Road name="8">
+<Node name="8a">
+<Point name="x">25</Point>
+<Point name="y">50</Point>
+<Type name="type">1</Type>
+<Timer name="timer">6</Timer>
+</Node>
+
+<Node name="8b">
+<Point name="x">50</Point>
+<Point name="y">50</Point>
+<Type name="type">2</Type>
+<Timer name="timer">6</Timer>
+</Node>
+<Length name="length">80</Length>
+<MaxSpeed name="maxSpeed">80</MaxSpeed>
+</Road>
+
+<Road name="9">
+<Node name="9a">
+<Point name="x">50</Point>
+<Point name="y">50</Point>
+<Type name="type">2</Type>
+<Timer name="timer">6</Timer>
+</Node>
+
+<Node name="9b">
+<Point name="x">50</Point>
+<Point name="y">0</Point>
+<Type name="type">2</Type>
+<Timer name="timer">2</Timer>
+</Node>
+<Length name="length">80</Length>
+<MaxSpeed name="maxSpeed">80</MaxSpeed>
+</Road>
+
+<Road name="10">
+<Node name="10a">
+<Point name="x">50</Point>
+<Point name="y">0</Point>
+<Type name="type">2</Type>
+<Timer name="timer">2</Timer>
+</Node>
+
+<Node name="10b">
+<Point name="x">50</Point>
+<Point name="y">-25</Point>
+<Type name="type">0</Type>
+<Timer name="timer">-1</Timer>
+</Node>
+<Length name="length">80</Length>
+<MaxSpeed name="maxSpeed">80</MaxSpeed>
+</Road>
+
+<Road name="11">
+<Node name="11a">
+<Point name="x">50</Point>
+<Point name="y">-25</Point>
+<Type name="type">0</Type>
+<Timer name="timer">-1</Timer>
+</Node>
+
+<Node name="11b">
+<Point name="x">0</Point>
+<Point name="y">-25</Point>
+<Type name="type">0</Type>
+<Timer name="timer">-1</Timer>
+</Node>
+<Length name="length">80</Length>
+<MaxSpeed name="maxSpeed">80</MaxSpeed>
+</Road>
+
+<Road name="12">
+<Node name="12a">
+<Point name="x">0</Point>
+<Point name="y">-25</Point>
+<Type name="type">0</Type>
+<Timer name="timer">-1</Timer>
+</Node>
+
+<Node name="12b">
+<Point name="x">0</Point>
+<Point name="y">0</Point>
+<Type name="type">1</Type>
+<Timer name="timer">2</Timer>
+</Node>
+<Length name="length">80</Length>
+<MaxSpeed name="maxSpeed">80</MaxSpeed>
 </Road>
 
 </Map>

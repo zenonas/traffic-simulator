@@ -29,14 +29,17 @@ public:
    int getType();
    void setTimer(int timer);
    int getTimer();
-   void setTrafficLight(trafficLight* t);
-   //trafficLight* getTrafficLight(); //???????
-
+   void setState(int state);
+   int getState();
+  
 private:
    int CartesianX, CartesianY;
    int Timer;
-   int Type; // 0: nothing 1: entry/exit point and traffic light 2: only traffic light
+   int Type;// 0: nothing 1: entry/exit point and traffic light 2: only traffic light
    //trafficLight will be null if not trafficLight
+   int State; 
 };
+
+
 
 #endif

@@ -21,6 +21,8 @@ roadNode::~roadNode(){
 
 void roadNode::setgraphNodeA(graphNode a){
 	A.setType(a.getType());
+	A.setTimer(a.getTimer());
+	A.setState(a.getState());
 	A.setCartesianX(a.getCartesianX());
 	A.setCartesianY(a.getCartesianY());
 }
@@ -31,6 +33,8 @@ graphNode roadNode::getgraphNodeA(){
 
 void roadNode::setgraphNodeB(graphNode b){
 	B.setType(b.getType());
+	B.setTimer(b.getTimer());
+	B.setState(b.getState());
 	B.setCartesianX(b.getCartesianX());
 	B.setCartesianY(b.getCartesianY());
 }
