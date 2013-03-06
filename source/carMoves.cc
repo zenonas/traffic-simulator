@@ -2,9 +2,9 @@
 
 Group Project 7CCSMGPR - Team B
 Created: 5/3/2013
-Updated: 6/3/2013
-File: carMoves.cc
-Description: This file contains the implementation for engine functions that have to do with the actual movement of vehicles
+Updated: 5/3/2013
+File: carFits.cc
+Description: This file contains the implementation for the carFits function of the Engine
 Copyright (c) King's College London
 
 */

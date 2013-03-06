@@ -1,3 +1,14 @@
+/* Traffic Simulation System
+
+Group Project 7CCSMGPR - Team B
+Created: 5/3/2013
+Updated: 5/3/2013
+File: ResetTrafficLights.cc
+Description: This file includes functions pertaining to the Traffic Light switches
+
+Copyright (c) King's College London
+*/
+
 #include "th_structs.h"
 #include "map.h"
 #include <vector>

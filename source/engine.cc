@@ -1,7 +1,7 @@
 /* Traffic Simulation System
 Group Project 7CCSMGPR - Team B
 Created: 15/2/2013
-Updated: 5/3/2013
+Updated: 6/3/2013
 File: engine.cc
 Description: This file specifies the engine thread of the system. Please treat as a "main" file and include any additional stuff you create rather than appending here.
 
@@ -10,7 +10,7 @@ Copyright (c) King's College London
 */
 #include "th_structs.h"
 #include "map.h"
-#include "carFits.cc"
+#include "carMoves.cc"
 #include "roadNode.h"
 #include "graphNode.h"
 #include <vector>
