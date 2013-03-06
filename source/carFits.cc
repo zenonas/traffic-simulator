@@ -10,8 +10,10 @@ Copyright (c) King's College London
 */
 #include "th_structs.h"
 #include "map.h"
+#include "vehicle.h"
 #include <vector>
 #include <iostream>
+#include <math.h>
 
 using namespace std;
 
@@ -67,5 +69,62 @@ bool carFits(vehicle *v, vector<vehicle *> vIengine,vector<roadNode> allRoads,vo
 		}
 		return false;
 	}
+}
+
+void accelerate(vehicle *v, int speed, int ticktime, void *arguments) {
+	struct thread_arguments *thread_args;
+	thread_args =(struct thread_arguments *)arguments;
+
+	int maxAcs;
+	if (v->getType() == 0) {
+		maxAcs = 15;
+	} else if (v->getType() == 1) {
+		maxAcs = 10;
+	} else if (v->getType() == 2) {
+		maxAcs = 5;
+	}
+	int maxSpeed;
+	if (v->getType() == 0) {
+		maxSpeed = 120;
+	} else if (v->getType() == 1) {
+		maxSpeed = 80;
+	} else if (v->getType() == 2) {
+		maxSpeed = 65;
+	}
+
+	int cAccs = v->getAcceleration();
+	int cSpeed = v->getCurrentSpeed();
+
+	int newSpeed = cSpeed + (cAccs * ticktime);
+	if (newSpeed <= maxSpeed) {
+		v->setCurrentSpeed(newSpeed); 
+	} else {
+		v->setCurrentSpeed(maxSpeed);
+	}
+	struct Position newPos;
+	newPos.roadNodeID = v->getCurrentPosition().roadNodeID;
+	newPos.lane = v->getCurrentPosition().lane;
+	newPos.p = v->getCurrentPosition().p;
+	int distanceToTravel = v->getCurrentPosition().p + ((1/2)*cAccs*pow(ticktime,2));
+	vector<int> vPath = v->getPath();
+	int z;
+	do{
+		if (distanceToTravel > thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength()) {
+			int tempDistance = thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength() - v->getCurrentPosition().p;
+			distanceToTravel -= tempDistance;
+		}
+		for (z=0; z<vPath.size(); z++) 
+			if (vPath[z] == newPos.roadNodeID)
+				break;		
+		z++;
+		if (z > vPath.size()) {
+			break; // efiges
+		} else {
+		newPos.roadNodeID = vPath[z];
+		}
+	} while(distanceToTravel > thread_args->mymap.getroadNode(vPath[z])->getLength());
+	newPos.p = distanceToTravel;
+	cout << " i am here: " << newPos.p << " and " << newPos.roadNodeID<< endl;
+	v->setCurrentPosition(newPos);
 }
 

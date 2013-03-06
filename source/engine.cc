@@ -55,27 +55,14 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
 				  entryQueues[k].pop();
 				//updatePosition(vehiclesInEngine.back());
 				}
-
 			}
 			maxe++;
 		}
 	}
-	//
-	/*
-	for(int k=0; k<entryQueues.size(); k++)
-		for(int l=0; l<entryQueues[k].size(); l++) 
-			cout << "CAR WITH ID:" << entryQueues[k][l]->vehi_id << " will enter queue: " << entryQueues[k][l]->getEntryPoint() << endl;
-*/
-
-   //STEP 3: for every car in the engine (vehiclesInEngine), check every other car
-   //        and if they have part of same path do...
-  /*
-   for (int i=0; i<vehiclesInEngine.size(); i++){
-      cout << "\nVehicle " << i+1 << ": ";
-      vehiclesInEngine[i]->printPath();
-   }
-   */
-   
+   for(int q=0; q<vehiclesInEngine.size(); q++){
+      accelerate(vehiclesInEngine[q], 100, thread_args->sleep_time,thread_args);
+      cout << "My current Position is: " << vehiclesInEngine[q]->getCurrentPosition().roadNodeID << " AND MY P IS: " << vehiclesInEngine[q]->getCurrentPosition().p << endl;
+   }    
    for(int i=0; i<vehiclesInEngine.size(); i++){    
       vector<int> vehicle1Path = vehiclesInEngine[i]->getPath();
       for (int k=0; k<vehiclesInEngine.size(); k++){
@@ -112,7 +99,7 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
    for(int i=0; i<vehiclesInEngine.size(); i++){    
       vector<int> vehiclePath = vehiclesInEngine[i]->getPath();
       vector<int> intersection;
-      cout << "\n\n\ncar:" << i<<endl;
+    //  cout << "\n\n\ncar:" << i<<endl;
       vehiclesInEngine[i]->printPath();
          for (int p=0; p<vehiclePath.size(); p++){
             for (int k=0; k<ROADS.size(); k++)
@@ -133,15 +120,15 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
                         if ((B1.getCartesianX() == A2.getCartesianX() && B1.getCartesianY() == A2.getCartesianY()))
                            count++;
                         if (count>2){
-                           cout << "\nintersection at "<< ROADS[k].getId() << endl;
+          //                 cout << "\nintersection at "<< ROADS[k].getId() << endl;
                            break;
                         }
                      }
                   }
-                  if (ROADS[k].getgraphNodeA().getType()==1 || ROADS[k].getgraphNodeA().getType()==2 )
+            /*      if (ROADS[k].getgraphNodeA().getType()==1 || ROADS[k].getgraphNodeA().getType()==2 )
                      cout << "\nTraffic Light A" << ROADS[k].getId();   
                   if (ROADS[k].getgraphNodeB().getType()==1 || ROADS[k].getgraphNodeB().getType()==2 )
-                     cout << "\nTraffic Light B" << ROADS[k].getId();               
+                     cout << "\nTraffic Light B" << ROADS[k].getId();      */         
                   break;  
                }
          }

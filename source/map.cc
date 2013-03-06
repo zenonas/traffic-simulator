@@ -283,4 +283,12 @@ bool map::inTrafficLights(graphNode g)
 	return false;
 }
 
+roadNode *map::getroadNode(int id) {
+	for (int i=0; i<unfRoads.size(); i++) {
+		if (unfRoads[i].getId() == id) {
+			return &unfRoads[i];
+		}
+	}
+}
+
 

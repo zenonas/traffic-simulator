@@ -28,6 +28,7 @@ public:
    void printAllPaths();
    vector<vector<int> > getAllPaths();
    vector<roadNode> getunfRoads();
+   roadNode * getroadNode(int id);
    vector<graphNode > entryGraphNodes;
    bool created;
 

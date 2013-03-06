@@ -21,7 +21,6 @@ void *generator(void *arguments)
    
   // cout << "Generator Thread with id : " << "1" << "  is created" << endl;
    srand(time(NULL));
-
   while(!thread_args->finished) {
 
   	/*
@@ -37,7 +36,7 @@ void *generator(void *arguments)
 		BASED ON THIS DECIDE HOW MANY VEHICLES NEED TO BE CREATE IN THIS ROUND
 	*/
 		int actual_no_to_create = rand() % thread_args->max_no_vehicles + 1;
-		if (actual_no_to_create < 10) actual_no_to_create = 10; //maybe revise
+		if (actual_no_to_create > 1) actual_no_to_create = 1; //maybe revise
 		vehicle* temp_array[actual_no_to_create];
 		//cout << "I SHALL CREATE: " << actual_no_to_create << endl;
 	/*	
@@ -85,7 +84,7 @@ void *generator(void *arguments)
 			curr_vehicles--;
 		}	
 	/* STEP 7: WAIT FOR THE NEXT ROUND DEPENDING ON THE SLEEP TIMER */
-
+		break;
 		sleep(thread_args->sleep_time);
 
 
