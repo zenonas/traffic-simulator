@@ -103,7 +103,7 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
             }
          }
       }
-   }
+   } /*
    // finding turns
    cout << "Check Turns!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
    cout << "\n1, 2 ";
@@ -117,7 +117,7 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
      cout << "\n2, 4 ";
      thread_args->mymap.checkTurn(2,4);
 
-
+*/
 
 
    // same path handling

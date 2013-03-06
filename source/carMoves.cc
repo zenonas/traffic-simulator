@@ -110,7 +110,7 @@ int accelerate(vehicle *v, int aRate, void *arguments) {
 	cout << "distanceToTravel: " << distanceToTravel << endl;
 	cout << "LENGTH OF CURRENT ROAD NODE: " << newPos.roadNodeID << " is " << thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength() << endl;
 	cout << "MY CARS CURRENT SPEED IS: " << v->getCurrentSpeed() << endl;
-	if (newPos.roadNodeID == vPath.back()) {
+	if (newPos.roadNodeID == vPath.back() && vPath.size() > 1) {
 		if (distanceToTravel >= (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength() - newPos.p)) {
 			return 0;
 		} else {
