@@ -68,6 +68,7 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
       }
       cout << endl;
       int result = accelerate(vehiclesInEngine[q], 1, thread_args);
+      result = moveVehicle(vehiclesInEngine[q], thread_args);
       if (result == 0) {
          cout << "vgika apto xarti" << endl;
          vehiclesInEngine.erase(vehiclesInEngine.begin()+q);

@@ -116,6 +116,63 @@ int accelerate(vehicle *v, int aRate, void *arguments) {
 		} else {
 			newPos.p += distanceToTravel;
 			v->setCurrentPosition(newPos);
+			return 1;
+		}
+	} 
+	while(distanceToTravel >= (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength() - newPos.p)) {
+		
+		int tempDistance = thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength() - newPos.p;
+		distanceToTravel -= tempDistance;
+		for (z=0; z<vPath.size(); z++) {
+			if (vPath[z] == newPos.roadNodeID) {
+				if (z+1<vPath.size()) z++;
+				else return 0; 
+			}		
+			newPos.roadNodeID = vPath[z];
+			newPos.p = 0;
+			break;
+		}
+		roadChange=true;
+	} 
+	if (roadChange) newPos.p = distanceToTravel;
+		else newPos.p += distanceToTravel;
+	v->setCurrentPosition(newPos);
+	return 1;
+}
+
+int moveVehicle(vehicle *v, void *arguments) {
+	struct thread_arguments *thread_args;
+	thread_args =(struct thread_arguments *)arguments;
+	int ticktime = thread_args->sleep_time;
+
+	int cSpeed = v->getCurrentSpeed();
+	
+	if (cSpeed == 0) return 0; // cannot move a vehicle with 0 speed need to accelerate instead
+
+	struct Position newPos;
+	newPos.roadNodeID = v->getCurrentPosition().roadNodeID;
+	newPos.lane = v->getCurrentPosition().lane;
+	newPos.p = v->getCurrentPosition().p;
+
+	vector<int> vPath = v->getPath();
+	if (newPos.roadNodeID == -1) {
+		newPos.roadNodeID = vPath[0];
+		newPos.p = 0;
+		newPos.lane = 0;
+	}
+	int distanceToTravel = cSpeed * ticktime;
+	int z=0;
+	bool roadChange = false;
+	cout << "distanceToTravel: " << distanceToTravel << endl;
+	cout << "LENGTH OF CURRENT ROAD NODE: " << newPos.roadNodeID << " is " << thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength() << endl;
+	cout << "MY CARS CURRENT SPEED IS: " << v->getCurrentSpeed() << endl;
+	if (newPos.roadNodeID == vPath.back() && vPath.size() > 1) {
+		if (distanceToTravel >= (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength() - newPos.p)) {
+			return 0;
+		} else {
+			newPos.p += distanceToTravel;
+			v->setCurrentPosition(newPos);
+			return 1;
 		}
 	} 
 	while(distanceToTravel >= (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength() - newPos.p)) {
