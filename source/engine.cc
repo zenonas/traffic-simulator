@@ -60,7 +60,7 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
 		}
 	}
    for(int q=0; q<vehiclesInEngine.size(); q++){
-      accelerate(vehiclesInEngine[q], 100, thread_args->sleep_time,thread_args);
+      accelerate(vehiclesInEngine[q], 100, thread_args);
       cout << "My current Position is: " << vehiclesInEngine[q]->getCurrentPosition().roadNodeID << " AND MY P IS: " << vehiclesInEngine[q]->getCurrentPosition().p << endl;
    }    
    for(int i=0; i<vehiclesInEngine.size(); i++){    
