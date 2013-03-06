@@ -47,7 +47,7 @@ void *generator(void *arguments)
 		entryPoints= thread_args->mymap.entryGraphNodes;
 		for (int z=0; z<actual_no_to_create;z++) temp_array[z] = NULL; //initalize array to null pointers
 		for (int i=0; i<actual_no_to_create;i++) {
-			int entryP = rand() % entryPoints.size() +1 ;
+			int entryP = rand() % entryPoints.size() + 1;
 			int exitP = rand() % entryPoints.size() + 1;
 			temp_array[i] = new vehicle(i, entryP, exitP, thread_args->mymap);
 			int type_no = rand() % 100 + 1;

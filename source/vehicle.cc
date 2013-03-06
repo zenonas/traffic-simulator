@@ -19,7 +19,7 @@ using namespace std;
 
 vehicle::vehicle(int id, int entryP, int exitP,map mymap){
 	vehi_id = id;
-	setCurrentSpeed(1);
+	setCurrentSpeed(0);
 	setAcceleration(0);
 	setEntryPoint(entryP);
 	setExitPoint(exitP);
