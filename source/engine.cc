@@ -68,12 +68,12 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
       }
       cout << endl;
       int result = accelerate(vehiclesInEngine[q], 1, thread_args);
-      result = moveVehicle(vehiclesInEngine[q], thread_args);
+      //result = moveVehicle(vehiclesInEngine[q], thread_args);
+      cout << "I ACCELERATED ONCE MY NEW POSITION IS: " << vehiclesInEngine[q]->getCurrentPosition().roadNodeID << " at position " << vehiclesInEngine[q]->getCurrentPosition().p << endl;
       if (result == 0) {
          cout << "vgika apto xarti" << endl;
          vehiclesInEngine.erase(vehiclesInEngine.begin()+q);
-      }
-      cout << "I ACCELERATED ONCE MY NEW POSITION IS: " << vehiclesInEngine[q]->getCurrentPosition().roadNodeID << " at position " << vehiclesInEngine[q]->getCurrentPosition().p << endl;
+      }      
    }    
    // test code for vehicle accelerate ends
    for(int i=0; i<vehiclesInEngine.size(); i++){    

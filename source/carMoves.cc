@@ -110,7 +110,7 @@ int accelerate(vehicle *v, int aRate, void *arguments) {
 	cout << "distanceToTravel: " << distanceToTravel << endl;
 	cout << "LENGTH OF CURRENT ROAD NODE: " << newPos.roadNodeID << " is " << thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength() << endl;
 	cout << "MY CARS CURRENT SPEED IS: " << v->getCurrentSpeed() << endl;
-	if (newPos.roadNodeID == vPath.back() && vPath.size() > 1) {
+/*	if (newPos.roadNodeID == vPath.back() && vPath.size() > 1) {
 		if (distanceToTravel >= (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength() - newPos.p)) {
 			return 0;
 		} else {
@@ -118,19 +118,19 @@ int accelerate(vehicle *v, int aRate, void *arguments) {
 			v->setCurrentPosition(newPos);
 			return 1;
 		}
-	} 
+	} */
 	while(distanceToTravel >= (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength() - newPos.p)) {
-		
+		if (newPos.roadNodeID == vPath.back() && vPath.size() > 1) return 0;	
 		int tempDistance = thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength() - newPos.p;
 		distanceToTravel -= tempDistance;
 		for (z=0; z<vPath.size(); z++) {
 			if (vPath[z] == newPos.roadNodeID) {
 				if (z+1<vPath.size()) z++;
 				else return 0; 
-			}		
 			newPos.roadNodeID = vPath[z];
 			newPos.p = 0;
 			break;
+			}		
 		}
 		roadChange=true;
 	} 
