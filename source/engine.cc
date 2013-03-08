@@ -1,7 +1,7 @@
 /* Traffic Simulation System
 Group Project 7CCSMGPR - Team B
 Created: 15/2/2013
-Updated: 6/3/2013
+Updated: 8/3/2013
 File: engine.cc
 Description: This file specifies the engine thread of the system. Please treat as a "main" file and include any additional stuff you create rather than appending here.
 
@@ -76,6 +76,10 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
       }      
    }    
    // test code for vehicle accelerate ends
+
+
+   //vehiclesInEngine
+
    for(int i=0; i<vehiclesInEngine.size(); i++){    
       vector<int> vehicle1Path = vehiclesInEngine[i]->getPath();
       for (int k=0; k<vehiclesInEngine.size(); k++){
@@ -104,24 +108,12 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
             }
          }
       }
-   } /*
-   // finding turns
-   cout << "Check Turns!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
-   cout << "\n1, 2 ";
-   thread_args->mymap.checkTurn(1,2);
-   cout << "\n1, 5 ";
-   thread_args->mymap.checkTurn(1,5);
-     cout << "\n1, 6 ";
-     thread_args->mymap.checkTurn(1,6);
-     cout << "\n4, 1 ";
-     thread_args->mymap.checkTurn(4,1);
-     cout << "\n2, 4 ";
-     thread_args->mymap.checkTurn(2,4);
-
-*/
+   } 
+   
 
 
-   // same path handling
+
+    // same path handling
    vector<roadNode> ROADS = thread_args->mymap.getunfRoads();
 
    for(int i=0; i<vehiclesInEngine.size(); i++){    
@@ -154,6 +146,8 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
                }
          }
       }
+
+
 // traffic lights handling
 for(int i=0; i<thread_args->mymap.trafficlights.size(); i++) {
   if (thread_args->mymap.trafficlights[i].getTimer()!=0) {
