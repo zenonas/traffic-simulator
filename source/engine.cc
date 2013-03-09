@@ -62,16 +62,16 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
    // test code for vehicle accelerate
    for(int q=0; q<vehiclesInEngine.size(); q++){
       vector<int> myPaths = vehiclesInEngine[q]->getPath();
-      cout << "MY PATH IS : ";
+      //cout << "MY PATH IS : ";
       for (int h=0; h<myPaths.size(); h++) {
-         cout << myPaths[h] << " ";
+         //cout << myPaths[h] << " ";
       }
-      cout << endl;
+      //cout << endl;
       int result = accelerate(vehiclesInEngine[q], 1, thread_args);
       result = accelerate(vehiclesInEngine[q], -1, thread_args);
-      cout << "I ACCELERATED ONCE MY NEW POSITION IS: " << vehiclesInEngine[q]->getCurrentPosition().roadNodeID << " at position " << vehiclesInEngine[q]->getCurrentPosition().p << endl;
+      //cout << "I ACCELERATED ONCE MY NEW POSITION IS: " << vehiclesInEngine[q]->getCurrentPosition().roadNodeID << " at position " << vehiclesInEngine[q]->getCurrentPosition().p << endl;
       if (result == 0) {
-         cout << "vgika apto xarti" << endl;
+         //cout << "vgika apto xarti" << endl;
          vehiclesInEngine.erase(vehiclesInEngine.begin()+q);
       }      
    }    

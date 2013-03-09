@@ -12,6 +12,7 @@ Copyright (c) King's College London
 #include <string.h>
 #include <stdlib.h>
 #include <iostream> 
+#include <curses.h>
 #include <limits>
 #include "ResetTrafficLights.cc"
 
@@ -33,8 +34,27 @@ void *inout(void *arguments)
     struct thread_arguments *thread_args;
     thread_args = (struct thread_arguments *)arguments;
 
+
+	initscr();   /* Start curses mode */
+	 start_color();
+
+    init_pair(1, COLOR_GREEN, COLOR_WHITE );
+    init_pair(2, COLOR_WHITE, COLOR_BLUE );
+    init_pair(3, COLOR_CYAN,  COLOR_WHITE );
+
+    //attron( COLOR_PAIR(2) | A_BLINK );
+    bkgd(   COLOR_PAIR(2)); // Green Text on a White Screen
+	printw("                            Traffic Simulation System                         \n");
+	printw("------------------------------------------------------------------------------\n");
+	printw("TEAM B: Zinon Kyprianou, Panikos Lazarou, Maria Leventopoulou, Adesinmisola Ogunsanya, Kosmas Tsakmakidis\n");
+	printw("build 0101: 9/3/2013\n");
+	printw("------------------------------------------------------------------------------\n");
+	printw("Simulation started\n");
+	refresh();   /* Print it on to the real screen */
+	getch();  /* Wait for user input */
     while(!thread_args->finished)
     {
+    refresh();   /* Print it on to the real screen */
     /*cout << "Select one of the following commands:\n";
 	cout << "1. SetNoVehicles\n";
 	cout << "2. SetVehicleTRatio\n";

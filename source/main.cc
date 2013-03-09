@@ -17,6 +17,7 @@ Copyright (c) King's College London
 #include "engine.cc"
 #include "sysio.cc"
 #include "map.h"
+#include <curses.h>
 #include <queue>
 #include "th_structs.h"
 
@@ -100,28 +101,29 @@ int main ()
          cout << "Error:unable to join," << rc << endl;
          return(-1);
       }
-      cout << "Vehicle Generator Thread completed and exiting with status :" << status << endl;
+      //cout << "Vehicle Generator Thread completed and exiting with status :" << status << endl;
       
       rc = pthread_join(threads[1], &status);
       if (rc){
          cout << "Error:unable to join," << rc << endl;
          return(-1);
       }
-      cout << "Engine Thread completed and exiting with status :" << status << endl;
+     // cout << "Engine Thread completed and exiting with status :" << status << endl;
       
       rc = pthread_join(threads[2], &status);
       if (rc){
          cout << "Error:unable to join," << rc << endl;
          return(-1);
       }
-      cout << "I/O Thread completed and exiting with status :" << status << endl;
+      //cout << "I/O Thread completed and exiting with status :" << status << endl;
    
      /* while (!th_args.VWaitingQ.empty()) {
          cout << "(OUTSIDE THREAD) TYPE: " << th_args.VWaitingQ.front()->vehi_id << endl;
          th_args.VWaitingQ.pop();
       }*/
-   cout << "Main program exiting." << endl;
+   //cout << "Main program exiting." << endl;
    pthread_exit(NULL);
+   endwin();    /* End curses mode   */
 }
 
 
