@@ -56,9 +56,8 @@ void statistics::CaptureStatistics(map& mymap, vector<vehicle *> vehiclesInEngin
 
 
 	for(int i=0; i< vehiclesInEngine.size(); i++){
-
 		speedsum += vehiclesInEngine[i]->getCurrentSpeed();
-		avtimeinengine += vehiclesInEngine[i]->getTimer();
+		timesum += vehiclesInEngine[i]->getTimer();
 		int entryp =  vehiclesInEngine[i]->getEntryPoint() -1;
 		int exitp = vehiclesInEngine[i]->getExitPoint() -1 ;
 		countEntryP[entryp]++;
@@ -90,8 +89,8 @@ void statistics::CaptureStatistics(map& mymap, vector<vehicle *> vehiclesInEngin
 	most_common_entryP++;
 	most_common_exitP++;
 
-	avspeed = speedsum / vehiclesInEngine.size();
-	avtimeinengine = timesum / vehiclesInEngine.size();
+	avspeed = double(speedsum / vehiclesInEngine.size());
+	avtimeinengine = double(timesum / vehiclesInEngine.size());
 
 
 }

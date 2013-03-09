@@ -29,8 +29,7 @@ void *engine(void *arguments)
    vector<queue <vehicle *> > entryQueues;
    vector<vehicle *> vehiclesInEngine;
 
-   //statistics S;
-   //S.CaptureStatistics(thread_args->mymap, vehiclesInEngine);
+   statistics S;
 
 
    thread_args->CurrentTimer=0;
@@ -76,7 +75,7 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
       }
       cout << endl;
       int result = accelerate(vehiclesInEngine[q], 1, thread_args);
-      result = accelerate(vehiclesInEngine[q], -1, thread_args);
+      //result = accelerate(vehiclesInEngine[q], -1, thread_args);
       cout << "I ACCELERATED ONCE MY NEW POSITION IS: " << vehiclesInEngine[q]->getCurrentPosition().roadNodeID << " at position " << vehiclesInEngine[q]->getCurrentPosition().p << endl;
       if (result == 0) {
          cout << "vgika apto xarti" << endl;
@@ -172,11 +171,25 @@ for(int i=0; i<thread_args->mymap.trafficlights.size(); i++) {
   //cout << "TESTING CURRENT LIGHT: " << i << " STATE: " <<thread_args->mymap.trafficlights[i].getState() << endl;
 }
 thread_args->CurrentTimer++;
+
 // Update time in engine for every single vehicle
 for(int k=0; k<vehiclesInEngine.size(); k++){
   int newtimer = vehiclesInEngine[k]->getTimer() + 1;
   vehiclesInEngine[k]->setTimer(newtimer);
 }
+
+S.CaptureStatistics(thread_args->mymap, vehiclesInEngine);
+cout << "---- STATISTICS!!! ----" << endl;
+cout << "AvSpeed: " << S.getAvSpeed() <<endl;
+cout << "AvTimeinEngine: " << S.getAvTimeinEngine() <<endl;
+cout << "MostCommonExitP: " << S.getMostCommonExitP() <<endl;
+cout << "MostCommonEntryP: " << S.getMostCommonEntryP() <<endl;
+
+cout << "Vehicles: " << S.getVehicleTypeNum()[0] << " " << S.getVehicleTypeNum()[1] << " " << S.getVehicleTypeNum()[2] << endl;
+
+cout << "Drivers: " << S.getDriverTypeNum()[0] << " " << S.getDriverTypeNum()[1] << " " << S.getDriverTypeNum()[2] << endl;
+
+cout << "-----------------------" << endl;
 
   sleep(thread_args->sleep_time);
 }
