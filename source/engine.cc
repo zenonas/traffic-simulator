@@ -59,6 +59,7 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
 			maxe++;
 		}
 	}
+   vector<roadNode> roads = thread_args->mymap.getunfRoads();
    // test code for vehicle accelerate
    for(int q=0; q<vehiclesInEngine.size(); q++){
       vector<int> myPaths = vehiclesInEngine[q]->getPath();
@@ -66,54 +67,57 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
       for (int h=0; h<myPaths.size(); h++) {
          cout << myPaths[h] << " ";
       }
+      int result;
       cout << endl;
-      int result = accelerate(vehiclesInEngine[q], 1, thread_args);
-      result = accelerate(vehiclesInEngine[q], -1, thread_args);
+      for (int p=0; p<vehiclesInEngine.size(); p++)
+        if (p!=q)
+          if (checkVehicle(vehiclesInEngine[q],vehiclesInEngine[p]))
+            {
+              struct Position pos1;
+              struct Position pos2;
+              
+              pos1 = vehiclesInEngine[q]->getCurrentPosition();
+              pos2 = vehiclesInEngine[p]->getCurrentPosition();
+              
+              int speed1 = vehiclesInEngine[q]->getCurrentSpeed();
+              int speed2 = vehiclesInEngine[p]->getCurrentSpeed();
+              int length;
+            //  if (pos1.roadNodeID>0)
+              {
+                cout <<"\n\nVehicle ahead road car " <<q<<" at "<< pos1.roadNodeID << " l: "<<roads[pos1.roadNodeID-1].getLength()<<" pos: " << pos1.p << " road id: "<< pos2.roadNodeID<<" l: " <<roads[pos2.roadNodeID-1].getLength()<< " pos: " << pos2.p;
+                if (pos1.roadNodeID == pos2.roadNodeID)
+                length = pos2.p - pos1.p;
+                else
+                length = (roads[pos1.roadNodeID].getLength() - pos1.p) + pos2.p;
+                cout << "Length: " << length;
+
+                if (length<100)
+                  result = moveVehicle(vehiclesInEngine[q], thread_args);
+                else
+                  result = accelerate(vehiclesInEngine[q], 20, thread_args);
+                if (result == 0) {
+                  cout << "vgika apo to xarti" << endl;
+                  vehiclesInEngine.erase(vehiclesInEngine.begin()+q);
+                }
+                break;
+              }
+            }
+
+
+      //int roadNodeID = thread_args->mymap.getroadNode()->getMaxSpeed();
+      if (vehiclesInEngine[q]->getCurrentSpeed()<roads[vehiclesInEngine[q]->getCurrentPosition().roadNodeID].getMaxSpeed())
+        result = accelerate(vehiclesInEngine[q], 20, thread_args);
+      else
+        result = moveVehicle(vehiclesInEngine[q], thread_args);
       cout << "I ACCELERATED ONCE MY NEW POSITION IS: " << vehiclesInEngine[q]->getCurrentPosition().roadNodeID << " at position " << vehiclesInEngine[q]->getCurrentPosition().p << endl;
       if (result == 0) {
-         cout << "vgika apto xarti" << endl;
+         cout << "vgika apo to xarti" << endl;
          vehiclesInEngine.erase(vehiclesInEngine.begin()+q);
       }      
    }    
    // test code for vehicle accelerate ends
-
-
-   //vehiclesInEngine
-
-   for(int i=0; i<vehiclesInEngine.size(); i++){    
-      vector<int> vehicle1Path = vehiclesInEngine[i]->getPath();
-      for (int k=0; k<vehiclesInEngine.size(); k++){
-         vector<int> vehicle2Path = vehiclesInEngine[k]->getPath();
-         int flag=0;
-         for (int p=0; p<vehicle1Path.size(); p++){
-            for (int q=0; q<vehicle2Path.size(); q++){                            
-               if (vehicle1Path[p]==vehicle2Path[q] && i!=k && flag==0){
-                  ///check current positions and calculate if affecting
-                  Position positionVehicle1;
-                  Position positionVehicle2;
-                  positionVehicle1= vehiclesInEngine[i]->getCurrentPosition();
-                  positionVehicle2= vehiclesInEngine[k]->getCurrentPosition();
-                  int speedVehicle1 = vehiclesInEngine[i]->getCurrentSpeed();
-                  int speedVehicle2 = vehiclesInEngine[k]->getCurrentSpeed();
-                  int driver1 = vehiclesInEngine[i]->getDriverType();
-                  int driver2 = vehiclesInEngine[k]->getDriverType();
-                 
-
-                 // cout << " CAR: " << i << " and " << k << endl;
-                   //  Do the appopriate checks in order to update position of car i
-
-                  
-                  flag=1;
-               }
-            }
-         }
-      }
-   } 
-   
-
-
-
-    // same path handling
+  
+    // intersection?
    vector<roadNode> ROADS = thread_args->mymap.getunfRoads();
 
    for(int i=0; i<vehiclesInEngine.size(); i++){    

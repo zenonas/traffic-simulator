@@ -77,6 +77,7 @@ int accelerate(vehicle *v, int aRate, void *arguments) {
 	struct thread_arguments *thread_args;
 	thread_args =(struct thread_arguments *)arguments;
 	int ticktime = thread_args->sleep_time;
+    vector<roadNode> roads = thread_args->mymap.getunfRoads();
 
 	int maxSpeed;
 	if (v->getType() == 0) {
@@ -88,11 +89,15 @@ int accelerate(vehicle *v, int aRate, void *arguments) {
 	}
 	int cSpeed = v->getCurrentSpeed();
 	int newSpeed = cSpeed + (aRate * ticktime);
-	if (newSpeed <= maxSpeed) {
+	int roadMaxSpeed = roads[v->getCurrentPosition().roadNodeID].getMaxSpeed();
+	if (newSpeed <= maxSpeed-10 && newSpeed <= roadMaxSpeed) {
 		v->setCurrentSpeed(newSpeed); 
 	} else {
-		v->setCurrentSpeed(maxSpeed);
+		v->setCurrentSpeed(min(maxSpeed,roadMaxSpeed));
 	}
+	if (newSpeed<0)
+		v->setCurrentSpeed(0);
+
 	struct Position newPos;
 	newPos.roadNodeID = v->getCurrentPosition().roadNodeID;
 	newPos.lane = v->getCurrentPosition().lane;
@@ -107,9 +112,9 @@ int accelerate(vehicle *v, int aRate, void *arguments) {
 	int distanceToTravel = (cSpeed * ticktime) + ((aRate*pow(ticktime,2)/2));
 	int z=0;
 	bool roadChange = false;
-	cout << "distanceToTravel: " << distanceToTravel << endl;
-	cout << "LENGTH OF CURRENT ROAD NODE: " << newPos.roadNodeID << " is " << thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength() << endl;
-	cout << "MY CARS CURRENT SPEED IS: " << v->getCurrentSpeed() << endl;
+	//cout << "distanceToTravel: " << distanceToTravel << endl;
+	//cout << "LENGTH OF CURRENT ROAD NODE: " << newPos.roadNodeID << " is " << thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength() << endl;
+	//cout << "MY CARS CURRENT SPEED IS: " << v->getCurrentSpeed() << endl;
 	while(distanceToTravel >= (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength() - newPos.p)) {
 		if (newPos.roadNodeID == vPath.back() && vPath.size() > 1) return 0;	
 		int tempDistance = thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength() - newPos.p;
@@ -177,4 +182,16 @@ int moveVehicle(vehicle *v, void *arguments) {
 	v->setCurrentPosition(newPos);
 	return 1;
 }
+
+int checkVehicle(vehicle *veh1, vehicle *veh2){
+     vector<int> vehicle1Path = veh1->getPath();
+     vector<int> vehicle2Path = veh2->getPath();
+     for (int p=veh1->getCurrentPosition().roadNodeID; p<vehicle1Path.size(); p++)
+            for (int q=veh2->getCurrentPosition().roadNodeID; q<vehicle2Path.size(); q++)                           
+               if (vehicle1Path[p]==vehicle2Path[q])
+               	return 1;
+               else return 0;
+                
+
+   }
 
