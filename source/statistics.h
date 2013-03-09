@@ -33,6 +33,7 @@ public:
    int getMostCommonEntryP();
    vector<int> getVehicleTypeNum();
    vector<int> getDriverTypeNum(); 
+   int getTotalVehicles();
 
 private:
    double avspeed;
@@ -42,7 +43,7 @@ private:
    int most_common_entryP;
    vector<int> vehicletypenum;
    vector<int> drivertypenum;
-
+   int total; 
 };
 
 

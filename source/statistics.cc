@@ -29,6 +29,7 @@ statistics::statistics(){
     most_visited_road = -1;
     most_common_exitP = -1;
     most_common_entryP = -1;
+    total = 0;
 }
 
 statistics::~statistics(){
@@ -37,6 +38,7 @@ statistics::~statistics(){
 }
 
 void statistics::CaptureStatistics(map& mymap, vector<vehicle *> vehiclesInEngine){
+	
 	int j;
 	double speedsum = 0;
 	double timesum = 0;
@@ -91,7 +93,7 @@ void statistics::CaptureStatistics(map& mymap, vector<vehicle *> vehiclesInEngin
 
 	avspeed = double(speedsum / vehiclesInEngine.size());
 	avtimeinengine = double(timesum / vehiclesInEngine.size());
-
+	total = vehiclesInEngine.size();
 
 }
 
@@ -124,3 +126,7 @@ vector<int> statistics::getVehicleTypeNum(){
 vector<int> statistics::getDriverTypeNum(){
 	return drivertypenum;
 } 
+
+int statistics::getTotalVehicles(){
+	return total;
+}
