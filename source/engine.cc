@@ -95,10 +95,15 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
                 length = (roads[pos1.roadNodeID].getLength() - pos1.p) + pos2.p;
                 cout << "Length: " << length;
 
-                if (length<100)
+                if (length<100){
                   result = moveVehicle(vehiclesInEngine[q], thread_args);
+                cout << "I MOVED ONCE MY NEW POSITION IS: " << vehiclesInEngine[q]->getCurrentPosition().roadNodeID << " at position " << vehiclesInEngine[q]->getCurrentPosition().p << endl;
+                }
                 else
+                 { 
                   result = accelerate(vehiclesInEngine[q], 20, thread_args);
+                cout << "I ACCELERATED ONCE MY NEW POSITION IS: " << vehiclesInEngine[q]->getCurrentPosition().roadNodeID << " at position " << vehiclesInEngine[q]->getCurrentPosition().p << endl;
+                  }
                 if (result == 0) {
                   cout << "vgika apo to xarti" << endl;
                   vehiclesInEngine.erase(vehiclesInEngine.begin()+q);
@@ -106,14 +111,16 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
                 break;
               }
             }
-
-
-      //int roadNodeID = thread_args->mymap.getroadNode()->getMaxSpeed();
-      if (vehiclesInEngine[q]->getCurrentSpeed()<roads[vehiclesInEngine[q]->getCurrentPosition().roadNodeID].getMaxSpeed())
-        result = accelerate(vehiclesInEngine[q], 20, thread_args);
-      else
-        result = moveVehicle(vehiclesInEngine[q], thread_args);
-      cout << "I ACCELERATED ONCE MY NEW POSITION IS: " << vehiclesInEngine[q]->getCurrentPosition().roadNodeID << " at position " << vehiclesInEngine[q]->getCurrentPosition().p << endl;
+            else if (vehiclesInEngine[q]->getCurrentSpeed()<roads[vehiclesInEngine[q]->getCurrentPosition().roadNodeID].getMaxSpeed())
+            {
+              result = accelerate(vehiclesInEngine[q], 20, thread_args);
+              cout << "I ACCELERATED ONCE MY NEW POSITION IS: " << vehiclesInEngine[q]->getCurrentPosition().roadNodeID << " at position " << vehiclesInEngine[q]->getCurrentPosition().p << endl;
+            }
+            else
+            {  
+              result = moveVehicle(vehiclesInEngine[q], thread_args);
+              cout << "I MOVED ONCE MY NEW POSITION IS: " << vehiclesInEngine[q]->getCurrentPosition().roadNodeID << " at position " << vehiclesInEngine[q]->getCurrentPosition().p << endl;
+            }
       if (result == 0) {
          cout << "vgika apo to xarti" << endl;
          vehiclesInEngine.erase(vehiclesInEngine.begin()+q);
