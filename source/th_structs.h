@@ -25,6 +25,7 @@ struct thread_arguments {
       double driver_ratios[3];
       bool arg_changed;
       int sleep_time;
+      int tick_count;
       queue<vehicle *> VWaitingQ;
       map mymap;
       int CurrentTimer;

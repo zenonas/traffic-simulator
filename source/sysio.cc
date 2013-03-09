@@ -12,6 +12,9 @@ Copyright (c) King's College London
 #include <string.h>
 #include <stdlib.h>
 #include <iostream> 
+#include <stdio.h>
+#include <form.h>
+#include <panel.h>
 #include <curses.h>
 #include <limits>
 #include "ResetTrafficLights.cc"
@@ -36,7 +39,43 @@ void *inout(void *arguments)
 
 
 	initscr();   /* Start curses mode */
-	 start_color();
+	
+  
+ 	WINDOW * mainwin, * headerwin, *stdstats;
+ 	WINDOW *vehiclestats, *roadnodestats;
+ 	PANEL *panels[2];
+ 	PANEL  *top;
+    int      ch;
+    /*  Set the dimensions and initial
+	position for our child window   */
+
+    int      width = 23, height = 7;
+    int      rows  = 25, cols   = 80;
+    int      midpointx = COLS/ 2;
+    int      midpointy = LINES / 2;
+
+
+    /*  Initialize ncurses  */
+
+    if ( (mainwin = initscr()) == NULL ) {
+	fprintf(stderr, "Error initialising ncurses.\n");
+	exit(EXIT_FAILURE);
+    }
+    
+
+    /*  Switch off echoing and enable keypad (for arrow keys)  */
+
+    noecho();
+    keypad(mainwin, TRUE);
+    box(vehiclestats,0,0);
+    box(roadnodestats,0,0);
+    panels[0]=new_panel(vehiclestats);
+    panels[1]=new_panel(roadnodestats);
+    set_panel_userptr(panels[0], panels[1]);
+	set_panel_userptr(panels[1], panels[0]);
+
+    update_panels();
+	start_color();
 
     init_pair(1, COLOR_GREEN, COLOR_WHITE );
     init_pair(2, COLOR_WHITE, COLOR_BLUE );
@@ -44,126 +83,52 @@ void *inout(void *arguments)
 
     //attron( COLOR_PAIR(2) | A_BLINK );
     bkgd(   COLOR_PAIR(2)); // Green Text on a White Screen
-	printw("                            Traffic Simulation System                         \n");
-	printw("------------------------------------------------------------------------------\n");
-	printw("TEAM B: Zinon Kyprianou, Panikos Lazarou, Maria Leventopoulou, Adesinmisola Ogunsanya, Kosmas Tsakmakidis\n");
-	printw("build 0101: 9/3/2013\n");
-	printw("------------------------------------------------------------------------------\n");
-	printw("Simulation started\n");
-	refresh();   /* Print it on to the real screen */
-	getch();  /* Wait for user input */
-    while(!thread_args->finished)
-    {
-    refresh();   /* Print it on to the real screen */
-    /*cout << "Select one of the following commands:\n";
-	cout << "1. SetNoVehicles\n";
-	cout << "2. SetVehicleTRatio\n";
-	cout << "3. SetDriverTRatio\n";
-	cout << "4. ToggleTrafficLights\n";
-	cout << "5. StopSimulation\n";
-	cout << "6. ShowStatistics\n";
-	cout << "7. Exit\n";
-*/
-	cin >> command;
-	while ( command != "SetNoVehicles" && command != "1"
-			&& command != "SetVehicleTRatio" && command != "2"
-			&& command != "SetDriverTRatio" && command != "3"
-			&& command != "ToggleTrafficLights" && command != "4"
-			&& command != "StopSimulation" && command != "5"
-			&& command != "ShowStatistics" && command != "6"
-			&& command != "Exit" && command != "7")
-	{
-		cout << "Invalid Command. Input another Command: "; 
-		cin >> command ; 
-	}
+    /*  Make our child window, and add
+	a border and some text to it.   */
 
-	if (command == "novehicles" || command == "1")
-	{
-		cout << "Insert max number of Vehicles to be created: " << endl;
-		while (!(cin >> num)){
-			cin.clear();
-			cin.ignore(numeric_limits<streamsize>::max(), '\n');
-			cout << "Invalid input! Insert max number of Vehicles to be created: ";
-		}		
-		thread_args->max_no_vehicles = num;
-	}
-	if (command == "vehicle-ratio" || command == "2")
-	{
-		do{
-			cout << "Insert Car Ratio: ";
-			while (!(cin >> crat)){
-				cin.clear();
-				cin.ignore(numeric_limits<streamsize>::max(), '\n');
-				cout << "Invalid input! Insert Car Ratio: ";
-			}
-					
-			cout << "Insert Bus Ratio: ";
-			while (!(cin >> brat)){
-				cin.clear();
-				cin.ignore(numeric_limits<streamsize>::max(), '\n');
-				cout << "Invalid input! Insert Bus Ratio: ";
-			}
-			cout << "Insert Lorry Ratio: ";
-			while (!(cin >> lrat)){
-				cin.clear();
-				cin.ignore(numeric_limits<streamsize>::max(), '\n');				
-				cout << "Invalid input! Insert Lorry Ratio: ";
-			}
-		}while (crat + brat + lrat != 1);
-		
-		thread_args->vehicle_ratios[0] = crat;
-		thread_args->vehicle_ratios[1] = brat;
-		thread_args->vehicle_ratios[2] = lrat;
-	}
+    headerwin = subwin(mainwin, 7, COLS-4, 1, 2);
+    stdstats = subwin(mainwin,6, COLS-4,8,2);
+    wborder(mainwin, 0, 0, 0, 0, 0, 0, 0, 0);
+    box(headerwin, 0, 0);
+    box(stdstats,0,0);
+    mvwaddstr(headerwin, 1, midpointx-12,"Traffic Simulation System");
+	mvwaddstr(headerwin, 2, 2,"TEAM B: Zinon Kyprianou, Panikos Lazarou, Maria Leventopoulou,");
+	mvwaddstr(headerwin, 3, 10,"Adesinmisola Ogunsanya, Kosmas Tsakmakidis");
+	mvwaddstr(headerwin,4,2,"build date: 9/3/2013");
+	mvwaddstr(headerwin,5,COLS-40,"Simulation Status: Running");
+	mvwaddstr(stdstats,1,midpointx, "Total Vehicles in engine:");
+	mvwaddstr(stdstats,1,2, "Sim granularity: ");
+	mvwprintw(stdstats,1,20,"%d",thread_args->sleep_time);
+	mvwaddstr(stdstats,1,25, "Sim updates: ");
+	mvwaddstr(stdstats,2,midpointx,"Cars: ");
+	mvwaddstr(stdstats,2,midpointx+10,"Buses: ");
+	mvwaddstr(stdstats,2,midpointx+20,"Lorries: ");
+    mvwprintw(stdstats,1,40, "%d",thread_args->tick_count);
+    refresh();
 
-	if (command == "driver-ratio" || command == "3")
-	{
-		do{
-			cout << "Insert Normal Driver Ratio: ";
-			while (!(cin >> normalr)){
-				cin.clear();
-				cin.ignore(numeric_limits<streamsize>::max(), '\n');
-				cout << "Invalid input! Insert Normal Driver Ratio: ";
-			}
-			cout << "Insert Cautious Driver Ratio: " << endl;
-			while (!(cin >> cautiousr)){
-				cin.clear();
-				cin.ignore(numeric_limits<streamsize>::max(), '\n');
-				cout << "Invalid input! Insert Cautious Driver Ratio: ";
-			}
-			cout << "Insert Aggressive Driver Ratio: ";
-			while (!(cin >> aggressiver)){
-				cin.clear();
-				cin.ignore(numeric_limits<streamsize>::max(), '\n');
-				cout << "Invalid input! Insert Aggressive Driver Ratio: ";
-			}
-
-		} while (normalr + cautiousr + aggressiver != 1);
-
-		thread_args->driver_ratios[0] = normalr;
-		thread_args->driver_ratios[1] = cautiousr;
-		thread_args->driver_ratios[2] = aggressiver;
-	}
-
-	if (command == "ToggleTrafficLights" || command == "4")
-	{
-
-		ToggleLights(thread_args,thread_args->CurrentTimer);
-		
-	}
-
-
-	if (command == "stop" || command == "5"){
-		//call for statistics
-		thread_args->finished = true;
-	}
-	if (command == "ShowStatistics" || command == "6"){
-		//ShowStatistics(w);
-	}
-	if (command == "Exit" || command == "7"){
-		//Terminate Simulation
-	}
+    /*  Loop until user hits 'q' to quit  */
+    top = panels[0];
+    /*while((ch = getch()) != KEY_F(1))
+	{	switch(ch)
+		{	case 9:
+				top = (PANEL *)panel_userptr(top);
+				top_panel(top);
+				break;
+		}
+		update_panels();
+		doupdate();
+	} */
+	while(!thread_args->finished) {
+			mvwprintw(stdstats,1,40, "%d",thread_args->tick_count);
+			wrefresh(stdstats);
+    
+ 
+	sleep(thread_args->sleep_time);
   }
-
+    delwin(mainwin);
+    delwin(headerwin);
+    delwin(stdstats);
+    endwin();
+    refresh();
    pthread_exit(NULL);
 }

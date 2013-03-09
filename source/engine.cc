@@ -164,6 +164,7 @@ for(int i=0; i<thread_args->mymap.trafficlights.size(); i++) {
   //cout << "TESTING CURRENT LIGHT: " << i << " STATE: " <<thread_args->mymap.trafficlights[i].getState() << endl;
 }
   thread_args->CurrentTimer++;
+  thread_args->tick_count++;
   sleep(thread_args->sleep_time);
 }
 

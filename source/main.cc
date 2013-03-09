@@ -39,6 +39,7 @@ int main ()
    th_args.driver_ratios[2] = 0.15; //aggressive (nai stin ellada imaste)
    th_args.arg_changed = false;
    th_args.sleep_time = 5; // this may change
+   th_args.tick_count = 0;
    th_args.engine_change = false;
    
 //

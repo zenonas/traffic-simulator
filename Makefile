@@ -11,7 +11,7 @@
 
 CC=g++
 CFLAGS = -g -Ilib
-LDFLAG = -lpthread -lncurses
+LDFLAG = -lpthread -lncurses -lpanel
 
 #------------------------------------------------------------------------------
 
