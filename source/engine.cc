@@ -31,6 +31,10 @@ void *engine(void *arguments)
    	entryQueues.push_back(currentQueue);
    }
 
+vehicle *v1= new vehicle(0,1,3,thread_args->mymap);
+vehicle *v2= new vehicle(1,2,3,thread_args->mymap);
+thread_args->VWaitingQ.push(v1);
+thread_args->VWaitingQ.push(v2);
 while (!thread_args->finished && thread_args->mymap.created == true) {
 	int max_entries = 0;
 	//CARS TAKEN OFF THE WAITING QUEUE AND SPLIT INTO THE SEPARATE QUEUES
@@ -82,7 +86,7 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
               int speed1 = vehiclesInEngine[q]->getCurrentSpeed();
               int speed2 = vehiclesInEngine[p]->getCurrentSpeed();
               int length;
-            //  if (pos1.roadNodeID>0)
+              if (pos1.roadNodeID>0)
               {
                 cout <<"\n\nVehicle ahead road car " <<q<<" at "<< pos1.roadNodeID << " l: "<<roads[pos1.roadNodeID-1].getLength()<<" pos: " << pos1.p << " road id: "<< pos2.roadNodeID<<" l: " <<roads[pos2.roadNodeID-1].getLength()<< " pos: " << pos2.p;
                 if (pos1.roadNodeID == pos2.roadNodeID)

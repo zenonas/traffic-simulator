@@ -90,7 +90,7 @@ int accelerate(vehicle *v, int aRate, void *arguments) {
 	int cSpeed = v->getCurrentSpeed();
 	int newSpeed = cSpeed + (aRate * ticktime);
 	int roadMaxSpeed = roads[v->getCurrentPosition().roadNodeID].getMaxSpeed();
-	if (newSpeed <= maxSpeed-10 && newSpeed <= roadMaxSpeed) {
+	if (newSpeed <= maxSpeed && newSpeed <= roadMaxSpeed) {
 		v->setCurrentSpeed(newSpeed); 
 	} else {
 		v->setCurrentSpeed(min(maxSpeed,roadMaxSpeed));
@@ -186,12 +186,10 @@ int moveVehicle(vehicle *v, void *arguments) {
 int checkVehicle(vehicle *veh1, vehicle *veh2){
      vector<int> vehicle1Path = veh1->getPath();
      vector<int> vehicle2Path = veh2->getPath();
-     for (int p=veh1->getCurrentPosition().roadNodeID; p<vehicle1Path.size(); p++)
-            for (int q=veh2->getCurrentPosition().roadNodeID; q<vehicle2Path.size(); q++)                           
+     for (int p=0; p<vehicle1Path.size(); p++)
+            for (int q=0; q<vehicle2Path.size(); q++)                           
                if (vehicle1Path[p]==vehicle2Path[q])
                	return 1;
                else return 0;
-                
-
    }
 

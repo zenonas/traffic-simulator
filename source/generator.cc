@@ -76,7 +76,7 @@ void *generator(void *arguments)
 		//for (int p=0; p<actual_no_to_create; p++) cout << "IN THREAD: " << temp_array[p]->vehi_id << endl;
 		while (curr_vehicles > 0) {
 			int rand_pick = rand() % curr_vehicles;
-			thread_args->VWaitingQ.push(temp_array[rand_pick]);
+		//	thread_args->VWaitingQ.push(temp_array[rand_pick]);
 			for (int j=rand_pick; j<=curr_vehicles-1; j++) {	
 				temp_array[j]=temp_array[j+1];
 				temp_array[j+1] = NULL;
