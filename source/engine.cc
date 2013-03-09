@@ -32,10 +32,9 @@ void *engine(void *arguments)
    }
 
 vehicle *v1= new vehicle(0,1,3,thread_args->mymap);
-v1->setType(0);
-
 vehicle *v2= new vehicle(1,2,3,thread_args->mymap);
-v2->setType(0);
+v2->setType(1);
+v1->setType(0);
 thread_args->VWaitingQ.push(v1);
 thread_args->VWaitingQ.push(v2);
 while (!thread_args->finished && thread_args->mymap.created == true) {
@@ -98,15 +97,15 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
                 length = (roads[pos1.roadNodeID].getLength() - pos1.p) + pos2.p;
                 cout << "Length: " << length;
 
+
                 if (length<100){
                   result = moveVehicle(vehiclesInEngine[q], thread_args);
-                cout << "I MOVED ONCE MY NEW POSITION IS: " << vehiclesInEngine[q]->getCurrentPosition().roadNodeID << " at position " << vehiclesInEngine[q]->getCurrentPosition().p << endl;
+                  cout << "I MOVED ONCE MY NEW POSITION IS: " << vehiclesInEngine[q]->getCurrentPosition().roadNodeID << " at position " << vehiclesInEngine[q]->getCurrentPosition().p << endl;
                 }
-                else
-                 { 
+                else{ 
                   result = accelerate(vehiclesInEngine[q], 20, thread_args);
-                cout << "I ACCELERATED ONCE MY NEW POSITION IS: " << vehiclesInEngine[q]->getCurrentPosition().roadNodeID << " at position " << vehiclesInEngine[q]->getCurrentPosition().p << endl;
-                  }
+                  cout << "I ACCELERATED ONCE MY NEW POSITION IS: " << vehiclesInEngine[q]->getCurrentPosition().roadNodeID << " at position " << vehiclesInEngine[q]->getCurrentPosition().p << endl;
+                }
                 if (result == 0) {
                   cout << "vgika apo to xarti" << endl;
                   vehiclesInEngine.erase(vehiclesInEngine.begin()+q);
@@ -132,7 +131,7 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
    // test code for vehicle accelerate ends
   
     // intersection?
-   vector<roadNode> ROADS = thread_args->mymap.getunfRoads();
+   /*vector<roadNode> ROADS = thread_args->mymap.getunfRoads();
 
    for(int i=0; i<vehiclesInEngine.size(); i++){    
       vector<int> vehiclePath = vehiclesInEngine[i]->getPath();
@@ -163,7 +162,7 @@ while (!thread_args->finished && thread_args->mymap.created == true) {
                 break;  
                }
          }
-      }
+      }*/
 
 
 // traffic lights handling

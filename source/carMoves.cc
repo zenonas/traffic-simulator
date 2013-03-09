@@ -92,25 +92,18 @@ int accelerate(vehicle *v, int aRate, void *arguments) {
 	int roadMaxSpeed = roads[v->getCurrentPosition().roadNodeID-1].getMaxSpeed();
 	int distanceToTravel=0;
 	int newSpeed=0;
-	for (int i=0; i<ticktime; i++)
-		{
-			
-			newSpeed= cSpeed+aRate;
-			//cout <<"\nnew speed "<< newSpeed;
-			
-			if (newSpeed < maxSpeed && newSpeed < roadMaxSpeed){
-				v->setCurrentSpeed(newSpeed); 
-				distanceToTravel += cSpeed + (aRate/2);
-				cSpeed=newSpeed;
-				v->setCurrentSpeed(cSpeed);
-				
-			}
-			else {
-			 	v->setCurrentSpeed(min(maxSpeed,roadMaxSpeed));
-			 	distanceToTravel += min(maxSpeed,roadMaxSpeed);
+	int temp=0;
+	
+	cSpeed = cSpeed + aRate*ticktime;
+	distanceToTravel = cSpeed*ticktime + 1/2*aRate*ticktime*ticktime;
 
-			}
-		}
+	if (cSpeed>=maxSpeed || cSpeed<=roadMaxSpeed){
+		temp = cSpeed-maxSpeed;
+		int remain=temp/aRate;
+		distanceToTravel = distanceToTravel- remain*aRate +1/2*aRate*remain;
+		cSpeed=min(maxSpeed,roadMaxSpeed);
+		v->setCurrentSpeed(cSpeed); 
+	}
 
     cout << "distanceToTravel: " << distanceToTravel << endl;
 	cout << "MY CARS CURRENT SPEED IS: " << v->getCurrentSpeed() << endl;
