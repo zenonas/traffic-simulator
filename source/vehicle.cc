@@ -30,6 +30,7 @@ vehicle::vehicle(int id, int entryP, int exitP,map mymap){
 	CurrentPosition.roadNodeID = -1;
 	CurrentPosition.p=0;
 	CurrentPosition.lane=0;
+	Timer = 0;
 }
 
 vehicle::~vehicle(){
@@ -156,4 +157,12 @@ void vehicle::printPath(){
 
 vector<int> vehicle::getPath(){
 	return Path;
+}
+
+int vehicle::getTimer(){
+	return Timer;
+}
+
+void vehicle::setTimer(int t){
+	Timer = t;
 }

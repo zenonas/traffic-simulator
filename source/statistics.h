@@ -25,12 +25,23 @@ public:
    ~statistics();
    void CaptureStatistics(map& mymap, vector<vehicle *> vehiclesInEngine);
    void RecordToSQL();
+
+   double getAvSpeed();
+   double getAvTimeinEngine();
+   int getMostVisitedRoad();
+   int getMostCommonExitP();
+   int getMostCommonEntryP();
+   vector<int> getVehicleTypeNum();
+   vector<int> getDriverTypeNum(); 
+
 private:
    double avspeed;
    double avtimeinengine;
    int most_visited_road;
-   vector<int> most_common_exitP;
-   vector<int> most_common_entryP;
+   int most_common_exitP;
+   int most_common_entryP;
+   vector<int> vehicletypenum;
+   vector<int> drivertypenum;
 
 };
 

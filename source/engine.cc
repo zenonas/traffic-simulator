@@ -171,7 +171,13 @@ for(int i=0; i<thread_args->mymap.trafficlights.size(); i++) {
   }
   //cout << "TESTING CURRENT LIGHT: " << i << " STATE: " <<thread_args->mymap.trafficlights[i].getState() << endl;
 }
-  thread_args->CurrentTimer++;
+thread_args->CurrentTimer++;
+// Update time in engine for every single vehicle
+for(int k=0; k<vehiclesInEngine.size(); k++){
+  int newtimer = vehiclesInEngine[k]->getTimer() + 1;
+  vehiclesInEngine[k]->setTimer(newtimer);
+}
+
   sleep(thread_args->sleep_time);
 }
 
