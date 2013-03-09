@@ -41,7 +41,7 @@ void *inout(void *arguments)
 	initscr();   /* Start curses mode */
 	
   
- 	WINDOW * mainwin, * headerwin, *stdstats;
+ 	WINDOW * mainwin, * headerwin, *stdstats, *cmdin;
  	WINDOW *vehiclestats, *roadnodestats;
  	PANEL *panels[2];
  	PANEL  *top;
@@ -88,9 +88,11 @@ void *inout(void *arguments)
 
     headerwin = subwin(mainwin, 7, COLS-4, 1, 2);
     stdstats = subwin(mainwin,6, COLS-4,8,2);
+    cmdin = subwin(mainwin,3,COLS-4,LINES-4,2);
     wborder(mainwin, 0, 0, 0, 0, 0, 0, 0, 0);
     box(headerwin, 0, 0);
     box(stdstats,0,0);
+    box(cmdin,0,0);
     mvwaddstr(headerwin, 1, midpointx-12,"Traffic Simulation System");
 	mvwaddstr(headerwin, 2, 2,"TEAM B: Zinon Kyprianou, Panikos Lazarou, Maria Leventopoulou,");
 	mvwaddstr(headerwin, 3, 10,"Adesinmisola Ogunsanya, Kosmas Tsakmakidis");
@@ -104,11 +106,12 @@ void *inout(void *arguments)
 	mvwaddstr(stdstats,2,midpointx+10,"Buses: ");
 	mvwaddstr(stdstats,2,midpointx+20,"Lorries: ");
     mvwprintw(stdstats,1,40, "%d",thread_args->tick_count);
+    mvwprintw(cmdin,1,2, "Command:");
     refresh();
 
     /*  Loop until user hits 'q' to quit  */
     top = panels[0];
-    /*while((ch = getch()) != KEY_F(1))
+    /*while()
 	{	switch(ch)
 		{	case 9:
 				top = (PANEL *)panel_userptr(top);
@@ -118,12 +121,20 @@ void *inout(void *arguments)
 		update_panels();
 		doupdate();
 	} */
-	while(!thread_args->finished) {
+	bool key_press = true;
+	ch = mvwgetch(cmdin,1,10);
+	while(!thread_args->finished &&(ch = getch()) != 'q') {
 			mvwprintw(stdstats,1,40, "%d",thread_args->tick_count);
 			wrefresh(stdstats);
-    
- 
-	sleep(thread_args->sleep_time);
+			while ((ch = getch()) != 'q') {
+				switch(ch)
+				{
+					case 't':
+						mvwprintw(stdstats,2,40, "%d",thread_args->tick_count);
+						wrefresh(stdstats);
+				}
+			}
+		sleep(thread_args->sleep_time);
   }
     delwin(mainwin);
     delwin(headerwin);
