@@ -88,15 +88,32 @@ int accelerate(vehicle *v, int aRate, void *arguments) {
 		maxSpeed = 65;
 	}
 	int cSpeed = v->getCurrentSpeed();
-	int newSpeed = cSpeed + (aRate * ticktime);
-	int roadMaxSpeed = roads[v->getCurrentPosition().roadNodeID].getMaxSpeed();
-	if (newSpeed <= maxSpeed && newSpeed <= roadMaxSpeed) {
-		v->setCurrentSpeed(newSpeed); 
-	} else {
-		v->setCurrentSpeed(min(maxSpeed,roadMaxSpeed));
-	}
-	if (newSpeed<0)
-		v->setCurrentSpeed(0);
+	
+	int roadMaxSpeed = roads[v->getCurrentPosition().roadNodeID-1].getMaxSpeed();
+	int distanceToTravel=0;
+	int newSpeed=0;
+	for (int i=0; i<ticktime; i++)
+		{
+			
+			newSpeed= cSpeed+aRate;
+			//cout <<"\nnew speed "<< newSpeed;
+			
+			if (newSpeed < maxSpeed && newSpeed < roadMaxSpeed){
+				v->setCurrentSpeed(newSpeed); 
+				distanceToTravel += cSpeed + (aRate/2);
+				cSpeed=newSpeed;
+				v->setCurrentSpeed(cSpeed);
+				
+			}
+			else {
+			 	v->setCurrentSpeed(min(maxSpeed,roadMaxSpeed));
+			 	distanceToTravel += min(maxSpeed,roadMaxSpeed);
+
+			}
+		}
+
+    cout << "distanceToTravel: " << distanceToTravel << endl;
+	cout << "MY CARS CURRENT SPEED IS: " << v->getCurrentSpeed() << endl;
 
 	struct Position newPos;
 	newPos.roadNodeID = v->getCurrentPosition().roadNodeID;
@@ -109,7 +126,7 @@ int accelerate(vehicle *v, int aRate, void *arguments) {
 		newPos.p = 0;
 		newPos.lane = 0;
 	}
-	int distanceToTravel = (cSpeed * ticktime) + ((aRate*pow(ticktime,2)/2));
+	
 	int z=0;
 	bool roadChange = false;
 	//cout << "distanceToTravel: " << distanceToTravel << endl;
@@ -160,7 +177,6 @@ int moveVehicle(vehicle *v, void *arguments) {
 	int z=0;
 	bool roadChange = false;
 	cout << "distanceToTravel: " << distanceToTravel << endl;
-	cout << "LENGTH OF CURRENT ROAD NODE: " << newPos.roadNodeID << " is " << thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength() << endl;
 	cout << "MY CARS CURRENT SPEED IS: " << v->getCurrentSpeed() << endl;
 	while(distanceToTravel >= (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength() - newPos.p)) {
 		if (newPos.roadNodeID == vPath.back() && vPath.size() > 1) return 0;
