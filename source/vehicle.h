@@ -52,6 +52,8 @@ public:
    void calculatePath(map mymap);
    vector<int> getPath();
    void printPath();
+   void setTimer(int t);
+   int getTimer();
    int vehi_id;
 
 private:
