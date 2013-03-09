@@ -15,6 +15,9 @@ Copyright (c) King's College London
 #include "graphNode.h"
 #include <vector>
 #include <iostream>
+#include "statistics.h"
+
+
 
 using namespace std;
 
@@ -25,6 +28,11 @@ void *engine(void *arguments)
    thread_args = (struct thread_arguments *)arguments;
    vector<queue <vehicle *> > entryQueues;
    vector<vehicle *> vehiclesInEngine;
+
+   //statistics S;
+   //S.CaptureStatistics(thread_args->mymap, vehiclesInEngine);
+
+
    thread_args->CurrentTimer=0;
    for (int i=0; i<thread_args->mymap.entryGraphNodes.size(); i++) {
    	queue<vehicle *> currentQueue;

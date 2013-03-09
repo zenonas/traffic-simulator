@@ -17,12 +17,11 @@ LDFLAG = -lpthread
 
 all: trafficsim
 
-trafficsim: bin/main.o bin/vehicle.o bin/map.o bin/graphNode.o bin/roadNode.o
+trafficsim: bin/main.o bin/vehicle.o bin/map.o bin/graphNode.o bin/roadNode.o bin/statistics.o
 	@echo "Linking everything together to produce the Traffic Simulation System"
 	$(CC) -o $@ $^ $(LDFLAG)
 
 bin/main.o: source/main.cc
-	clear
 	@echo "Compiling the Main file"
 	$(CC) -c $(CFLAGS) -o $@ $< 
 
@@ -38,6 +37,9 @@ bin/graphNode.o: source/graphNode.cc
 
 bin/roadNode.o: source/roadNode.cc
 	$(CC) -c $(CFLAGS) -o $@ $< 
+
+bin/statistics.o: source/statistics.cc
+	$(CC) -c $(CFLAGS) -o $@ $<
 
 clean:
 	clear
