@@ -29,9 +29,6 @@ void *engine(void *arguments)
    vector<queue <vehicle *> > entryQueues;
    vector<vehicle *> vehiclesInEngine;
 
-   statistics S;
-
-
    thread_args->CurrentTimer=0;
    for (int i=0; i<thread_args->mymap.entryGraphNodes.size(); i++) {
    	queue<vehicle *> currentQueue;
@@ -181,7 +178,7 @@ for(int k=0; k<vehiclesInEngine.size(); k++){
 }
 
 
-S.CaptureStatistics(thread_args->mymap, vehiclesInEngine);
+thread_args->simstats.CaptureStatistics(thread_args->mymap, vehiclesInEngine);
 /*cout << "---- STATISTICS!!! ----" << endl;
 cout << "Vehicles in Engine: " << S.getTotalVehicles() <<endl;
 cout << "AvSpeed: " << S.getAvSpeed() <<endl;

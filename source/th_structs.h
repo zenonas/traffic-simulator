@@ -14,7 +14,9 @@ Copyright (c) King's College London
 #define A_TH_STRC
 
 #include "vehicle.h"
+#include "statistics.h"
 #include "map.h"
+#include <curses.h>
 #include <queue>
 
 struct thread_arguments {
@@ -29,6 +31,8 @@ struct thread_arguments {
       queue<vehicle *> VWaitingQ;
       map mymap;
       int CurrentTimer;
+      statistics simstats;
+
 };
 
 

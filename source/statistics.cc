@@ -119,12 +119,12 @@ int statistics::getMostCommonEntryP(){
 	return most_common_entryP;
 }
 
-vector<int> statistics::getVehicleTypeNum(){
-	return vehicletypenum;
+int statistics::getVehicleTypeNum(int vehicleType){
+	return vehicletypenum[vehicleType];
 }
    
-vector<int> statistics::getDriverTypeNum(){
-	return drivertypenum;
+int statistics::getDriverTypeNum(int driverType){
+	return drivertypenum[driverType];
 } 
 
 int statistics::getTotalVehicles(){

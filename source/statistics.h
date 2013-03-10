@@ -15,6 +15,7 @@ Copyright (c) King's College London
 #include <vector>
 #include "map.h"
 #include "vehicle.h"
+#include "statistics.h"
 
 using namespace std;
 
@@ -31,8 +32,8 @@ public:
    int getMostVisitedRoad();
    int getMostCommonExitP();
    int getMostCommonEntryP();
-   vector<int> getVehicleTypeNum();
-   vector<int> getDriverTypeNum(); 
+   int getVehicleTypeNum(int vehicleType);
+   int getDriverTypeNum(int driverType); 
    int getTotalVehicles();
 
 private:

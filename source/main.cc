@@ -91,6 +91,7 @@ int main ()
          cout << "Error:unable to create thread," << rc << endl;
          return(-1);
       }
+
       //cout << "OK!" << endl;
    
 
@@ -116,6 +117,7 @@ int main ()
          cout << "Error:unable to join," << rc << endl;
          return(-1);
       }
+
       //cout << "I/O Thread completed and exiting with status :" << status << endl;
    
      /* while (!th_args.VWaitingQ.empty()) {
