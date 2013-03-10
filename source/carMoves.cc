@@ -77,6 +77,7 @@ int accelerate(vehicle *v, int aRate, void *arguments) {
 	struct thread_arguments *thread_args;
 	thread_args =(struct thread_arguments *)arguments;
 	int ticktime = thread_args->sleep_time;
+    vector<roadNode> roads = thread_args->mymap.getunfRoads();
 
 	int maxSpeed;
 	if (v->getType() == 0) {
@@ -87,11 +88,21 @@ int accelerate(vehicle *v, int aRate, void *arguments) {
 		maxSpeed = 65;
 	}
 	int cSpeed = v->getCurrentSpeed();
-	int newSpeed = cSpeed + (aRate * ticktime);
-	if (newSpeed <= maxSpeed) {
-		v->setCurrentSpeed(newSpeed); 
-	} else {
-		v->setCurrentSpeed(maxSpeed);
+	
+	int roadMaxSpeed = roads[v->getCurrentPosition().roadNodeID-1].getMaxSpeed();
+	int distanceToTravel=0;
+	int newSpeed=0;
+	int temp=0;
+	
+	cSpeed = cSpeed + aRate*ticktime;
+	distanceToTravel = cSpeed*ticktime + 1/2*aRate*ticktime*ticktime;
+
+	if (cSpeed>=maxSpeed || cSpeed<=roadMaxSpeed){
+		temp = cSpeed-maxSpeed;
+		int remain=temp/aRate;
+		distanceToTravel = distanceToTravel- remain*aRate +1/2*aRate*remain;
+		cSpeed=min(maxSpeed,roadMaxSpeed);
+		v->setCurrentSpeed(cSpeed); 
 	}
 	struct Position newPos;
 	newPos.roadNodeID = v->getCurrentPosition().roadNodeID;
@@ -104,7 +115,7 @@ int accelerate(vehicle *v, int aRate, void *arguments) {
 		newPos.p = 0;
 		newPos.lane = 0;
 	}
-	int distanceToTravel = (cSpeed * ticktime) + ((aRate*pow(ticktime,2)/2));
+	
 	int z=0;
 	bool roadChange = false;
 	//cout << "distanceToTravel: " << distanceToTravel << endl;
@@ -154,9 +165,6 @@ int moveVehicle(vehicle *v, void *arguments) {
 	int distanceToTravel = cSpeed * ticktime;
 	int z=0;
 	bool roadChange = false;
-	//cout << "distanceToTravel: " << distanceToTravel << endl;
-	//cout << "LENGTH OF CURRENT ROAD NODE: " << newPos.roadNodeID << " is " << thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength() << endl;
-	//cout << "MY CARS CURRENT SPEED IS: " << v->getCurrentSpeed() << endl;
 	while(distanceToTravel >= (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength() - newPos.p)) {
 		if (newPos.roadNodeID == vPath.back() && vPath.size() > 1) return 0;
 		int tempDistance = thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength() - newPos.p;
@@ -177,4 +185,14 @@ int moveVehicle(vehicle *v, void *arguments) {
 	v->setCurrentPosition(newPos);
 	return 1;
 }
+
+int checkVehicle(vehicle *veh1, vehicle *veh2){
+     vector<int> vehicle1Path = veh1->getPath();
+     vector<int> vehicle2Path = veh2->getPath();
+     for (int p=0; p<vehicle1Path.size(); p++)
+            for (int q=0; q<vehicle2Path.size(); q++)                           
+               if (vehicle1Path[p]==vehicle2Path[q])
+               	return 1;
+               else return 0;
+   }
 

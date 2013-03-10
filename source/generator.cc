@@ -35,8 +35,8 @@ void *generator(void *arguments)
   		STEP 2 GET NUMBER OF VEHICLES/H NEEDED
 		BASED ON THIS DECIDE HOW MANY VEHICLES NEED TO BE CREATE IN THIS ROUND
 	*/
-		int actual_no_to_create = rand() % thread_args->max_no_vehicles + 1;
-		if (actual_no_to_create > 1) actual_no_to_create = 1; //maybe revise
+		int actual_no_to_create = rand() % thread_args->max_no_vehicles + 2;
+		if (actual_no_to_create > 2) actual_no_to_create = 2; //maybe revise
 		vehicle* temp_array[actual_no_to_create];
 		//cout << "I SHALL CREATE: " << actual_no_to_create << endl;
 	/*	
@@ -76,7 +76,7 @@ void *generator(void *arguments)
 		//for (int p=0; p<actual_no_to_create; p++) cout << "IN THREAD: " << temp_array[p]->vehi_id << endl;
 		while (curr_vehicles > 0) {
 			int rand_pick = rand() % curr_vehicles;
-			thread_args->VWaitingQ.push(temp_array[rand_pick]);
+		//	thread_args->VWaitingQ.push(temp_array[rand_pick]);
 			for (int j=rand_pick; j<=curr_vehicles-1; j++) {	
 				temp_array[j]=temp_array[j+1];
 				temp_array[j+1] = NULL;
