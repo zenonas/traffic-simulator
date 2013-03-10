@@ -37,7 +37,7 @@ void *inout(void *arguments)
     struct thread_arguments *thread_args;
     thread_args = (struct thread_arguments *)arguments;
     initscr();   /* Start curses mode */
-    WINDOW * mainwin, * headerwin, *stdstats, *cmdin, *helpwin;
+    WINDOW * mainwin, * headerwin, *stdstats, *cmdin, *helpwin, *helpbox;
     int      ch;
     int      midpointx = COLS/ 2;
     int      midpointy = LINES / 2;
@@ -67,18 +67,27 @@ void *inout(void *arguments)
 
     //Following is code pertaining to the Panels showing Live updates of Vehicles
     WINDOW *vehiclestats, *roadnodestats;
-    PANEL *panels[2];
+    PANEL *panels[4];
     PANEL  *top;
     vehiclestats = newwin(LINES-18,COLS-4,14,2);
     roadnodestats = newwin(LINES-18,COLS-4,14,2);
+    helpbox = newwin(7,COLS-4,1,2);
+    headerwin = newwin(7, COLS-4, 1, 2);
     box(vehiclestats,0,0);
     box(roadnodestats,0,0);
+    box(helpbox,0,0);
+    box(headerwin, 0, 0);
     wbkgd(vehiclestats,COLOR_PAIR(2));
     wbkgd(roadnodestats,COLOR_PAIR(2));
+    wbkgd(helpbox,COLOR_PAIR(1));
+    wbkgd(headerwin,COLOR_PAIR(2));
     panels[0]=new_panel(vehiclestats);
     panels[1]=new_panel(roadnodestats);
+    panels[2]=new_panel(helpbox);
+    panels[3]=new_panel(headerwin);
     set_panel_userptr(panels[0], panels[1]);
-    set_panel_userptr(panels[1], panels[0]);
+    set_panel_userptr(panels[1], panels[2]);
+    set_panel_userptr(panels[2], panels[0]);
     bkgd(COLOR_PAIR(2));
     update_panels();
     
@@ -86,19 +95,19 @@ void *inout(void *arguments)
     
 
     int cpanel = 0;
+    int helppanel = 0;
     show_panel(panels[0]);
-
+    show_panel(panels[3]);
     //Panel code ends here
     
     /*  Make our child window, and add
     a border and some text to it.   */
 
-    headerwin = subwin(mainwin, 7, COLS-4, 1, 2);
+   
     stdstats = subwin(mainwin,6, COLS-4,8,2);
     cmdin = subwin(mainwin,3,25,LINES-4,2);
     helpwin = subwin(mainwin,3,COLS-29,LINES-4,27);
     wborder(mainwin, 0, 0, 0, 0, 0, 0, 0, 0);
-    box(headerwin, 0, 0);
     box(stdstats,0,0);
     box(cmdin,0,0);
     box(helpwin,0,0);
@@ -135,6 +144,19 @@ void *inout(void *arguments)
     // PREPARING PANEL TEXT
     wattron(vehiclestats, A_UNDERLINE);
     wattron(roadnodestats, A_UNDERLINE);
+    wattron(helpbox, A_UNDERLINE);
+    mvwaddstr(helpbox, 1, midpointx-12,"Traffic Simulation System");
+    mvwaddstr(helpbox,2,midpointx-8,"HELP COMMAND LIST");
+    wattroff(helpbox, A_UNDERLINE);
+    mvwaddstr(helpbox,3,2,"1. Set No of Vehicles ");
+    mvwaddstr(helpbox,4,2,"2. Set Vehicle Type Ratio ");
+    mvwaddstr(helpbox,5,2,"3. Set Driver Type Ratio ");
+    mvwaddstr(helpbox,3,35,"4. Stop Simulation ");
+    mvwaddstr(helpbox,4,35,"5. Change Granularity");
+    mvwaddstr(helpbox,5,35,"P. Switch Between Vehicle/road views");
+    mvwaddstr(helpbox,3,65,"H. Close this menu");
+    mvwaddstr(helpbox,4,65,"Q. Quit the Simulation");
+
     mvwaddstr(vehiclestats,1,2,"Vehicle ID");
     mvwaddstr(vehiclestats,1,15,"Current Speed");
     mvwaddstr(vehiclestats,1,30,"EntryP");
@@ -154,7 +176,7 @@ void *inout(void *arguments)
     refresh();
     update_panels();
     doupdate();
-    halfdelay(1);
+    halfdelay(5);
     while(!thread_args->finished) {
         
         mvwprintw(stdstats,2,27, "%0.00f",thread_args->simstats.getAvTimeinEngine());
@@ -176,9 +198,9 @@ void *inout(void *arguments)
 
             ch = mvwgetch(cmdin,1,10);
             if (ch == '\n') break;
-            if (ch == 'a') mvwprintw(stdstats,2,40, "%d",thread_args->tick_count);
-            if (ch == 't')  mvwaddstr(stdstats,3,2,"testing this shit"); 
-            if (ch == 'q') thread_args->finished=true;
+            if (ch == '1') mvwprintw(stdstats,2,40, "%d",thread_args->tick_count);
+            if (ch == '2')  mvwaddstr(stdstats,3,2,"testing this shit"); 
+            if (ch == '3') thread_args->finished=true;
             if (ch == 'p') { // panel switch
                 if (cpanel == 0) {
                     hide_panel(panels[0]);
@@ -190,6 +212,17 @@ void *inout(void *arguments)
                     cpanel = 0;
                 }
 
+            }
+            if (ch == 'h') {
+                if (helppanel == 0) {
+                    hide_panel(panels[3]);
+                    show_panel(panels[2]);
+                    helppanel = 1;
+                } else {
+                    hide_panel(panels[2]);
+                    show_panel(panels[3]);
+                    helppanel = 0;
+                }
             }
             wrefresh(cmdin);
         
