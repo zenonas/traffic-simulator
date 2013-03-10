@@ -27,8 +27,8 @@ statistics::statistics(){
    	avspeed =0;
     avtimeinengine =0;
     most_visited_road = -1;
-    most_common_exitP = -1;
-    most_common_entryP = -1;
+    most_common_exitP = 0;
+    most_common_entryP = 0;
     total = 0;
 }
 
@@ -90,9 +90,11 @@ void statistics::CaptureStatistics(map& mymap, vector<vehicle *> vehiclesInEngin
 	}
 	most_common_entryP++;
 	most_common_exitP++;
-
-	avspeed = double(speedsum / vehiclesInEngine.size());
-	avtimeinengine = double(timesum / vehiclesInEngine.size());
+	if(vehiclesInEngine.size()!=0)
+	{
+		avspeed = double(speedsum / vehiclesInEngine.size());
+		avtimeinengine = double(timesum / vehiclesInEngine.size());
+	}
 	total = vehiclesInEngine.size();
 
 }

@@ -33,24 +33,12 @@ void *inout(void *arguments)
     int timedelay;
     string stp;
     string show;
-    vector<int> vehicleTypesStats;
-    vector<int> driverTypeStats;
-
+    
     struct thread_arguments *thread_args;
     thread_args = (struct thread_arguments *)arguments;
-      initscr();   /* Start curses mode */
-    
-  
-    WINDOW * mainwin, * headerwin, *stdstats, *cmdin;
-    WINDOW *vehiclestats, *roadnodestats;
-    PANEL *panels[2];
-    PANEL  *top;
+    initscr();   /* Start curses mode */
+    WINDOW * mainwin, * headerwin, *stdstats, *cmdin, *helpwin;
     int      ch;
-    /*  Set the dimensions and initial
-    position for our child window   */
-
-    int      width = 23, height = 7;
-    int      rows  = 25, cols   = 80;
     int      midpointx = COLS/ 2;
     int      midpointy = LINES / 2;
 
@@ -62,43 +50,64 @@ void *inout(void *arguments)
     exit(EXIT_FAILURE);
     }
     
+    start_color();
+    init_pair(1, COLOR_RED, COLOR_BLACK );
+    init_pair(2, COLOR_WHITE, COLOR_BLUE );
+    init_pair(3, COLOR_GREEN,  COLOR_BLACK );
+    bkgd(COLOR_PAIR(2)); // Green Text on a White Screen
 
     /*  Switch off echoing and enable keypad (for arrow keys)  */
     cbreak();
     raw();
     nodelay(mainwin,TRUE);
-    noecho();
+    //noecho();
     keypad(mainwin, TRUE);
+
+
+
+    //Following is code pertaining to the Panels showing Live updates of Vehicles
+    WINDOW *vehiclestats, *roadnodestats;
+    PANEL *panels[2];
+    PANEL  *top;
+    vehiclestats = newwin(LINES-18,COLS-4,14,2);
+    roadnodestats = newwin(LINES-18,COLS-4,14,2);
     box(vehiclestats,0,0);
     box(roadnodestats,0,0);
+    wbkgd(vehiclestats,COLOR_PAIR(2));
+    wbkgd(roadnodestats,COLOR_PAIR(2));
     panels[0]=new_panel(vehiclestats);
     panels[1]=new_panel(roadnodestats);
     set_panel_userptr(panels[0], panels[1]);
     set_panel_userptr(panels[1], panels[0]);
-
+    bkgd(COLOR_PAIR(2));
     update_panels();
-    start_color();
+    
+    top = panels[0];
+    
 
-    init_pair(1, COLOR_GREEN, COLOR_WHITE );
-    init_pair(2, COLOR_WHITE, COLOR_BLUE );
-    init_pair(3, COLOR_CYAN,  COLOR_WHITE );
+    int cpanel = 0;
+    show_panel(panels[0]);
 
-    //attron( COLOR_PAIR(2) | A_BLINK );
-    bkgd(   COLOR_PAIR(2)); // Green Text on a White Screen
+    //Panel code ends here
+    
     /*  Make our child window, and add
     a border and some text to it.   */
 
     headerwin = subwin(mainwin, 7, COLS-4, 1, 2);
     stdstats = subwin(mainwin,6, COLS-4,8,2);
-    cmdin = subwin(mainwin,3,COLS-4,LINES-4,2);
+    cmdin = subwin(mainwin,3,25,LINES-4,2);
+    helpwin = subwin(mainwin,3,COLS-29,LINES-4,27);
     wborder(mainwin, 0, 0, 0, 0, 0, 0, 0, 0);
     box(headerwin, 0, 0);
     box(stdstats,0,0);
     box(cmdin,0,0);
+    box(helpwin,0,0);
+ 
+    
     mvwaddstr(headerwin, 1, midpointx-12,"Traffic Simulation System");
     mvwaddstr(headerwin, 2, 2,"TEAM B: Zinon Kyprianou, Panikos Lazarou, Maria Leventopoulou,");
     mvwaddstr(headerwin, 3, 10,"Adesinmisola Ogunsanya, Kosmas Tsakmakidis");
-    mvwaddstr(headerwin,4,2,"build date: 9/3/2013");
+    mvwaddstr(headerwin,4,2,"build date: 10/3/2013");
     mvwaddstr(headerwin,5,COLS-40,"Simulation Status: Running");
     mvwaddstr(stdstats,1,midpointx, "Total Vehicles in engine:");
     mvwprintw(stdstats,1,midpointx+27, "%d",thread_args->simstats.getTotalVehicles());
@@ -118,12 +127,33 @@ void *inout(void *arguments)
     mvwprintw(stdstats,3,midpointx+30,"%d",thread_args->simstats.getDriverTypeNum(1));
     mvwprintw(stdstats,3,midpointx+45,"%d",thread_args->simstats.getDriverTypeNum(2));
     mvwprintw(stdstats,1,40, "%d",thread_args->tick_count);
+    mvwaddstr(stdstats,4,2,"Most visited roadNode:    Most Common Entry/Exit point:    /");
+    mvwprintw(stdstats,4,25,"%d", thread_args->simstats.getMostVisitedRoad());
+    mvwprintw(stdstats,4,58,"%d", thread_args->simstats.getMostCommonEntryP());
+    mvwprintw(stdstats,4,63,"%d", thread_args->simstats.getMostCommonExitP());
+    mvwaddstr(helpwin,1,2,"For help press 'H'.           Copyright(c) 2013 Kings College London.");
+    // PREPARING PANEL TEXT
+    wattron(vehiclestats, A_UNDERLINE);
+    wattron(roadnodestats, A_UNDERLINE);
+    mvwaddstr(vehiclestats,1,2,"Vehicle ID");
+    mvwaddstr(vehiclestats,1,15,"Current Speed");
+    mvwaddstr(vehiclestats,1,30,"EntryP");
+    mvwaddstr(vehiclestats,1,40,"ExitP");
+    mvwaddstr(vehiclestats,1,50,"Path");
+    mvwaddstr(vehiclestats,1,70,"Current Position in Path");
+
+    mvwaddstr(roadnodestats,1,2,"RoadNode ID");
+    mvwaddstr(roadnodestats,1,15,"Length");
+    mvwaddstr(roadnodestats,1,30,"Maximum Speed");
+    mvwaddstr(roadnodestats,1,45,"Connected RoadNodes");
+    mvwaddstr(roadnodestats,1,65,"Current Vehicles in RoadNode");
+
+    wattroff(vehiclestats, A_UNDERLINE);
+    wattroff(roadnodestats, A_UNDERLINE);
     mvwprintw(cmdin,1,2, "Command:");
     refresh();
-
-    top = panels[0];
-
-
+    update_panels();
+    doupdate();
     halfdelay(1);
     while(!thread_args->finished) {
         
@@ -135,6 +165,9 @@ void *inout(void *arguments)
         mvwprintw(stdstats,3,midpointx+16,"%d",thread_args->simstats.getDriverTypeNum(0));
         mvwprintw(stdstats,3,midpointx+30,"%d",thread_args->simstats.getDriverTypeNum(1));
         mvwprintw(stdstats,3,midpointx+45,"%d",thread_args->simstats.getDriverTypeNum(2));
+        mvwprintw(stdstats,4,25,"%d", thread_args->simstats.getMostVisitedRoad());
+        mvwprintw(stdstats,4,58,"%d", thread_args->simstats.getMostCommonEntryP());
+        mvwprintw(stdstats,4,63,"%d", thread_args->simstats.getMostCommonExitP()); 
         mvwprintw(stdstats,1,40, "%d",thread_args->tick_count);
         wrefresh(stdstats);
         
@@ -146,12 +179,25 @@ void *inout(void *arguments)
             if (ch == 'a') mvwprintw(stdstats,2,40, "%d",thread_args->tick_count);
             if (ch == 't')  mvwaddstr(stdstats,3,2,"testing this shit"); 
             if (ch == 'q') thread_args->finished=true;
-        
+            if (ch == 'p') { // panel switch
+                if (cpanel == 0) {
+                    hide_panel(panels[0]);
+                    show_panel(panels[1]);
+                    cpanel = 1;
+                } else {
+                    hide_panel(panels[1]);
+                    show_panel(panels[0]);
+                    cpanel = 0;
+                }
+
+            }
             wrefresh(cmdin);
         
         } while (ch != ERR);
     
         wmove(cmdin,1,10);
+        update_panels();
+        doupdate();
         wrefresh(cmdin);
         sleep(thread_args->sleep_time);
     }
