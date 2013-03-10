@@ -32,6 +32,7 @@ struct thread_arguments {
       map mymap;
       int CurrentTimer;
       statistics simstats;
+      bool debug;
 
 };
 

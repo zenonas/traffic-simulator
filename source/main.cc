@@ -23,7 +23,7 @@ Copyright (c) King's College London
 
 using namespace std;
 
-int main ()
+int main (int argc, char *argv[])
 {
 
 /* DEFINING GENERATOR THREAD ARGUMENTS */
@@ -41,18 +41,15 @@ int main ()
    th_args.sleep_time = 5; // this may change
    th_args.tick_count = 0;
    th_args.engine_change = false;
-   
-//
+   th_args.debug = false;
+// Checking for debug mode
+   if (argc > 1) {
+      if (strcmp(argv[1],"debug") == 0) {
+         cout << "Running Simulation without the UI in debug mode" <<endl;
+         th_args.debug = true;
+      }
+   }
 
-//read xml file to construct map
-
-//get vector with all paths
-   vector<vector<int> > paths = th_args.mymap.getAllPaths();
-/* DEFINING ENGINE THREAD ARGUEMENTS */
-
-/* DEFINING I/O THREAD ARGUEMENT */
-
-/* test graph code */
 
 /* MULTI-THREADING STUFF */
 
@@ -61,70 +58,58 @@ int main ()
    pthread_attr_t attr;
    void *status;
 
-
-/* test graph code */
-
    // Initialize and set thread joinable
    pthread_attr_init(&attr);
    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
    
- //     cout << "Creating thread: Vehicle Generator... ";
-      rc = pthread_create(&threads[0], NULL, generator, (void*)&th_args);
-      if (rc){
-       cout << "Error:unable to create thread," << rc << endl;
-         return(-1);
-      }
-     // cout << "OK!" << endl;
+   //THREAD GENERATOR
+   rc = pthread_create(&threads[0], NULL, generator, (void*)&th_args);
+   if (rc){
+      cout << "Error:unable to create thread," << rc << endl;
+      return(-1);
+   }
 
-   //   cout << "Creating thread: Engine... "; 
-      rc = pthread_create(&threads[1], NULL, engine, (void*)&th_args);
-      if (rc){
-         cout << "Error:unable to create thread," << rc << endl;
-         return(-1);
-      }
-      //cout << "OK!" << endl;
+   //THREAD ENGINE
+   rc = pthread_create(&threads[1], NULL, engine, (void*)&th_args);
+   if (rc){
+      cout << "Error:unable to create thread," << rc << endl;
+      return(-1);
+   }
       
-     // cout << "Creating thread: I/O... ";
+   //THREAD SYSIO
+   if (th_args.debug == false) {
       rc = pthread_create(&threads[2], NULL, inout, (void*)&th_args);
       if (rc){
          cout << "Error:unable to create thread," << rc << endl;
          return(-1);
       }
-
-      //cout << "OK!" << endl;
+   }
    
 
    // free attribute and wait for the other threads
    pthread_attr_destroy(&attr);
- 
-      rc = pthread_join(threads[0], &status);
-      if (rc){
-         cout << "Error:unable to join," << rc << endl;
-         return(-1);
-      }
-      //cout << "Vehicle Generator Thread completed and exiting with status :" << status << endl;
-      
-      rc = pthread_join(threads[1], &status);
-      if (rc){
-         cout << "Error:unable to join," << rc << endl;
-         return(-1);
-      }
-     // cout << "Engine Thread completed and exiting with status :" << status << endl;
-      
+   rc = pthread_join(threads[0], &status);
+   if (rc){
+      cout << "Error:unable to join," << rc << endl;
+      return(-1);
+   }
+   if (th_args.debug) cout << "Vehicle Generator Thread completed and exiting with status :" << status << endl;   
+   rc = pthread_join(threads[1], &status);
+   if (rc){
+      cout << "Error:unable to join," << rc << endl;
+      return(-1);
+   }
+   if (th_args.debug) cout << "Engine Thread completed and exiting with status :" << status << endl;
+   if (th_args.debug == false) {  
       rc = pthread_join(threads[2], &status);
       if (rc){
          cout << "Error:unable to join," << rc << endl;
          return(-1);
       }
+   }
 
-      //cout << "I/O Thread completed and exiting with status :" << status << endl;
-   
-     /* while (!th_args.VWaitingQ.empty()) {
-         cout << "(OUTSIDE THREAD) TYPE: " << th_args.VWaitingQ.front()->vehi_id << endl;
-         th_args.VWaitingQ.pop();
-      }*/
-   //cout << "Main program exiting." << endl;
+   if (th_args.debug) cout << "Main program exiting." << endl;
    pthread_exit(NULL);
    endwin();    /* End curses mode   */
 }
