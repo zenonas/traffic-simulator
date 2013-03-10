@@ -23,6 +23,35 @@ Copyright (c) King's College London
 
 using namespace std;
 
+int maxVehicleChange(WINDOW *cmdbox,void *arguments) {
+    struct thread_arguments *thread_args;
+    thread_args = (struct thread_arguments *)arguments;
+    int midpointx = COLS / 2;
+    nodelay(cmdbox,FALSE);
+    wattron(cmdbox, A_UNDERLINE);
+    mvwaddstr(cmdbox, 1, midpointx-12,"Traffic Simulation System");
+    mvwaddstr(cmdbox,2,midpointx-8,"Change the max number of Vehicles");
+    wattroff(cmdbox, A_UNDERLINE);
+    mvwaddstr(cmdbox,3,2, "This controls the maximum number of vehicles the Vehicle generator is allowed to");
+    mvwaddstr(cmdbox,4,2, "create during each of the simulation updates");
+    mvwaddstr(cmdbox,5,2, "Please enter a new maximum number");
+    wattron(cmdbox, A_UNDERLINE);
+    mvwaddstr(cmdbox,5,40, "          ");
+    wattroff(cmdbox, A_UNDERLINE);
+    int maxInLen = 4;
+    char input[maxInLen];
+    for (int i=0; i<maxInLen; i++){
+        int charIn = mvwgetch(cmdbox,5,41+i);
+        if (charIn != '\n')
+            input[i] = charIn;
+        else
+            break;
+    }
+    int newNum = atoi(input);
+    thread_args->max_no_vehicles = newNum;
+    return 1;
+}
+
 void *inout(void *arguments)
 {
 
@@ -66,36 +95,37 @@ void *inout(void *arguments)
 
 
     //Following is code pertaining to the Panels showing Live updates of Vehicles
-    WINDOW *vehiclestats, *roadnodestats;
-    PANEL *panels[4];
-    PANEL  *top;
+    WINDOW *vehiclestats, *roadnodestats, *cmdbox;
+    PANEL *panels[5];
     vehiclestats = newwin(LINES-18,COLS-4,14,2);
     roadnodestats = newwin(LINES-18,COLS-4,14,2);
     helpbox = newwin(7,COLS-4,1,2);
+    cmdbox = newwin(7,COLS-4,1,2);
     headerwin = newwin(7, COLS-4, 1, 2);
     box(vehiclestats,0,0);
     box(roadnodestats,0,0);
     box(helpbox,0,0);
+    box(cmdbox,0,0);
     box(headerwin, 0, 0);
     wbkgd(vehiclestats,COLOR_PAIR(2));
     wbkgd(roadnodestats,COLOR_PAIR(2));
     wbkgd(helpbox,COLOR_PAIR(1));
+    wbkgd(cmdbox,COLOR_PAIR(1));
     wbkgd(headerwin,COLOR_PAIR(2));
     panels[0]=new_panel(vehiclestats);
     panels[1]=new_panel(roadnodestats);
     panels[2]=new_panel(helpbox);
     panels[3]=new_panel(headerwin);
+    panels[4]=new_panel(cmdbox);
     set_panel_userptr(panels[0], panels[1]);
     set_panel_userptr(panels[1], panels[2]);
     set_panel_userptr(panels[2], panels[0]);
     bkgd(COLOR_PAIR(2));
     update_panels();
-    
-    top = panels[0];
-    
 
     int cpanel = 0;
     int helppanel = 0;
+    int cmdbox_status = 0 ;
     show_panel(panels[0]);
     show_panel(panels[3]);
     //Panel code ends here
@@ -176,7 +206,7 @@ void *inout(void *arguments)
     refresh();
     update_panels();
     doupdate();
-    halfdelay(5);
+    nodelay(cmdin,TRUE);
     while(!thread_args->finished) {
         
         mvwprintw(stdstats,2,27, "%0.00f",thread_args->simstats.getAvTimeinEngine());
@@ -198,7 +228,22 @@ void *inout(void *arguments)
 
             ch = mvwgetch(cmdin,1,10);
             if (ch == '\n') break;
-            if (ch == '1') mvwprintw(stdstats,2,40, "%d",thread_args->tick_count);
+            if (ch == '1') {
+                if (cmdbox_status == 0) {
+                    hide_panel(panels[3]);
+                    show_panel(panels[4]);
+                    cmdbox_status = 1;
+                    if (int result = maxVehicleChange(cmdbox, thread_args) == 1) {
+                        hide_panel(panels[4]);
+                        show_panel(panels[3]);    
+                        cmdbox_status = 0;
+                    }
+                } else {
+                    hide_panel(panels[4]);
+                    show_panel(panels[3]);
+                    cmdbox_status = 0;
+                }
+            }
             if (ch == '2')  mvwaddstr(stdstats,3,2,"testing this shit"); 
             if (ch == '3') thread_args->finished=true;
             if (ch == 'p') { // panel switch
@@ -223,6 +268,9 @@ void *inout(void *arguments)
                     show_panel(panels[3]);
                     helppanel = 0;
                 }
+            }
+            if (ch == 'q') {
+                thread_args->finished = true;
             }
             wrefresh(cmdin);
         
