@@ -116,11 +116,11 @@ void *engine(void *arguments)
                   result = accelerate(vehiclesInEngine[q], 20, thread_args);
                   //cout << "Car " << q<< " ACCELERATED ONCE MY NEW POSITION IS: " << vehiclesInEngine[q]->getCurrentPosition().roadNodeID << " at position " << vehiclesInEngine[q]->getCurrentPosition().p << "\n";
                 }
-
+                /*
                 if (result == 0) {
                   //cout << "vgika apo to xarti car Which car p???" <<p<< endl;
-                  vehiclesInEngine.erase(vehiclesInEngine.begin()+p);
-                }
+                  vehiclesInEngine.erase(vehiclesInEngine.begin()+q);
+                } */
                break;
               }
               else {
@@ -129,7 +129,6 @@ void *engine(void *arguments)
               }
             }
       if (result == 0) {
-         //cout << "vgika apo to xarti car Which car q???" <<q<< endl;
          vehiclesInEngine.erase(vehiclesInEngine.begin()+q);
       }      
    }    

@@ -17,6 +17,7 @@ Copyright (c) King's College London
 #include "engine.cc"
 #include "sysio.h"
 #include "map.h"
+#include <string.h>
 #include <curses.h>
 #include <queue>
 #include "th_structs.h"

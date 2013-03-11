@@ -210,7 +210,7 @@ void *inout(void *arguments)
     set_panel_userptr(panels[0], panels[1]);
     set_panel_userptr(panels[1], panels[2]);
     set_panel_userptr(panels[2], panels[0]);
-    bkgd(COLOR_PAIR(2));
+    bkgd(COLOR_PAIR(3));
     update_panels();
 
     int cpanel = 0;
@@ -236,7 +236,7 @@ void *inout(void *arguments)
     mvwaddstr(headerwin, 1, midpointx-12,"Traffic Simulation System");
     mvwaddstr(headerwin, 2, 2,"TEAM B: Zinon Kyprianou, Panikos Lazarou, Maria Leventopoulou,");
     mvwaddstr(headerwin, 3, 10,"Adesinmisola Ogunsanya, Kosmas Tsakmakidis");
-    mvwaddstr(headerwin,4,2,"build date: 10/3/2013");
+    mvwaddstr(headerwin,4,2,"build date: 11/3/2013");
     mvwaddstr(headerwin,5,COLS-40,"Simulation Status: Running");
     mvwaddstr(stdstats,1,midpointx, "Total Vehicles in engine:");
     mvwprintw(stdstats,1,midpointx+27, "%d",thread_args->simstats.getTotalVehicles());
