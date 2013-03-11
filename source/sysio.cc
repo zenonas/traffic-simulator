@@ -9,6 +9,7 @@ Description: This file specifies the input and output thread of the system
 Copyright (c) King's College London
 
 */
+#include "sysio.h"
 #include <string.h>
 #include <stdlib.h>
 #include <iostream> 
@@ -31,17 +32,24 @@ void updateVehicles(WINDOW *vehiclestats, void *arguments) {
     int midpointx = COLS / 2;
 
     vector<vehicle *> vehiclesInEngine = thread_args->simstats.getVehiclesInEngine();
-
     for (int y=0; y<LINES-17; y++) {
         wmove(vehiclestats,2+y,2);
         wclrtoeol(vehiclestats);
     }
     box(vehiclestats,0,0);
     for (int i=0; i<vehiclesInEngine.size(); i++) {
+        vector<int> vehiclePath = vehiclesInEngine[i]->getPath();
         mvwprintw(vehiclestats,2+i,3,"%d",vehiclesInEngine[i]->vehi_id);
         mvwprintw(vehiclestats,2+i,16,"%d",vehiclesInEngine[i]->getCurrentSpeed());
         mvwprintw(vehiclestats,2+i,31,"%d",vehiclesInEngine[i]->getEntryPoint());
         mvwprintw(vehiclestats,2+i,41,"%d",vehiclesInEngine[i]->getExitPoint());
+        for (int vp=0; vp<vehiclePath.size(); vp++) {
+            mvwprintw(vehiclestats,2+i,50+(2*vp)," %d", vehiclePath[vp]);
+        }        
+        mvwprintw(vehiclestats,2+i,70,"roadNode: %d",vehiclesInEngine[i]->getCurrentPosition().roadNodeID);
+        mvwprintw(vehiclestats,2+i,83,"Pos: %d", vehiclesInEngine[i]->getCurrentPosition().p);
+        mvwprintw(vehiclestats,2+i,93,"Lane: %d",vehiclesInEngine[i]->getCurrentPosition().lane);
+
         //mvwprintw(vehiclestats,2+i,51,"%d",vehiclesInEngine[i]->getCurrentSpeed()); //path
         //vwprintw(vehiclestats,2+i,16,"%d",vehiclesInEngine[i]->getCurrentSpeed());  //current position in path
     }
@@ -52,6 +60,7 @@ void updateRoadNodes(WINDOW *roadnodestats, void *arguments){
     int midpointx = COLS / 2;
 
     vector<roadNode > unfRoads = thread_args->mymap.getunfRoads();
+    vector<vehicle *> vehiclesInEngine = thread_args->simstats.getVehiclesInEngine();
     for (int y=0; y<LINES-17; y++) {
     wmove(roadnodestats,2+y,2);
     wclrtoeol(roadnodestats);
@@ -61,10 +70,18 @@ void updateRoadNodes(WINDOW *roadnodestats, void *arguments){
         mvwprintw(roadnodestats,2+i,3,"%d",unfRoads[i].getId());
         mvwprintw(roadnodestats,2+i,16,"%d",unfRoads[i].getLength());
         mvwprintw(roadnodestats,2+i,31,"%d",unfRoads[i].getMaxSpeed());
+        int carcount = 0;
+        for (int p=0; p<vehiclesInEngine.size(); p++) {
+            int id = vehiclesInEngine[p]->getCurrentPosition().roadNodeID;
+        if (id == unfRoads[i].getId())
+            mvwprintw(roadnodestats,2+i,65+(2*carcount)," %d",vehiclesInEngine[p]->vehi_id);
+            carcount++;
+    }
+
+
         //mvwprintw(roadnodestats,2+i,46,"%d",vehiclesInEngine[i]->getExitPoint()); //connected roadnodes
         //mvwprintw(roadnodestats,2+i,66,"%d",vehiclesInEngine[i]->getExitPoint()); // current vehicles in roadnode
     }
-    wrefresh(roadnodestats);
 }
 
 int maxVehicleChange(WINDOW *cmdbox,void *arguments) {
@@ -74,7 +91,7 @@ int maxVehicleChange(WINDOW *cmdbox,void *arguments) {
     nodelay(cmdbox,FALSE);
     wattron(cmdbox, A_UNDERLINE);
     mvwaddstr(cmdbox, 1, midpointx-12,"Traffic Simulation System");
-    mvwaddstr(cmdbox,2,midpointx-8,"Change the max number of Vehicles");
+    mvwaddstr(cmdbox,2,midpointx-15,"Change the max number of Vehicles");
     wattroff(cmdbox, A_UNDERLINE);
     mvwaddstr(cmdbox,3,2, "This controls the maximum number of vehicles the Vehicle generator is allowed to");
     mvwaddstr(cmdbox,4,2, "create during each of the simulation updates");
@@ -93,6 +110,35 @@ int maxVehicleChange(WINDOW *cmdbox,void *arguments) {
     }
     int newNum = atoi(input);
     thread_args->max_no_vehicles = newNum;
+    return 1;
+}
+
+int changeSimTime(WINDOW *cmdbox,void *arguments) {
+    struct thread_arguments *thread_args;
+    thread_args = (struct thread_arguments *)arguments;
+    int midpointx = COLS / 2;
+    nodelay(cmdbox,FALSE);
+    wattron(cmdbox, A_UNDERLINE);
+    mvwaddstr(cmdbox, 1, midpointx-12,"Traffic Simulation System");
+    mvwaddstr(cmdbox,2,midpointx-15,"Change the simulation granularity");
+    wattroff(cmdbox, A_UNDERLINE);
+    mvwaddstr(cmdbox,3,2, "This controls the time between each simulation tick. This setting defaults");
+    mvwaddstr(cmdbox,4,2, "to 5 second lapses");
+    mvwaddstr(cmdbox,5,2, "Please enter a new tick time:");
+    wattron(cmdbox, A_UNDERLINE);
+    mvwaddstr(cmdbox,5,40, "          ");
+    wattroff(cmdbox, A_UNDERLINE);
+    int maxInLen = 3;
+    char input[maxInLen];
+    for (int i=0; i<maxInLen; i++){
+        int charIn = mvwgetch(cmdbox,5,41+i);
+        if (charIn != '\n')
+            input[i] = charIn;
+        else
+            break;
+    }
+    int newNum = atoi(input);
+    thread_args->sleep_time = newNum;
     return 1;
 }
 
@@ -255,6 +301,7 @@ void *inout(void *arguments)
     while(!thread_args->finished) {
         
         mvwprintw(stdstats,2,27, "%0.00f",thread_args->simstats.getAvTimeinEngine());
+        mvwprintw(stdstats,1,20,"%d",thread_args->sleep_time);
         mvwprintw(stdstats,2,midpointx+6, "%d",thread_args->simstats.getVehicleTypeNum(0));
         mvwprintw(stdstats,2,midpointx+17, "%d",thread_args->simstats.getVehicleTypeNum(1));
         mvwprintw(stdstats,2,midpointx+30, "%d",thread_args->simstats.getVehicleTypeNum(2));
@@ -267,6 +314,7 @@ void *inout(void *arguments)
         mvwprintw(stdstats,4,63,"%d", thread_args->simstats.getMostCommonExitP()); 
         mvwprintw(stdstats,1,40, "%d",thread_args->tick_count);
         updateVehicles(vehiclestats, thread_args);
+        updateRoadNodes(roadnodestats, thread_args);
         wrefresh(stdstats);
         
 
@@ -290,8 +338,25 @@ void *inout(void *arguments)
                     cmdbox_status = 0;
                 }
             }
-            if (ch == '2')  mvwaddstr(stdstats,3,2,"testing this shit"); 
-            if (ch == '3') thread_args->finished=true;
+            if (ch == '2') break; 
+            if (ch == '3') break;
+            if (ch == '4') break;
+            if (ch == '5') {
+                if (cmdbox_status == 0) {
+                    hide_panel(panels[3]);
+                    show_panel(panels[4]);
+                    cmdbox_status = 1;
+                    if (int result = changeSimTime(cmdbox, thread_args) == 1) {
+                        hide_panel(panels[4]);
+                        show_panel(panels[3]);    
+                        cmdbox_status = 0;
+                    }
+                } else {
+                    hide_panel(panels[4]);
+                    show_panel(panels[3]);
+                    cmdbox_status = 0;
+                }
+            }
             if (ch == 'p') { // panel switch
                 if (cpanel == 0) {
                     hide_panel(panels[0]);
@@ -316,7 +381,10 @@ void *inout(void *arguments)
                 }
             }
             if (ch == 'q') {
+                mvwaddstr(headerwin,5,COLS-40,"Simulation Status: Shutting Down");
+                wrefresh(headerwin);
                 thread_args->finished = true;
+                sleep(2);
             }
             wrefresh(cmdin);
         
@@ -326,12 +394,17 @@ void *inout(void *arguments)
         update_panels();
         doupdate();
         wrefresh(cmdin);
-        sleep(thread_args->sleep_time);
-    }
+        usleep(5000);
+    }   
     delwin(mainwin);
     delwin(headerwin);
     delwin(stdstats);
+    delwin(vehiclestats);
+    delwin(roadnodestats);
+    delwin(cmdin);
+    delwin(cmdbox);
+    delwin(helpbox);
+    delwin(helpwin);
     endwin();
-    
-    pthread_exit(NULL);
+    pthread_exit(NULL);   
 }

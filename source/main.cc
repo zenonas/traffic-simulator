@@ -15,7 +15,7 @@ Copyright (c) King's College London
 #include <time.h>
 #include "generator.cc"
 #include "engine.cc"
-#include "sysio.cc"
+#include "sysio.h"
 #include "map.h"
 #include <curses.h>
 #include <queue>
@@ -111,6 +111,7 @@ int main (int argc, char *argv[])
 
    if (th_args.debug) cout << "Main program exiting." << endl;
    pthread_exit(NULL);
+
    endwin();    /* End curses mode   */
 }
 
