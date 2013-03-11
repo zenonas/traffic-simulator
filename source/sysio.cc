@@ -16,12 +16,56 @@ Copyright (c) King's College London
 #include <form.h>
 #include <panel.h>
 #include <curses.h>
+#include "roadNode.h"
+#include <vector>
 #include <limits>
 #include "statistics.h"
 #include "ResetTrafficLights.cc"
 
 
 using namespace std;
+
+void updateVehicles(WINDOW *vehiclestats, void *arguments) {
+    struct thread_arguments *thread_args;
+    thread_args = (struct thread_arguments *)arguments;
+    int midpointx = COLS / 2;
+
+    vector<vehicle *> vehiclesInEngine = thread_args->simstats.getVehiclesInEngine();
+
+    for (int y=0; y<LINES-17; y++) {
+        wmove(vehiclestats,2+y,2);
+        wclrtoeol(vehiclestats);
+    }
+    box(vehiclestats,0,0);
+    for (int i=0; i<vehiclesInEngine.size(); i++) {
+        mvwprintw(vehiclestats,2+i,3,"%d",vehiclesInEngine[i]->vehi_id);
+        mvwprintw(vehiclestats,2+i,16,"%d",vehiclesInEngine[i]->getCurrentSpeed());
+        mvwprintw(vehiclestats,2+i,31,"%d",vehiclesInEngine[i]->getEntryPoint());
+        mvwprintw(vehiclestats,2+i,41,"%d",vehiclesInEngine[i]->getExitPoint());
+        //mvwprintw(vehiclestats,2+i,51,"%d",vehiclesInEngine[i]->getCurrentSpeed()); //path
+        //vwprintw(vehiclestats,2+i,16,"%d",vehiclesInEngine[i]->getCurrentSpeed());  //current position in path
+    }
+}
+void updateRoadNodes(WINDOW *roadnodestats, void *arguments){
+    struct thread_arguments *thread_args;
+    thread_args = (struct thread_arguments *)arguments;
+    int midpointx = COLS / 2;
+
+    vector<roadNode > unfRoads = thread_args->mymap.getunfRoads();
+    for (int y=0; y<LINES-17; y++) {
+    wmove(roadnodestats,2+y,2);
+    wclrtoeol(roadnodestats);
+    }
+    box(roadnodestats,0,0);
+    for (int i=0; i<unfRoads.size(); i++) {
+        mvwprintw(roadnodestats,2+i,3,"%d",unfRoads[i].getId());
+        mvwprintw(roadnodestats,2+i,16,"%d",unfRoads[i].getLength());
+        mvwprintw(roadnodestats,2+i,31,"%d",unfRoads[i].getMaxSpeed());
+        //mvwprintw(roadnodestats,2+i,46,"%d",vehiclesInEngine[i]->getExitPoint()); //connected roadnodes
+        //mvwprintw(roadnodestats,2+i,66,"%d",vehiclesInEngine[i]->getExitPoint()); // current vehicles in roadnode
+    }
+    wrefresh(roadnodestats);
+}
 
 int maxVehicleChange(WINDOW *cmdbox,void *arguments) {
     struct thread_arguments *thread_args;
@@ -202,6 +246,7 @@ void *inout(void *arguments)
 
     wattroff(vehiclestats, A_UNDERLINE);
     wattroff(roadnodestats, A_UNDERLINE);
+    updateRoadNodes(roadnodestats, thread_args);
     mvwprintw(cmdin,1,2, "Command:");
     refresh();
     update_panels();
@@ -221,6 +266,7 @@ void *inout(void *arguments)
         mvwprintw(stdstats,4,58,"%d", thread_args->simstats.getMostCommonEntryP());
         mvwprintw(stdstats,4,63,"%d", thread_args->simstats.getMostCommonExitP()); 
         mvwprintw(stdstats,1,40, "%d",thread_args->tick_count);
+        updateVehicles(vehiclestats, thread_args);
         wrefresh(stdstats);
         
 
