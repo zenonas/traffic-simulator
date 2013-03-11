@@ -197,7 +197,7 @@ for(int k=0; k<vehiclesInEngine.size(); k++){
 }
 
 
-thread_args->simstats.CaptureStatistics(thread_args->mymap, vehiclesInEngine);
+thread_args->simstats.CaptureStatistics(arguments, thread_args->mymap, vehiclesInEngine);
 /*cout << "---- STATISTICS!!! ----" << endl;
 cout << "Vehicles in Engine: " << S.getTotalVehicles() <<endl;
 cout << "AvSpeed: " << S.getAvSpeed() <<endl;

@@ -37,8 +37,9 @@ statistics::~statistics(){
 	
 }
 
-void statistics::CaptureStatistics(map& mymap, vector<vehicle *> vehiclesInEngine){
-	
+void statistics::CaptureStatistics(void *arguments, map& mymap, vector<vehicle *> vehiclesInEngine){
+	struct thread_arguments *thread_args;
+    thread_args = (struct thread_arguments *)arguments;
 	int j;
 	double speedsum = 0;
 	double timesum = 0;

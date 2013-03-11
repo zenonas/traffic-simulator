@@ -24,7 +24,7 @@ class statistics
 public:
    statistics();
    ~statistics();
-   void CaptureStatistics(map& mymap, vector<vehicle *> vehiclesInEngine);
+   void CaptureStatistics(void *arguments, map& mymap, vector<vehicle *> vehiclesInEngine);
    void RecordToSQL();
 
    double getAvSpeed();
