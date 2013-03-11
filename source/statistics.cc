@@ -18,7 +18,7 @@ Copyright (c) King's College London
 #include <math.h>
 
 statistics::statistics(){
-
+	VehMap = NULL;
 
 
 	vehicletypenum.resize(3);
@@ -37,15 +37,16 @@ statistics::~statistics(){
 	
 }
 
-void statistics::CaptureStatistics(void *arguments, map& mymap, vector<vehicle *> vehiclesInEngine){
-	struct thread_arguments *thread_args;
-    thread_args = (struct thread_arguments *)arguments;
+void statistics::CaptureStatistics(map* mymap, vector<vehicle *> vehiclesInEngine){
+
+	VehMap = mymap;
+	VehEng = vehiclesInEngine;
 	int j;
 	double speedsum = 0;
 	double timesum = 0;
-	vector<int> countEntryP(mymap.getunfRoads().size());
-	vector<int> countExitP(mymap.getunfRoads().size());
-	for(j=0; j< mymap.getunfRoads().size(); j++)
+	vector<int> countEntryP(VehMap->getunfRoads().size());
+	vector<int> countExitP(VehMap->getunfRoads().size());
+	for(j=0; j< VehMap->getunfRoads().size(); j++)
 	{
 		countEntryP[j] = 0;
 		countExitP[j] = 0;
@@ -133,3 +134,12 @@ int statistics::getDriverTypeNum(int driverType){
 int statistics::getTotalVehicles(){
 	return total;
 }
+
+map* statistics::getMap(){
+	return VehMap;
+}
+
+vector<vehicle *> statistics::getVehiclesInEngine(){
+	return VehEng;
+}
+

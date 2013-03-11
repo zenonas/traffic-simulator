@@ -24,7 +24,7 @@ class statistics
 public:
    statistics();
    ~statistics();
-   void CaptureStatistics(void *arguments, map& mymap, vector<vehicle *> vehiclesInEngine);
+   void CaptureStatistics(map* mymap, vector<vehicle *> vehiclesInEngine);
    void RecordToSQL();
 
    double getAvSpeed();
@@ -35,8 +35,12 @@ public:
    int getVehicleTypeNum(int vehicleType);
    int getDriverTypeNum(int driverType); 
    int getTotalVehicles();
+   map* getMap();
+   vector<vehicle *> getVehiclesInEngine();
 
 private:
+   map* VehMap;
+   vector<vehicle *> VehEng;
    double avspeed;
    double avtimeinengine;
    int most_visited_road;
