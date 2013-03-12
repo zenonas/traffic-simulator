@@ -40,15 +40,20 @@ void updateVehicles(WINDOW *vehiclestats, void *arguments) {
     for (int i=0; i<vehiclesInEngine.size(); i++) {
         vector<int> vehiclePath = vehiclesInEngine[i]->getPath();
         mvwprintw(vehiclestats,2+i,3,"%d",vehiclesInEngine[i]->vehi_id);
-        mvwprintw(vehiclestats,2+i,16,"%d",vehiclesInEngine[i]->getCurrentSpeed());
-        mvwprintw(vehiclestats,2+i,31,"%d",vehiclesInEngine[i]->getEntryPoint());
-        mvwprintw(vehiclestats,2+i,41,"%d",vehiclesInEngine[i]->getExitPoint());
+        mvwprintw(vehiclestats,2+i,16,"%d",vehiclesInEngine[i]->getType());
+        mvwprintw(vehiclestats,2+i,31,"%d",vehiclesInEngine[i]->getCurrentSpeed());
+        mvwprintw(vehiclestats,2+i,41,"%d",vehiclesInEngine[i]->getEntryPoint());
+        mvwprintw(vehiclestats,2+i,51,"%d",vehiclesInEngine[i]->getExitPoint());
         for (int vp=0; vp<vehiclePath.size(); vp++) {
-            mvwprintw(vehiclestats,2+i,50+(2*vp)," %d", vehiclePath[vp]);
+            mvwprintw(vehiclestats,2+i,60+(2*vp)," %d", vehiclePath[vp]);
         }        
-        mvwprintw(vehiclestats,2+i,70,"roadNode: %d",vehiclesInEngine[i]->getCurrentPosition().roadNodeID);
-        mvwprintw(vehiclestats,2+i,83,"Pos: %d", vehiclesInEngine[i]->getCurrentPosition().p);
-        mvwprintw(vehiclestats,2+i,93,"Lane: %d",vehiclesInEngine[i]->getCurrentPosition().lane);
+        mvwprintw(vehiclestats,2+i,80,"roadNode: %d",vehiclesInEngine[i]->getCurrentPosition().roadNodeID);
+        mvwprintw(vehiclestats,2+i,93,"Pos: %d", vehiclesInEngine[i]->getCurrentPosition().p);
+        if (vehiclesInEngine[i]->getCurrentPosition().lane == 0)
+            mvwaddstr(vehiclestats,2+i,103,"Lane: L");
+        else
+            mvwaddstr(vehiclestats,2+i,103,"Lane: R");
+        mvwprintw(vehiclestats,2+i,113,"%d",vehiclesInEngine[i]->getTimer());
 
         //mvwprintw(vehiclestats,2+i,51,"%d",vehiclesInEngine[i]->getCurrentSpeed()); //path
         //vwprintw(vehiclestats,2+i,16,"%d",vehiclesInEngine[i]->getCurrentSpeed());  //current position in path
@@ -240,7 +245,7 @@ void *inout(void *arguments)
     mvwaddstr(headerwin,5,COLS-40,"Simulation Status: Running");
     mvwaddstr(stdstats,1,midpointx, "Total Vehicles in engine:");
     mvwprintw(stdstats,1,midpointx+27, "%d",thread_args->simstats.getTotalVehicles());
-    mvwaddstr(stdstats,2,2, "Average Time in Engine:");
+    mvwaddstr(stdstats,2,2, "Average time in Engine:");
     mvwprintw(stdstats,2,27, "%0.00f",thread_args->simstats.getAvTimeinEngine());
     mvwaddstr(stdstats,1,2, "Sim granularity: ");
     mvwprintw(stdstats,1,20,"%d",thread_args->sleep_time);
@@ -256,6 +261,8 @@ void *inout(void *arguments)
     mvwprintw(stdstats,3,midpointx+30,"%d",thread_args->simstats.getDriverTypeNum(1));
     mvwprintw(stdstats,3,midpointx+45,"%d",thread_args->simstats.getDriverTypeNum(2));
     mvwprintw(stdstats,1,40, "%d",thread_args->tick_count);
+    mvwprintw(stdstats,3,27, "%.00f",thread_args->simstats.getAvSpeed());
+    mvwaddstr(stdstats,3,2,"Average speed in engine: ");
     mvwaddstr(stdstats,4,2,"Most visited roadNode:    Most Common Entry/Exit point:    /");
     mvwprintw(stdstats,4,25,"%d", thread_args->simstats.getMostVisitedRoad());
     mvwprintw(stdstats,4,58,"%d", thread_args->simstats.getMostCommonEntryP());
@@ -278,11 +285,13 @@ void *inout(void *arguments)
     mvwaddstr(helpbox,4,65,"Q. Quit the Simulation");
 
     mvwaddstr(vehiclestats,1,2,"Vehicle ID");
-    mvwaddstr(vehiclestats,1,15,"Current Speed");
-    mvwaddstr(vehiclestats,1,30,"EntryP");
-    mvwaddstr(vehiclestats,1,40,"ExitP");
-    mvwaddstr(vehiclestats,1,50,"Path");
-    mvwaddstr(vehiclestats,1,70,"Current Position in Path");
+    mvwaddstr(vehiclestats,1,15,"Type");
+    mvwaddstr(vehiclestats,1,25,"Current Speed");
+    mvwaddstr(vehiclestats,1,40,"EntryP");
+    mvwaddstr(vehiclestats,1,50,"ExitP");
+    mvwaddstr(vehiclestats,1,60,"Path");
+    mvwaddstr(vehiclestats,1,80,"Current Position in Path");
+    mvwaddstr(vehiclestats,1,113,"Timer");
 
     mvwaddstr(roadnodestats,1,2,"RoadNode ID");
     mvwaddstr(roadnodestats,1,15,"Length");
@@ -302,6 +311,7 @@ void *inout(void *arguments)
         
         mvwprintw(stdstats,2,27, "%0.00f",thread_args->simstats.getAvTimeinEngine());
         mvwprintw(stdstats,1,20,"%d",thread_args->sleep_time);
+        mvwprintw(stdstats,3,27, "%.00f",thread_args->simstats.getAvSpeed());
         mvwprintw(stdstats,2,midpointx+6, "%d",thread_args->simstats.getVehicleTypeNum(0));
         mvwprintw(stdstats,2,midpointx+17, "%d",thread_args->simstats.getVehicleTypeNum(1));
         mvwprintw(stdstats,2,midpointx+30, "%d",thread_args->simstats.getVehicleTypeNum(2));
