@@ -40,7 +40,12 @@ void updateVehicles(WINDOW *vehiclestats, void *arguments) {
     for (int i=0; i<vehiclesInEngine.size(); i++) {
         vector<int> vehiclePath = vehiclesInEngine[i]->getPath();
         mvwprintw(vehiclestats,2+i,3,"%d",vehiclesInEngine[i]->vehi_id);
-        mvwprintw(vehiclestats,2+i,16,"%d",vehiclesInEngine[i]->getType());
+        if (vehiclesInEngine[i]->getType() == 0)
+            mvwaddstr(vehiclestats,2+i,16,"Car");
+        else if (vehiclesInEngine[i]->getType() == 1)
+            mvwaddstr(vehiclestats,2+i,16,"Bus");
+        else if (vehiclesInEngine[i]->getType() == 2)
+            mvwaddstr(vehiclestats,2+i,16,"Lorry");
         mvwprintw(vehiclestats,2+i,31,"%d",vehiclesInEngine[i]->getCurrentSpeed());
         mvwprintw(vehiclestats,2+i,41,"%d",vehiclesInEngine[i]->getEntryPoint());
         mvwprintw(vehiclestats,2+i,51,"%d",vehiclesInEngine[i]->getExitPoint());
@@ -53,7 +58,7 @@ void updateVehicles(WINDOW *vehiclestats, void *arguments) {
             mvwaddstr(vehiclestats,2+i,103,"Lane: L");
         else
             mvwaddstr(vehiclestats,2+i,103,"Lane: R");
-        mvwprintw(vehiclestats,2+i,113,"%d",vehiclesInEngine[i]->getTimer());
+        mvwprintw(vehiclestats,2+i,113,"%d s",vehiclesInEngine[i]->getTimer()*thread_args->sleep_time);
 
         //mvwprintw(vehiclestats,2+i,51,"%d",vehiclesInEngine[i]->getCurrentSpeed()); //path
         //vwprintw(vehiclestats,2+i,16,"%d",vehiclesInEngine[i]->getCurrentSpeed());  //current position in path
@@ -246,9 +251,9 @@ void *inout(void *arguments)
     mvwaddstr(stdstats,1,midpointx, "Total Vehicles in engine:");
     mvwprintw(stdstats,1,midpointx+27, "%d",thread_args->simstats.getTotalVehicles());
     mvwaddstr(stdstats,2,2, "Average time in Engine:");
-    mvwprintw(stdstats,2,27, "%0.00f",thread_args->simstats.getAvTimeinEngine());
+    mvwprintw(stdstats,2,27, "%0.00f s",thread_args->simstats.getAvTimeinEngine()*thread_args->sleep_time );
     mvwaddstr(stdstats,1,2, "Sim granularity: ");
-    mvwprintw(stdstats,1,20,"%d",thread_args->sleep_time);
+    mvwprintw(stdstats,1,20,"%d s",thread_args->sleep_time);
     mvwaddstr(stdstats,1,25, "Sim updates: ");
     mvwaddstr(stdstats,2,midpointx,"Cars: ");
     mvwprintw(stdstats,2,midpointx+6, "%d",thread_args->simstats.getVehicleTypeNum(0));
@@ -309,7 +314,7 @@ void *inout(void *arguments)
     nodelay(cmdin,TRUE);
     while(!thread_args->finished) {
         
-        mvwprintw(stdstats,2,27, "%0.00f",thread_args->simstats.getAvTimeinEngine());
+        mvwprintw(stdstats,2,27, "%0.00f",thread_args->simstats.getAvTimeinEngine()*thread_args->sleep_time);
         mvwprintw(stdstats,1,20,"%d",thread_args->sleep_time);
         mvwprintw(stdstats,3,27, "%.00f",thread_args->simstats.getAvSpeed());
         mvwprintw(stdstats,2,midpointx+6, "%d",thread_args->simstats.getVehicleTypeNum(0));

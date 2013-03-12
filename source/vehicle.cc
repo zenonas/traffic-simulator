@@ -56,11 +56,11 @@ return exitPoint;
 void vehicle::setType(int type){
 	Type=type;
 	if (type == 0) 
-		setMaxSpeed(100);
+		setMaxSpeed(28);
 	else if (type == 1)
-		setMaxSpeed(80);
+		setMaxSpeed(22);
 	else if (type == 2)
-		setMaxSpeed(60);	
+		setMaxSpeed(17);	
 }
 
 void vehicle::setMaxSpeed(int speed){
