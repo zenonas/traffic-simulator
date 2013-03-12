@@ -14,7 +14,7 @@
 <Type name="type">1</Type>
 <Timer name="timer">3</Timer>
 </Node>
-<Length name="length">800</Length>
+<Length name="length">1500</Length>
 <MaxSpeed name="maxSpeed">80</MaxSpeed>
 </Road>
 
@@ -32,7 +32,7 @@
 <Type name="type">1</Type>
 <Timer name="timer">3</Timer>
 </Node>
-<Length name="length">1200</Length>
+<Length name="length">2000</Length>
 <MaxSpeed name="maxSpeed">80</MaxSpeed>
 </Road>
 
@@ -51,7 +51,7 @@
 <Timer name="timer">-1</Timer>
 </Node>
 <Length name="length">2000</Length>
-<MaxSpeed name="maxSpeed">80</MaxSpeed>
+<MaxSpeed name="maxSpeed">100</MaxSpeed>
 </Road>
 
 </Map>

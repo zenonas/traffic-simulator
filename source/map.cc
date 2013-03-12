@@ -264,31 +264,31 @@ int map::checkTurn(int roadNode1Id, int roadNode2Id){
 					graphNode B2 = unfRoads[j].getgraphNodeB();
 					if ((A1.getCartesianX() == A2.getCartesianX() && A1.getCartesianY() == A2.getCartesianY())) 
 					{			
-						int deltaY = (B2.getCartesianY() - B1.getCartesianY());
-						int deltaX = (B2.getCartesianX() - B1.getCartesianX());
+						int deltaY = (A2.getCartesianY() - A1.getCartesianY());
+						int deltaX = (A2.getCartesianX() - A1.getCartesianX());
 						float angle = atan2(deltaY,deltaX) * 180 / PI;
 						if (angle == 180)
 						{
-							cout << "no turn";
+						//	cout << "no turn";
 							return 0;
 						}
 						else {
-							cout << "turn";
+						//	cout << "turn";
 							return 1;
 						}
 					}
 					if ((A1.getCartesianX() == B2.getCartesianX() && A1.getCartesianY() == B2.getCartesianY()))
 					{
-						int deltaY = (B2.getCartesianY() - B1.getCartesianY());
-						int deltaX = (B2.getCartesianX() - B1.getCartesianX());
+						int deltaY = (B2.getCartesianY() - A1.getCartesianY());
+						int deltaX = (B2.getCartesianX() - A1.getCartesianX());
 						float angle = atan2(deltaY,deltaX) * 180 / PI;
 						if (angle == 180)
 						{
-							cout << "no turn";
+						//	cout << "no turn";
 							return 0;
 						}
 						else {
-							cout << "turn";
+						//	cout << "turn";
 							return 1;
 						}	
 					}			
@@ -299,35 +299,39 @@ int map::checkTurn(int roadNode1Id, int roadNode2Id){
 						float angle = atan2(deltaY,deltaX) * 180 / PI;
 						if (angle == 180)
 						{
-							cout << "no turn";
+					//		cout << "no turn";
 							return 0;
 						}
 						else {
-							cout << "turn";
+						//	cout << "turn";
 							return 1;
 						}
 					}			
 					if ((B1.getCartesianX() == A2.getCartesianX() && B1.getCartesianY() == A2.getCartesianY()))
 					{
-						int deltaY = (B2.getCartesianY() - B1.getCartesianY());
-						int deltaX = (B2.getCartesianX() - B1.getCartesianX());
+					//	cout << "checking " << roadNode1Id<<"and " <<roadNode2Id;
+						int deltaY = (A2.getCartesianY() - B1.getCartesianY());
+						int deltaX = (A2.getCartesianX() - B1.getCartesianX());
+
 						float angle = atan2(deltaY,deltaX) * 180 / PI;
+					//	cout <<"\nangle is " << angle;
 						if (angle == 180)
 						{
-							cout << "no turn";
+						//	cout << "no turn";
 							return 0;
 						}
 						else {
-							cout << "turn";
+						//	cout << "turn";
 							return 1;
 						}
 					}
 					else {
-						cout << "not connected";
+						//cout << "not connected";
 						return -1;
 					}
 				}
 }
+
 
 //return vector that contains allPaths
 vector<vector<int> > map::getAllPaths (){

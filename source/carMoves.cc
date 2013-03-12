@@ -78,11 +78,19 @@ int accelerate(vehicle *v, int aRate, void *arguments) {
 	thread_args =(struct thread_arguments *)arguments;
 	int ticktime = thread_args->sleep_time;
     vector<roadNode> roads = thread_args->mymap.getunfRoads();
+
 	
+
 	struct Position newPos;
 	newPos.roadNodeID = v->getCurrentPosition().roadNodeID;
 	newPos.lane = v->getCurrentPosition().lane;
 	newPos.p = v->getCurrentPosition().p;
+
+	vector<int> vPath = v->getPath();
+	int nextRoadID=-1;
+	for (int i=0; i<vPath.size(); i++)
+		if (vPath[i] == newPos.roadNodeID)
+			nextRoadID=vPath[i+1];
 
 	int cSpeed = v->getCurrentSpeed();
 	int roadMaxSpeed=-1;
@@ -100,39 +108,85 @@ int accelerate(vehicle *v, int aRate, void *arguments) {
 
 
 	if (cSpeed==v->getMaxSpeed() && cSpeed<=roadMaxSpeed){
-		distanceToTravel = cSpeed*ticktime;
+		//check if turn in order to decelerate
+		int remain = 0;
+		if (thread_args->mymap.checkTurn(newPos.roadNodeID, nextRoadID) && (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength()-newPos.p)<100)
+			{
+				remain = (cSpeed-40)/aRate;
+				distanceToTravel = cSpeed*remain + ((aRate*remain*remain)/2);
+				distanceToTravel = distanceToTravel + ((ticktime-remain) * 40);
+				v->setCurrentSpeed(40); 
+			}
+		else
+			distanceToTravel = cSpeed*ticktime;
 		//cout << "eftasa to max speed tu car. actual distance: " << distanceToTravel<<endl;
 	}
 	else if (cSpeed==roadMaxSpeed && cSpeed<=v->getMaxSpeed() ){
-		
+		int remain = 0;
+		if (thread_args->mymap.checkTurn(newPos.roadNodeID, nextRoadID) && (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength()-newPos.p)<200)
+			{
+				remain = (cSpeed-40)/aRate;
+				distanceToTravel = cSpeed*remain + ((aRate*remain*remain)/2);
+				distanceToTravel = distanceToTravel + ((ticktime-remain) * 40);
+				v->setCurrentSpeed(40); 
+			}
+			else
 		distanceToTravel = cSpeed*ticktime;
 		//cout << "eftasa to max speed tu road. actual distance: " << distanceToTravel<<endl;
 	}
 	else if (newSpeed>v->getMaxSpeed() && newSpeed<=roadMaxSpeed)
 	{
+		int remain = 0;
+		if (thread_args->mymap.checkTurn(newPos.roadNodeID, nextRoadID) && (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength()-newPos.p)<100)
+			{
+				remain = (cSpeed-40)/aRate;
+				distanceToTravel = cSpeed*remain + ((aRate*remain*remain)/2);
+				distanceToTravel = distanceToTravel + ((ticktime-remain) * 40);
+				v->setCurrentSpeed(40); 
+			}
+			else{
 			int temp = newSpeed-v->getMaxSpeed();
 			int remain=temp/aRate;
-			distanceToTravel = distanceToTravel - (remain*aRate +(aRate*remain)/2);
+			distanceToTravel = distanceToTravel - (remain*aRate +(aRate*remain*remain)/2);
 			v->setCurrentSpeed(v->getMaxSpeed()); 
 			//cout << "piga panw apo to max speed tu car. actual distance: " << distanceToTravel<<endl;
+		}
 	}
 	else if (newSpeed>roadMaxSpeed && roadMaxSpeed>0 && newSpeed<=v->getMaxSpeed()){
-			int temp = newSpeed-roadMaxSpeed;
+			int remain = 0;
+		if (thread_args->mymap.checkTurn(newPos.roadNodeID, nextRoadID) && (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength()-newPos.p)<100)
+			{
+				remain = (cSpeed-40)/aRate;
+				distanceToTravel = cSpeed*remain + ((aRate*remain*remain)/2);
+				distanceToTravel = distanceToTravel + ((ticktime-remain) * 40);
+				v->setCurrentSpeed(40); 
+			}
+			else{int temp = newSpeed-roadMaxSpeed;
 			int remain=temp/aRate;
 			distanceToTravel = distanceToTravel - (remain*aRate +(aRate*remain)/2);
 			v->setCurrentSpeed(roadMaxSpeed); 
 			//cout << "piga panw apo to max speed tu road. actual distance: " << distanceToTravel<<endl;
 		}
+	}
 	else if (newSpeed>roadMaxSpeed && roadMaxSpeed>0 && newSpeed>=v->getMaxSpeed()){
-			int temp = newSpeed - max(roadMaxSpeed,v->getMaxSpeed());
+			int remain = 0;
+		if (thread_args->mymap.checkTurn(newPos.roadNodeID, nextRoadID) && (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength()-newPos.p)<100)
+			{
+				remain = (cSpeed-40)/aRate;
+				distanceToTravel = cSpeed*remain + ((aRate*remain*remain)/2); 
+				distanceToTravel = distanceToTravel + ((ticktime-remain) * 40);
+					v->setCurrentSpeed(40); 
+			}
+			else {int temp = newSpeed - max(roadMaxSpeed,v->getMaxSpeed());
 			int remain;
 			if (aRate!=0){
 				remain=temp/aRate;
-			distanceToTravel = distanceToTravel - (remain*aRate +(aRate*remain)/2);
+			distanceToTravel = distanceToTravel - (remain*aRate +(aRate*remain*remain)/2);
 			}
 			v->setCurrentSpeed(min(roadMaxSpeed,v->getMaxSpeed())); 
 			//cout << "pio polli kai apo ta dio. actual distance: " << distanceToTravel<<endl;
 		}
+	}
 		//if is not in the map what???
 	else if (roadMaxSpeed<0)
 		{
@@ -140,7 +194,7 @@ int accelerate(vehicle *v, int aRate, void *arguments) {
 			//cout << "road0. distance: " << distanceToTravel<<endl;
 		}
 	
-	vector<int> vPath = v->getPath();
+	
 	if (newPos.roadNodeID == -1) {
 		newPos.roadNodeID = vPath[0];
 		newPos.p = 0;
