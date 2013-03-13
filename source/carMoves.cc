@@ -100,7 +100,7 @@ int accelerate(vehicle *v, int aRate, void *arguments) {
 	int newSpeed=0;
 	
 	newSpeed = cSpeed + aRate*ticktime;
-
+	
 	distanceToTravel = cSpeed*ticktime + (aRate*ticktime*ticktime)/2;
 	//cout << "\ndistanceToTravel without speed limits: " << distanceToTravel << endl;
 	//cout << "MY CARS SPEED was: " << v->getCurrentSpeed() << endl;
@@ -184,6 +184,7 @@ int accelerate(vehicle *v, int aRate, void *arguments) {
 			distanceToTravel = distanceToTravel - (remain*aRate +(aRate*remain*remain)/2);
 			}
 			v->setCurrentSpeed(min(roadMaxSpeed,v->getMaxSpeed())); 
+			if (newSpeed < v->getCurrentSpeed()) v->setCurrentSpeed(newSpeed);
 			//cout << "pio polli kai apo ta dio. actual distance: " << distanceToTravel<<endl;
 		}
 	}
@@ -193,6 +194,7 @@ int accelerate(vehicle *v, int aRate, void *arguments) {
 			distanceToTravel=0;
 			//cout << "road0. distance: " << distanceToTravel<<endl;
 		}
+	else v->setCurrentSpeed(newSpeed);
 	
 	
 	if (newPos.roadNodeID == -1) {

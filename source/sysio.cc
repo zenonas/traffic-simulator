@@ -21,7 +21,7 @@ Copyright (c) King's College London
 #include <vector>
 #include <limits>
 #include "statistics.h"
-#include "ResetTrafficLights.cc"
+#include "ResetTrafficLights.h"
 
 
 using namespace std;
@@ -64,6 +64,36 @@ void updateVehicles(WINDOW *vehiclestats, void *arguments) {
         //vwprintw(vehiclestats,2+i,16,"%d",vehiclesInEngine[i]->getCurrentSpeed());  //current position in path
     }
 }
+void updateTrafficLights(WINDOW *trafficlstats, void *arguments){
+    struct thread_arguments *thread_args;
+    thread_args = (struct thread_arguments *)arguments;
+    int midpointx = COLS / 2;
+
+    for (int y=0; y<LINES-17; y++) {
+    wmove(trafficlstats,2+y,2);
+    wclrtoeol(trafficlstats);
+    }
+    box(trafficlstats,0,0);
+    for (int i=0; i<thread_args->mymap.trafficlights.size(); i++) {
+        mvwprintw(trafficlstats,2+i,3,"%d",thread_args->mymap.trafficlights[i].getCartesianX());
+        mvwprintw(trafficlstats,2+i,11,"%d",thread_args->mymap.trafficlights[i].getCartesianY());
+        mvwprintw(trafficlstats,2+i,21,"%d",thread_args->mymap.trafficlights[i].getTimer());
+         if (thread_args->mymap.trafficlights[i].getState() == 0) {
+            wattron(trafficlstats,COLOR_PAIR(4));
+            mvwaddstr(trafficlstats,2+i,30,"RED");
+            wattroff(trafficlstats,COLOR_PAIR(4));
+        } else {
+            wattron(trafficlstats,COLOR_PAIR(3));
+            mvwaddstr(trafficlstats,2+i,30,"GREEN");
+            wattroff(trafficlstats,COLOR_PAIR(3));
+        }
+    }
+
+
+        //mvwprintw(roadnodestats,2+i,46,"%d",vehiclesInEngine[i]->getExitPoint()); //connected roadnodes
+        //mvwprintw(roadnodestats,2+i,66,"%d",vehiclesInEngine[i]->getExitPoint()); // current vehicles in roadnode
+}
+
 void updateRoadNodes(WINDOW *roadnodestats, void *arguments){
     struct thread_arguments *thread_args;
     thread_args = (struct thread_arguments *)arguments;
@@ -182,7 +212,8 @@ void *inout(void *arguments)
     start_color();
     init_pair(1, COLOR_RED, COLOR_BLACK );
     init_pair(2, COLOR_WHITE, COLOR_BLUE );
-    init_pair(3, COLOR_GREEN,  COLOR_BLACK );
+    init_pair(3, COLOR_GREEN,  COLOR_BLUE );
+    init_pair(4, COLOR_RED,  COLOR_BLUE );
     bkgd(COLOR_PAIR(2)); // Green Text on a White Screen
 
     /*  Switch off echoing and enable keypad (for arrow keys)  */
@@ -195,10 +226,11 @@ void *inout(void *arguments)
 
 
     //Following is code pertaining to the Panels showing Live updates of Vehicles
-    WINDOW *vehiclestats, *roadnodestats, *cmdbox;
-    PANEL *panels[5];
+    WINDOW *vehiclestats, *roadnodestats, *trafficlstats, *cmdbox;
+    PANEL *panels[6];
     vehiclestats = newwin(LINES-18,COLS-4,14,2);
     roadnodestats = newwin(LINES-18,COLS-4,14,2);
+    trafficlstats = newwin(LINES-18,COLS-4,14,2);
     helpbox = newwin(7,COLS-4,1,2);
     cmdbox = newwin(7,COLS-4,1,2);
     headerwin = newwin(7, COLS-4, 1, 2);
@@ -207,20 +239,23 @@ void *inout(void *arguments)
     box(helpbox,0,0);
     box(cmdbox,0,0);
     box(headerwin, 0, 0);
+    box(trafficlstats,0,0);
     wbkgd(vehiclestats,COLOR_PAIR(2));
     wbkgd(roadnodestats,COLOR_PAIR(2));
     wbkgd(helpbox,COLOR_PAIR(1));
     wbkgd(cmdbox,COLOR_PAIR(1));
     wbkgd(headerwin,COLOR_PAIR(2));
+    wbkgd(trafficlstats,COLOR_PAIR(2));
     panels[0]=new_panel(vehiclestats);
     panels[1]=new_panel(roadnodestats);
     panels[2]=new_panel(helpbox);
     panels[3]=new_panel(headerwin);
     panels[4]=new_panel(cmdbox);
+    panels[5]=new_panel(trafficlstats);
     set_panel_userptr(panels[0], panels[1]);
     set_panel_userptr(panels[1], panels[2]);
     set_panel_userptr(panels[2], panels[0]);
-    bkgd(COLOR_PAIR(3));
+    bkgd(COLOR_PAIR(2));
     update_panels();
 
     int cpanel = 0;
@@ -241,8 +276,7 @@ void *inout(void *arguments)
     box(stdstats,0,0);
     box(cmdin,0,0);
     box(helpwin,0,0);
- 
-    
+
     mvwaddstr(headerwin, 1, midpointx-12,"Traffic Simulation System");
     mvwaddstr(headerwin, 2, 2,"TEAM B: Zinon Kyprianou, Panikos Lazarou, Maria Leventopoulou,");
     mvwaddstr(headerwin, 3, 10,"Adesinmisola Ogunsanya, Kosmas Tsakmakidis");
@@ -276,6 +310,7 @@ void *inout(void *arguments)
     // PREPARING PANEL TEXT
     wattron(vehiclestats, A_UNDERLINE);
     wattron(roadnodestats, A_UNDERLINE);
+    wattron(trafficlstats, A_UNDERLINE);
     wattron(helpbox, A_UNDERLINE);
     mvwaddstr(helpbox, 1, midpointx-12,"Traffic Simulation System");
     mvwaddstr(helpbox,2,midpointx-8,"HELP COMMAND LIST");
@@ -285,9 +320,10 @@ void *inout(void *arguments)
     mvwaddstr(helpbox,5,2,"3. Set Driver Type Ratio ");
     mvwaddstr(helpbox,3,35,"4. Stop Simulation ");
     mvwaddstr(helpbox,4,35,"5. Change Granularity");
-    mvwaddstr(helpbox,5,35,"P. Switch Between Vehicle/road views");
+    mvwaddstr(helpbox,5,35,"6. Toggle Traffic Lights");
     mvwaddstr(helpbox,3,65,"H. Close this menu");
     mvwaddstr(helpbox,4,65,"Q. Quit the Simulation");
+    mvwaddstr(helpbox,5,65,"P. Switch Between Vehicle/road views");
 
     mvwaddstr(vehiclestats,1,2,"Vehicle ID");
     mvwaddstr(vehiclestats,1,15,"Type");
@@ -304,9 +340,16 @@ void *inout(void *arguments)
     mvwaddstr(roadnodestats,1,45,"Connected RoadNodes");
     mvwaddstr(roadnodestats,1,65,"Current Vehicles in RoadNode");
 
+    mvwaddstr(trafficlstats,1,2,"Cart-X");
+    mvwaddstr(trafficlstats,1,10,"Cart-Y");
+    mvwaddstr(trafficlstats,1,20,"Timer");
+    mvwaddstr(trafficlstats,1,30,"State");
+
     wattroff(vehiclestats, A_UNDERLINE);
+    wattroff(trafficlstats, A_UNDERLINE);
     wattroff(roadnodestats, A_UNDERLINE);
     updateRoadNodes(roadnodestats, thread_args);
+    updateTrafficLights(trafficlstats, thread_args);
     mvwprintw(cmdin,1,2, "Command:");
     refresh();
     update_panels();
@@ -317,6 +360,7 @@ void *inout(void *arguments)
         mvwprintw(stdstats,2,27, "%0.00f",thread_args->simstats.getAvTimeinEngine()*thread_args->sleep_time);
         mvwprintw(stdstats,1,20,"%d",thread_args->sleep_time);
         mvwprintw(stdstats,3,27, "%.00f",thread_args->simstats.getAvSpeed());
+        updateTrafficLights(trafficlstats, thread_args);
         mvwprintw(stdstats,2,midpointx+6, "%d",thread_args->simstats.getVehicleTypeNum(0));
         mvwprintw(stdstats,2,midpointx+17, "%d",thread_args->simstats.getVehicleTypeNum(1));
         mvwprintw(stdstats,2,midpointx+30, "%d",thread_args->simstats.getVehicleTypeNum(2));
@@ -372,19 +416,24 @@ void *inout(void *arguments)
                     cmdbox_status = 0;
                 }
             }
-            if (ch == 'p') { // panel switch
+            if (ch == '6') ToggleLights(thread_args);
+            if (ch == 'p' || ch == 'P') { // panel switch
                 if (cpanel == 0) {
                     hide_panel(panels[0]);
                     show_panel(panels[1]);
                     cpanel = 1;
-                } else {
+                } else if (cpanel == 1) {
                     hide_panel(panels[1]);
+                    show_panel(panels[5]);
+                    cpanel = 2;
+                } else if (cpanel == 2) {
+                    hide_panel(panels[5]);
                     show_panel(panels[0]);
                     cpanel = 0;
                 }
 
             }
-            if (ch == 'h') {
+            if (ch == 'h' || ch == 'H') {
                 if (helppanel == 0) {
                     hide_panel(panels[3]);
                     show_panel(panels[2]);
@@ -395,7 +444,7 @@ void *inout(void *arguments)
                     helppanel = 0;
                 }
             }
-            if (ch == 'q') {
+            if (ch == 'q' || ch == 'Q') {
                 mvwaddstr(headerwin,5,COLS-40,"Simulation Status: Shutting Down");
                 wrefresh(headerwin);
                 thread_args->finished = true;

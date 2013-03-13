@@ -10,6 +10,7 @@ Copyright (c) King's College London
 */
 
 #include "th_structs.h"
+#include "ResetTrafficLights.h"
 #include "map.h"
 #include <vector>
 #include <iostream>
@@ -25,7 +26,7 @@ void ResetTrafficLights(void *arguments)
 	thread_args->CurrentTimer=0;
 }
 
-void ToggleLights(void *arguments, int CurrentTimer)
+void ToggleLights(void *arguments)
 {
 	
 	struct thread_arguments *thread_args;
@@ -37,14 +38,14 @@ void ToggleLights(void *arguments, int CurrentTimer)
 			{
 				thread_args->mymap.trafficlights[i].setState(0);
 				thread_args->CurrentTimer=0;
-				thread_args->mymap.trafficlights[i].setTimer(thread_args->mymap.trafficlights[i].getTimer()/2);
+				//thread_args->mymap.trafficlights[i].setTimer(thread_args->mymap.trafficlights[i].getTimer()/2);
 			}
 			else
 			{
 
 				thread_args->mymap.trafficlights[i].setState(1);
 				thread_args->CurrentTimer=0;
-				thread_args->mymap.trafficlights[i].setTimer(thread_args->mymap.trafficlights[i].getTimer()*2);
+				//thread_args->mymap.trafficlights[i].setTimer(thread_args->mymap.trafficlights[i].getTimer()*2);
 			}
 	}
 }

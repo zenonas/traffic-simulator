@@ -104,7 +104,7 @@ void *engine(void *arguments)
 
                 if (length<400){
                  // cout <<"\t\t\tlength < 400";
-                  result = accelerate(vehiclesInEngine[q], -10, thread_args);
+                  result = accelerate(vehiclesInEngine[q], -1, thread_args);
                  // cout << "Car " << q<< " DECELERATED ONCE MY NEW POSITION IS: " << vehiclesInEngine[q]->getCurrentPosition().roadNodeID << " at position " << vehiclesInEngine[q]->getCurrentPosition().p << "\n";
                 }
                 else if (length<600){
@@ -113,7 +113,7 @@ void *engine(void *arguments)
                  // cout << "Car " << q<< " MOVE ONCE MY NEW POSITION IS: " << vehiclesInEngine[q]->getCurrentPosition().roadNodeID << " at position " << vehiclesInEngine[q]->getCurrentPosition().p << "\n";
                 }
                 else{ 
-                  result = accelerate(vehiclesInEngine[q], 20, thread_args);
+                  result = accelerate(vehiclesInEngine[q], 2, thread_args);
                   //cout << "Car " << q<< " ACCELERATED ONCE MY NEW POSITION IS: " << vehiclesInEngine[q]->getCurrentPosition().roadNodeID << " at position " << vehiclesInEngine[q]->getCurrentPosition().p << "\n";
                 }
                 /*
@@ -124,7 +124,7 @@ void *engine(void *arguments)
                break;
               }
               else {
-                result = accelerate(vehiclesInEngine[q], 20, thread_args);
+                result = accelerate(vehiclesInEngine[q], 2, thread_args);
                 //cout << "Car " << q<< " acc once my new position is: " << vehiclesInEngine[q]->getCurrentPosition().roadNodeID << " at position " << vehiclesInEngine[q]->getCurrentPosition().p << "\n";
               }
             }
@@ -175,10 +175,10 @@ for(int i=0; i<thread_args->mymap.trafficlights.size(); i++) {
     if((thread_args->CurrentTimer % thread_args->mymap.trafficlights[i].getTimer())== 0 && thread_args->CurrentTimer !=0) {
 		  if (thread_args->mymap.trafficlights[i].getState() == 1) {
           thread_args->mymap.trafficlights[i].setState(0);
-          thread_args->mymap.trafficlights[i].setTimer(thread_args->mymap.trafficlights[i].getTimer()/2);
+          //thread_args->mymap.trafficlights[i].setTimer(thread_args->mymap.trafficlights[i].getTimer()/2);
 		  } else {
           thread_args->mymap.trafficlights[i].setState(1);
-          thread_args->mymap.trafficlights[i].setTimer(thread_args->mymap.trafficlights[i].getTimer()*2);
+          //thread_args->mymap.trafficlights[i].setTimer(thread_args->mymap.trafficlights[i].getTimer()*2);
 		  }
     } 
   }
