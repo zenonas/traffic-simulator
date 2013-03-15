@@ -33,33 +33,16 @@ void *engine(void *arguments)
    	entryQueues.push_back(currentQueue);
   }
 
-//if (thread_args->debug) cout <<"\t\t\t\tandfkjabfhlabPANIKOS";
-  vehicle *v1= new vehicle(0,6,7,thread_args->mymap);
-  //vehicle *v2= new vehicle(1,3,6,thread_args->mymap);
-  //v2->setType(2);
-//v2->setDriverType(2);
-
-  //vehicle *v1= new vehicle(2,3,2,thread_args->mymap);
+  vehicle *v1= new vehicle(1,7,1,thread_args->mymap);
   v1->setType(0);
-  
   v1->setDriverType(0);
-   
-    //if (thread_args->debug)
-  
-     
- v1->printPath();
- cout <<endl;
- //v2->printPath();
-
- // else cout <<"asdfkjahdfiuagfyugafyuagsfyuagsfyugayusgfasyuaupapapapa";
-int k = thread_args->mymap.checkTurn(9,10);
-
-
-
-
-  //v3->setType(1);
+  vehicle *v2= new vehicle(0,6,3,thread_args->mymap);
+  v2->setType(2);
+  v2->setDriverType(2);
+ 
+  cout <<endl;
   thread_args->VWaitingQ.push(v1);
-  //thread_args->VWaitingQ.push(v2);
+  thread_args->VWaitingQ.push(v2);
   //thread_args->VWaitingQ.push(v3);
   while (!thread_args->finished && thread_args->mymap.created == true) {
   	int max_entries = 0;
@@ -161,6 +144,10 @@ int k = thread_args->mymap.checkTurn(9,10);
             result = accelerate(vehiclesInEngine[q],vehiclesInEngine[p], 2, thread_args); 
       if (result == 0) {
          vehiclesInEngine.erase(vehiclesInEngine.begin()+q);
+         vehicle *v1= new vehicle(3,1,2,thread_args->mymap);
+         v1->setType(0);
+         v1->setDriverType(0);
+          thread_args->VWaitingQ.push(v1);
       }      
    }
     // check for intersections

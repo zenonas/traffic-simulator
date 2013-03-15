@@ -271,16 +271,21 @@ int map::checkTurn(int roadNode1Id, int roadNode2Id){
 					{			
 						float deltaY = (B2.getCartesianY() - B1.getCartesianY());
 						float deltaX = (B2.getCartesianX() - B1.getCartesianX());
-						float angle = atan2(deltaY,deltaX) * 180 / PI;
+int len1 = unfRoads[i].getLength();
+int len2 = unfRoads[j].getLength();
+int len3 = sqrt(deltaY*deltaY+deltaX*deltaX);
+int result = (len1*len1 + len2*len2 - len3*len3 ) / (2*len1*len2);
+//cout <<"result: "<<result<<"       "<<endl;
 
-						if (angle == 180 || angle==0 || angle==360)
+
+						if (result == -1)
 						{
-							cout << "no turn 1 - ";
+						//	cout << "no turn 1 - ";
 							return 0;
 						}
 						else {
 					//		cout << "angle: " <<angle;
-							cout << "turn 1";
+						//	cout << "turn 1";
 							return 1;
 						}
 					}
@@ -288,14 +293,20 @@ int map::checkTurn(int roadNode1Id, int roadNode2Id){
 					{
 						float deltaY = (A2.getCartesianY() - B1.getCartesianY());
 						float deltaX = (A2.getCartesianX() - B1.getCartesianX());
-						float angle = atan2(deltaY,deltaX) * 180 / PI;
-						if (angle == 180 || angle==0 || angle==360)
+int len1 = unfRoads[i].getLength();
+int len2 = unfRoads[j].getLength();
+int len3 = sqrt(deltaY*deltaY+deltaX*deltaX);
+int result = (len1*len1 + len2*len2 - len3*len3 ) / (2*len1*len2);
+//cout <<"result: "<<result<<"       "<<endl;
+
+
+						if (result == -1)
 						{
-							cout << "no turn 2 - ";
+						//	cout << "no turn 2 - ";
 							return 0;
 						}
 						else {
-							cout << "turn 2";
+						//	cout << "turn 2";
 							return 1;
 						}	
 					}			
@@ -303,14 +314,20 @@ int map::checkTurn(int roadNode1Id, int roadNode2Id){
 					{
 						float deltaY = (A2.getCartesianY() - A1.getCartesianY());
 						float deltaX = (A2.getCartesianX() - A1.getCartesianX());
-						float angle = atan2(deltaY,deltaX) * 180 / PI;
-						if (angle == 180 || angle==0 || angle==360)
+int len1 = unfRoads[i].getLength();
+int len2 = unfRoads[j].getLength();
+int len3 = sqrt(deltaY*deltaY+deltaX*deltaX);
+int result = (len1*len1 + len2*len2 - len3*len3 ) / (2*len1*len2);
+//cout <<"result: "<<result<<"       "<<endl;
+
+
+						if (result == -1)
 						{
-							cout << "no turn 3 - ";
+							//cout << "no turn 3 - ";
 							return 0;
 						}
 						else {
-							cout << "turn 3";
+							//cout << "turn 3";
 							return 1;
 						}
 					}			
@@ -318,15 +335,17 @@ int map::checkTurn(int roadNode1Id, int roadNode2Id){
 					{
 						float deltaY = abs(B2.getCartesianY() - A1.getCartesianY());
 						float deltaX = abs(B2.getCartesianX() - A1.getCartesianX());
-						float angle = atan2(deltaY,deltaX) * 180 / 3.14;
-						cout <<"\nangle is " << angle;
-						if (angle == 180 || angle==0 || angle==360)
+int len1 = unfRoads[i].getLength();
+int len2 = unfRoads[j].getLength();
+int len3 = sqrt(deltaY*deltaY+deltaX*deltaX);
+int result = (len1*len1 + len2*len2 - len3*len3 ) / (2*len1*len2);
+						//when -1 is straight
+						if (result == -1)
 						{
-							cout << "no turn 4 - ";
 							return 0;
 						}
 						else {
-							cout << "turn 4";
+						//	cout << "turn 4";
 							return 1;
 						}
 					}

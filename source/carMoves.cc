@@ -141,10 +141,10 @@ int accelerate(vehicle *v,vehicle *s, float aRate, void *arguments) {
 		if (thread_args->mymap.checkTurn(newPos.roadNodeID, nextRoadID) && (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength()-newPos.p)<cSpeed*ticktime)
 			{
 				remain = ((float) cSpeed-11.0)/(float)aRate;
-				cout << "aRate: " <<aRate;
-				cout << "remain3:" <<endl<<remain<<endl;
+			//	cout << "aRate: " <<aRate;
+		//		cout << "remain3:" <<endl<<remain<<endl;
 		distanceToTravel =  cSpeed*remain + (remain*remain*(0-aRate))/2.0 + (ticktime-remain)*11.0;
-		cout << "distance: " <<distanceToTravel<<" cspeed: " <<cSpeed<<" tick: "<<ticktime;
+		//cout << "distance: " <<distanceToTravel<<" cspeed: " <<cSpeed<<" tick: "<<ticktime;
 		v->setCurrentSpeed(11); 
 			}
 			else
