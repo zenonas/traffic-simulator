@@ -31,7 +31,7 @@ public:
    vector<roadNode> getunfRoads();
    roadNode * getroadNode(int id);
    vector<graphNode > entryGraphNodes;
-   vector<graphNode > trafficlights;
+   vector<trafficLight *> trafficlights;
    bool created;
 
 private:

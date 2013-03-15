@@ -9,6 +9,7 @@ Description: This file includes the implementation for the map class.
 Copyright (c) King's College London
 */
 #include "map.h"
+#include "trafficLight.h"
 #include <string.h>
 #include <stdio.h>
 #include <iostream>
@@ -114,8 +115,6 @@ void map::ReadXMLFile()
 			i++;				
 			newroadNode.setgraphNodeA(newgraphNodeA);
 			newroadNode.setgraphNodeB(newgraphNodeB);
-			newroadNode.getgraphNodeA().setTimer(newgraphNodeA.getTimer());
-			newroadNode.getgraphNodeB().setTimer(newgraphNodeB.getTimer());
 		
 		}
 		for (xml_node<> * length= road_node->first_node("Length"); length; length=length->next_sibling("Length")){
@@ -349,15 +348,16 @@ void map::findTrafficLights(){
 
 	for (int i=0; i<unfRoads.size(); i++)
 	{
+		trafficLight *newTrafficLight = new trafficLight();
 		a = unfRoads[i].getgraphNodeA();
 		b = unfRoads[i].getgraphNodeB();
 		
 		if(a.getType()==1 || a.getType()==2)
 			if(!inTrafficLights(a))
-				trafficlights.push_back(a);
+				trafficlights.push_back(newTrafficLight);
 		if(b.getType()==1 || b.getType()==2)
 			if(!inTrafficLights(b))
-				trafficlights.push_back(b);
+				trafficlights.push_back(newTrafficLight);
 	}
 
 }
@@ -365,7 +365,7 @@ void map::findTrafficLights(){
 bool map::inTrafficLights(graphNode g)
 {
 	for(int i=0; i<trafficlights.size(); i++)
-		if((g.getCartesianX() == trafficlights[i].getCartesianX()) && (g.getCartesianY() == trafficlights[i].getCartesianY()) )
+		//if((g.getCartesianX() == trafficlights[i].getCartesianX()) && (g.getCartesianY() == trafficlights[i].getCartesianY()) )
 			return true;
 	return false;
 }
