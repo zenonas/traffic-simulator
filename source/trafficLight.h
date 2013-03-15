@@ -21,6 +21,10 @@ public:
      
    ~trafficLight();
    void Wait();
+   void setCartesianX(int x);
+   int getCartesianX();
+   void setCartesianY(int y);
+   int getCartesianY();
    void setState(int state);
    int getState();
    void setTimer(int timer);
@@ -28,8 +32,9 @@ public:
 
 private:
   
-   int Timer;
-   int State;
+	int CartesianX, CartesianY;  
+	int Timer;
+	int State;
 
 };
 

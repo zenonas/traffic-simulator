@@ -75,10 +75,10 @@ void updateTrafficLights(WINDOW *trafficlstats, void *arguments){
     }
     box(trafficlstats,0,0);
     for (int i=0; i<thread_args->mymap.trafficlights.size(); i++) {
-        mvwprintw(trafficlstats,2+i,3,"%d",thread_args->mymap.trafficlights[i].getCartesianX());
-        mvwprintw(trafficlstats,2+i,11,"%d",thread_args->mymap.trafficlights[i].getCartesianY());
-        mvwprintw(trafficlstats,2+i,21,"%d",thread_args->mymap.trafficlights[i].getTimer());
-         if (thread_args->mymap.trafficlights[i].getState() == 0) {
+        mvwprintw(trafficlstats,2+i,3,"%d",thread_args->mymap.trafficlights[i]->getCartesianX());
+        mvwprintw(trafficlstats,2+i,11,"%d",thread_args->mymap.trafficlights[i]->getCartesianY());
+        mvwprintw(trafficlstats,2+i,21,"%d",thread_args->mymap.trafficlights[i]->getTimer());
+         if (thread_args->mymap.trafficlights[i]->getState() == 0) {
             wattron(trafficlstats,COLOR_PAIR(4));
             mvwaddstr(trafficlstats,2+i,30,"RED");
             wattroff(trafficlstats,COLOR_PAIR(4));

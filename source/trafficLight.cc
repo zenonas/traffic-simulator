@@ -36,4 +36,18 @@ void trafficLight::setTimer(int timer){
 int trafficLight::getTimer(){
 	return Timer;
 }
+void trafficLight::setCartesianX(int x){
+	CartesianX=x;
+}
 
+int trafficLight::getCartesianX(){
+	return CartesianX;
+}
+
+void trafficLight::setCartesianY(int y){
+	CartesianY=y;
+}
+
+int trafficLight::getCartesianY(){
+	return CartesianY;
+}

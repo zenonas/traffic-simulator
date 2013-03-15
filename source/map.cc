@@ -353,9 +353,13 @@ void map::findTrafficLights(){
 		b = unfRoads[i].getgraphNodeB();
 		
 		if(a.getType()==1 || a.getType()==2)
+			newTrafficLight->setCartesianX(a.getCartesianX());
+			newTrafficLight->setCartesianY(a.getCartesianY());
 			if(!inTrafficLights(a))
 				trafficlights.push_back(newTrafficLight);
 		if(b.getType()==1 || b.getType()==2)
+			newTrafficLight->setCartesianX(b.getCartesianX());
+			newTrafficLight->setCartesianY(b.getCartesianY());
 			if(!inTrafficLights(b))
 				trafficlights.push_back(newTrafficLight);
 	}
@@ -365,7 +369,7 @@ void map::findTrafficLights(){
 bool map::inTrafficLights(graphNode g)
 {
 	for(int i=0; i<trafficlights.size(); i++)
-		//if((g.getCartesianX() == trafficlights[i].getCartesianX()) && (g.getCartesianY() == trafficlights[i].getCartesianY()) )
+		if((g.getCartesianX() == trafficlights[i]->getCartesianX()) && (g.getCartesianY() == trafficlights[i]->getCartesianY()) )
 			return true;
 	return false;
 }
