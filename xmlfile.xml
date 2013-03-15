@@ -15,7 +15,7 @@
 <Type name="type">1</Type>
 <Timer name="timer">3</Timer>
 </Node>
-<Length name="length">400</Length>
+<Length name="length">1500</Length>
 <MaxSpeed name="maxSpeed">22</MaxSpeed>
 </Road>
 
@@ -33,7 +33,7 @@
 <Type name="type">1</Type>
 <Timer name="timer">3</Timer>
 </Node>
-<Length name="length">200</Length>
+<Length name="length">2000</Length>
 <MaxSpeed name="maxSpeed">22</MaxSpeed>
 </Road>
 
@@ -51,7 +51,7 @@
 <Type name="type">1</Type>
 <Timer name="timer">3</Timer>
 </Node>
-<Length name="length">1800</Length>
+<Length name="length">2000</Length>
 <MaxSpeed name="maxSpeed">28</MaxSpeed>
 </Road>
 <Road name="4">
@@ -63,8 +63,8 @@
 </Node>
 
 <Node name="4b">
-<Point name="x">0</Point>
-<Point name="y">1000</Point>
+<Point name="x">1000</Point>
+<Point name="y">0</Point>
 <Type name="type">2</Type>
 <Timer name="timer">5</Timer>
 </Node>
@@ -110,14 +110,14 @@
 
 <Road name="7">
 <Node name="7a">
-<Point name="x">1000</Point>
+<Point name="x">500</Point>
 <Point name="y">2000</Point>
 <Type name="type">1</Type>
 <Timer name="timer">3</Timer>
 </Node>
 
 <Node name="7b">
-<Point name="x">1000</Point>
+<Point name="x">500</Point>
 <Point name="y">1000</Point>
 <Type name="type">0</Type>
 <Timer name="timer">-1</Timer>
@@ -128,14 +128,14 @@
 
 <Road name="8">
 <Node name="8a">
-<Point name="x">1000</Point>
+<Point name="x">500</Point>
 <Point name="y">1000</Point>
 <Type name="type">0</Type>
 <Timer name="timer">-1</Timer>
 </Node>
 
 <Node name="8b">
-<Point name="x">1500</Point>
+<Point name="x">1000</Point>
 <Point name="y">1000</Point>
 <Type name="type">0</Type>
 <Timer name="timer">-1</Timer>
@@ -146,14 +146,14 @@
 
 <Road name="9">
 <Node name="9a">
-<Point name="x">1500</Point>
+<Point name="x">1000</Point>
 <Point name="y">1000</Point>
 <Type name="type">0</Type>
 <Timer name="timer">-1</Timer>
 </Node>
 
 <Node name="9b">
-<Point name="x">1500</Point>
+<Point name="x">1000</Point>
 <Point name="y">0</Point>
 <Type name="type">2</Type>
 <Timer name="timer">3</Timer>
@@ -164,14 +164,14 @@
 
 <Road name="10">
 <Node name="10a">
-<Point name="x">1500</Point>
+<Point name="x">1000</Point>
 <Point name="y">0</Point>
 <Type name="type">2</Type>
 <Timer name="timer">3</Timer>
 </Node>
 
 <Node name="10b">
-<Point name="x">1500</Point>
+<Point name="x">1000</Point>
 <Point name="y">-1000</Point>
 <Type name="type">2</Type>
 <Timer name="timer">5</Timer>
@@ -182,7 +182,7 @@
 
 <Road name="11">
 <Node name="11a">
-<Point name="x">1500</Point>
+<Point name="x">1000</Point>
 <Point name="y">-1000</Point>
 <Type name="type">0</Type>
 <Timer name="timer">-1</Timer>

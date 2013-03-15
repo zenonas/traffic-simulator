@@ -27,22 +27,38 @@ void *engine(void *arguments)
   vector<queue <vehicle *> > entryQueues;
   vector<vehicle *> vehiclesInEngine;
   thread_args->CurrentTimer=0;
+ // thread_args->mymap.printAllPaths();
   for (int i=0; i<thread_args->mymap.entryGraphNodes.size(); i++) {
    	queue<vehicle *> currentQueue;
    	entryQueues.push_back(currentQueue);
   }
 
-  vehicle *v1= new vehicle(0,1,3,thread_args->mymap);
-  vehicle *v2= new vehicle(1,2,3,thread_args->mymap);
-  //vehicle *v3= new vehicle(2,4,3,thread_args->mymap);
+//if (thread_args->debug) cout <<"\t\t\t\tandfkjabfhlabPANIKOS";
+  vehicle *v1= new vehicle(0,7,6,thread_args->mymap);
+  //vehicle *v2= new vehicle(1,3,6,thread_args->mymap);
+  //v2->setType(2);
+//v2->setDriverType(2);
+
+  //vehicle *v1= new vehicle(2,3,2,thread_args->mymap);
   v1->setType(0);
-  v2->setType(2);
+  
   v1->setDriverType(0);
-  v2->setDriverType(2);
+
+  
+   
+    //if (thread_args->debug)
+  
+     
+ v1->printPath();
+ cout <<endl;
+ //v2->printPath();
+
+ // else cout <<"asdfkjahdfiuagfyugafyuagsfyuagsfyugayusgfasyuaupapapapa";
+
 
   //v3->setType(1);
   thread_args->VWaitingQ.push(v1);
-  thread_args->VWaitingQ.push(v2);
+  //thread_args->VWaitingQ.push(v2);
   //thread_args->VWaitingQ.push(v3);
   while (!thread_args->finished && thread_args->mymap.created == true) {
   	int max_entries = 0;
@@ -84,7 +100,7 @@ void *engine(void *arguments)
       int result;
      //check every other vehicle
       for (int p=0; p<vehiclesInEngine.size(); p++)
-        if (p!=q)
+        if (p!=q){
           //if they have same path
           if (checkVehicle(vehiclesInEngine[q],vehiclesInEngine[p]))
             {
@@ -139,6 +155,9 @@ void *engine(void *arguments)
                 result = accelerate(vehiclesInEngine[q],vehiclesInEngine[p], 2, thread_args);
                }
             }
+          }
+            else
+            result = accelerate(vehiclesInEngine[q],vehiclesInEngine[p], 2, thread_args); 
       if (result == 0) {
          vehiclesInEngine.erase(vehiclesInEngine.begin()+q);
       }      

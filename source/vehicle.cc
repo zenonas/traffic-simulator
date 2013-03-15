@@ -25,6 +25,7 @@ vehicle::vehicle(int id, int entryP, int exitP,map mymap){
 	setExitPoint(exitP);
 	//calculatePath() is called manually at the moment
 	calculatePath(mymap);
+	//printPath();
 
 	//initialize current pos
 	CurrentPosition.roadNodeID = -1;

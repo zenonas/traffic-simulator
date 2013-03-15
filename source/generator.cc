@@ -36,7 +36,7 @@ void *generator(void *arguments)
 		BASED ON THIS DECIDE HOW MANY VEHICLES NEED TO BE CREATE IN THIS ROUND
 	*/
 		int actual_no_to_create = rand() % thread_args->max_no_vehicles + 2;
-		if (actual_no_to_create > 2) actual_no_to_create = 2; //maybe revise
+		if (actual_no_to_create > 0) actual_no_to_create = 0; //maybe revise
 		vehicle* temp_array[actual_no_to_create];
 		//cout << "I SHALL CREATE: " << actual_no_to_create << endl;
 	/*	
