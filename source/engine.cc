@@ -33,11 +33,11 @@ void *engine(void *arguments)
    	entryQueues.push_back(currentQueue);
   }
 
-  vehicle *v1= new vehicle(1,7,1,thread_args->mymap);
-  v1->setType(0);
+  vehicle *v1= new vehicle(0,2,3,thread_args->mymap);
+  v1->setType(2);
   v1->setDriverType(0);
-  vehicle *v2= new vehicle(0,6,3,thread_args->mymap);
-  v2->setType(2);
+  vehicle *v2= new vehicle(1,1,3,thread_args->mymap);
+  v2->setType(0);
   v2->setDriverType(2);
  
   cout <<endl;

@@ -147,8 +147,10 @@ int accelerate(vehicle *v,vehicle *s, float aRate, void *arguments) {
 		//cout << "distance: " <<distanceToTravel<<" cspeed: " <<cSpeed<<" tick: "<<ticktime;
 		v->setCurrentSpeed(11); 
 			}
-			else
-		distanceToTravel = cSpeed*ticktime;
+			else{
+				distanceToTravel = cSpeed*ticktime;
+				//cout << "here";
+			}
 		//cout << "eftasa to max speed tu road. actual distance: " << distanceToTravel<<endl;
 	}
 	else if (newSpeed>v->getMaxSpeed() && newSpeed<=roadMaxSpeed)
@@ -178,8 +180,8 @@ int accelerate(vehicle *v,vehicle *s, float aRate, void *arguments) {
 			{
 				remain = (cSpeed-11)/v->getAcceleration();
 		//		cout << "remain6:" <<remain;
-		distanceToTravel =  cSpeed*remain + (remain*remain*(-aRate))/2 + (ticktime-remain)*v->getCurrentSpeed();
-		v->setCurrentSpeed(11); 
+				distanceToTravel =  cSpeed*remain + (remain*remain*(-aRate))/2 + (ticktime-remain)*v->getCurrentSpeed();
+				v->setCurrentSpeed(11); 
 			}
 			else{float temp = newSpeed-roadMaxSpeed;
 			float remain=temp/v->getAcceleration();
@@ -191,24 +193,23 @@ int accelerate(vehicle *v,vehicle *s, float aRate, void *arguments) {
 	else if (newSpeed>roadMaxSpeed && roadMaxSpeed>0 && newSpeed>=v->getMaxSpeed()){
 			float remain = 0;
 			//check if two roadnodes form a turn
-		if (thread_args->mymap.checkTurn(newPos.roadNodeID, nextRoadID) && (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength()-newPos.p)<cSpeed*ticktime)
+		/*if (thread_args->mymap.checkTurn(newPos.roadNodeID, nextRoadID) && (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength()-newPos.p)<cSpeed*ticktime)
 			{
 				remain = (cSpeed-11)/v->getAcceleration();
 			//	cout << "remain7:" <<remain;
 		distanceToTravel =  cSpeed*remain + (remain*remain*(-aRate))/2 + (ticktime-remain)*v->getCurrentSpeed();
 		v->setCurrentSpeed(11); 
 			}
-			else {
-			float temp = newSpeed - max(roadMaxSpeed,v->getMaxSpeed());
+			else*/ {
+			float temp = newSpeed - min(roadMaxSpeed,v->getMaxSpeed());
 			float remain;
-			if (aRate!=0){
+			//if (aRate!=0){
 		//		cout << "what";
 				remain=temp/aRate;
-			distanceToTravel = distanceToTravel - (remain*aRate +(aRate*remain*remain)/2);
-			}
+			distanceToTravel = distanceToTravel - (cSpeed*remain +(aRate*remain*remain)/2);
+			//}
 			v->setCurrentSpeed(min(roadMaxSpeed,v->getMaxSpeed())); 
-			if (newSpeed < v->getCurrentSpeed()) 
-				v->setCurrentSpeed(newSpeed);
+
 			//cout << "pio polli kai apo ta dio. actual distance: " << distanceToTravel<<endl;
 		}
 	}
@@ -220,7 +221,6 @@ int accelerate(vehicle *v,vehicle *s, float aRate, void *arguments) {
 			//cout << "road0. distance: " << distanceToTravel<<endl;
 		}
 	else v->setCurrentSpeed(newSpeed);
-	
 	
 	if (newPos.roadNodeID == -1) {
 		newPos.roadNodeID = vPath[0];
