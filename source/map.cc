@@ -269,70 +269,70 @@ int map::checkTurn(int roadNode1Id, int roadNode2Id){
 					graphNode B2 = unfRoads[j].getgraphNodeB();
 					if ((A1.getCartesianX() == A2.getCartesianX() && A1.getCartesianY() == A2.getCartesianY())) 
 					{			
-						int deltaY = (A2.getCartesianY() - A1.getCartesianY());
-						int deltaX = (A2.getCartesianX() - A1.getCartesianX());
+						float deltaY = (B2.getCartesianY() - B1.getCartesianY());
+						float deltaX = (B2.getCartesianX() - B1.getCartesianX());
 						float angle = atan2(deltaY,deltaX) * 180 / PI;
-						if (angle == 180)
+
+						if (angle == 180 || angle==0 || angle==360)
 						{
-						//	cout << "no turn";
+							cout << "no turn 1 - ";
 							return 0;
 						}
 						else {
-						//	cout << "turn";
+					//		cout << "angle: " <<angle;
+							cout << "turn 1";
 							return 1;
 						}
 					}
 					if ((A1.getCartesianX() == B2.getCartesianX() && A1.getCartesianY() == B2.getCartesianY()))
 					{
-						int deltaY = (B2.getCartesianY() - A1.getCartesianY());
-						int deltaX = (B2.getCartesianX() - A1.getCartesianX());
+						float deltaY = (A2.getCartesianY() - B1.getCartesianY());
+						float deltaX = (A2.getCartesianX() - B1.getCartesianX());
 						float angle = atan2(deltaY,deltaX) * 180 / PI;
-						if (angle == 180)
+						if (angle == 180 || angle==0 || angle==360)
 						{
-						//	cout << "no turn";
+							cout << "no turn 2 - ";
 							return 0;
 						}
 						else {
-						//	cout << "turn";
+							cout << "turn 2";
 							return 1;
 						}	
 					}			
 					if ((B1.getCartesianX() == B2.getCartesianX() && B1.getCartesianY() == B2.getCartesianY()))
 					{
-						int deltaY = (B2.getCartesianY() - B1.getCartesianY());
-						int deltaX = (B2.getCartesianX() - B1.getCartesianX());
+						float deltaY = (A2.getCartesianY() - A1.getCartesianY());
+						float deltaX = (A2.getCartesianX() - A1.getCartesianX());
 						float angle = atan2(deltaY,deltaX) * 180 / PI;
-						if (angle == 180)
+						if (angle == 180 || angle==0 || angle==360)
 						{
-					//		cout << "no turn";
+							cout << "no turn 3 - ";
 							return 0;
 						}
 						else {
-						//	cout << "turn";
+							cout << "turn 3";
 							return 1;
 						}
 					}			
 					if ((B1.getCartesianX() == A2.getCartesianX() && B1.getCartesianY() == A2.getCartesianY()))
 					{
-					//	cout << "checking " << roadNode1Id<<"and " <<roadNode2Id;
-						int deltaY = (A2.getCartesianY() - B1.getCartesianY());
-						int deltaX = (A2.getCartesianX() - B1.getCartesianX());
-
-						float angle = atan2(deltaY,deltaX) * 180 / PI;
-					//	cout <<"\nangle is " << angle;
-						if (angle == 180)
+						float deltaY = abs(B2.getCartesianY() - A1.getCartesianY());
+						float deltaX = abs(B2.getCartesianX() - A1.getCartesianX());
+						float angle = atan2(deltaY,deltaX) * 180 / 3.14;
+						cout <<"\nangle is " << angle;
+						if (angle == 180 || angle==0 || angle==360)
 						{
-						//	cout << "no turn";
+							cout << "no turn 4 - ";
 							return 0;
 						}
 						else {
-						//	cout << "turn";
+							cout << "turn 4";
 							return 1;
 						}
 					}
 					else {
 						//cout << "not connected";
-						return -1;
+						return 0;
 					}
 				}
 }

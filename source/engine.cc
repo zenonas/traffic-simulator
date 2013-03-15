@@ -34,7 +34,7 @@ void *engine(void *arguments)
   }
 
 //if (thread_args->debug) cout <<"\t\t\t\tandfkjabfhlabPANIKOS";
-  vehicle *v1= new vehicle(0,7,6,thread_args->mymap);
+  vehicle *v1= new vehicle(0,6,7,thread_args->mymap);
   //vehicle *v2= new vehicle(1,3,6,thread_args->mymap);
   //v2->setType(2);
 //v2->setDriverType(2);
@@ -43,8 +43,6 @@ void *engine(void *arguments)
   v1->setType(0);
   
   v1->setDriverType(0);
-
-  
    
     //if (thread_args->debug)
   
@@ -54,6 +52,9 @@ void *engine(void *arguments)
  //v2->printPath();
 
  // else cout <<"asdfkjahdfiuagfyugafyuagsfyuagsfyugayusgfasyuaupapapapa";
+int k = thread_args->mymap.checkTurn(9,10);
+
+
 
 
   //v3->setType(1);
