@@ -10,7 +10,6 @@ Copyright (c) King's College London
 */
 #ifndef trafficLight_h
 #define trafficLight_h
-#include <iostream>
 
 using namespace std;
 
@@ -22,14 +21,16 @@ public:
      
    ~trafficLight();
    void Wait();
-   void setState();
+   void setState(int state);
    int getState();
+   void setTimer(int timer);
+   int getTimer();
 
 private:
   
-
-
    int Timer;
+   int State;
+
 };
 
 #endif
