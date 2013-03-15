@@ -35,8 +35,8 @@ void *engine(void *arguments)
   vehicle *v1= new vehicle(0,1,3,thread_args->mymap);
   vehicle *v2= new vehicle(1,2,3,thread_args->mymap);
   //vehicle *v3= new vehicle(2,4,3,thread_args->mymap);
-  v1->setType(1);
-  v2->setType(0);
+  v1->setType(0);
+  v2->setType(2);
   v1->setDriverType(0);
   v2->setDriverType(2);
 
@@ -58,32 +58,34 @@ void *engine(void *arguments)
   	int maxe = 0;
   	for (int k=0; k<entryQueues.size(); k++) { //iterate through all the entry queues
   		while(!entryQueues[k].empty() && maxe < 10) { //this will never be easily empty need to have && carfits() here
-  			if (vehiclesInEngine.size() == 0) { //first time car definitely fits
-  				vehiclesInEngine.push_back(entryQueues[k].front());
-  				entryQueues[k].pop();
-  				//updatePosition(vehiclesInEngine.back());
+  		  if (vehiclesInEngine.size() == 0) { //first time car definitely fits
+  			   vehiclesInEngine.push_back(entryQueues[k].front());
+  				 entryQueues[k].pop();
+  				 //updatePosition(vehiclesInEngine.back());
   			} 
         else if (carFits(entryQueues[k].front(), vehiclesInEngine, thread_args->mymap.getunfRoads(), thread_args)) {
-				  vehiclesInEngine.push_back(entryQueues[k].front());
-				  entryQueues[k].pop();
-				//updatePosition(vehiclesInEngine.back());
+				    vehiclesInEngine.push_back(entryQueues[k].front());
+				    entryQueues[k].pop();
+				    //updatePosition(vehiclesInEngine.back());
 				}
 			
 			maxe++;
 		}
 	}
+
    vector<roadNode> roads = thread_args->mymap.getunfRoads();
    // test code for vehicle accelerate
-   for(int q=0; q<vehiclesInEngine.size(); q++){
+  for(int q=0; q<vehiclesInEngine.size(); q++){
       vector<int> myPaths = vehiclesInEngine[q]->getPath();
      // cout << "\n\nMY PATH IS : ";
       for (int h=0; h<myPaths.size(); h++) {
          //cout << myPaths[h] << " ";
       }
       int result;
-     
+     //check every other vehicle
       for (int p=0; p<vehiclesInEngine.size(); p++)
         if (p!=q)
+          //if they have same path
           if (checkVehicle(vehiclesInEngine[q],vehiclesInEngine[p]))
             {
               struct Position pos1;
@@ -95,48 +97,56 @@ void *engine(void *arguments)
               int speed1 = vehiclesInEngine[q]->getCurrentSpeed();
               int speed2 = vehiclesInEngine[p]->getCurrentSpeed();
               int length=1000;
+              //if <0 then not in the map yet
               if (pos1.roadNodeID>0){
-                if (pos1.roadNodeID == pos2.roadNodeID)
+                //if the vehicles are in the same roadNode
+                if (pos1.roadNodeID == pos2.roadNodeID){
+                  //calculate their distance
                     if (pos2.p>pos1.p)
                       length = pos2.p - pos1.p;
                     else
                       length = 1000;
-
-                if (length<400){
-                 // cout <<"\t\t\tlength < 400";
-                  result = accelerate(vehiclesInEngine[q], -1, thread_args);
-                 // cout << "Car " << q<< " DECELERATED ONCE MY NEW POSITION IS: " << vehiclesInEngine[q]->getCurrentPosition().roadNodeID << " at position " << vehiclesInEngine[q]->getCurrentPosition().p << "\n";
                 }
-                else if (length<600){
-                 // cout <<"\t\t\tlength < 600";
-                  result = accelerate(vehiclesInEngine[q], 0, thread_args);
-                 // cout << "Car " << q<< " MOVE ONCE MY NEW POSITION IS: " << vehiclesInEngine[q]->getCurrentPosition().roadNodeID << " at position " << vehiclesInEngine[q]->getCurrentPosition().p << "\n";
+                //if not in the same roadNode
+               else {
+                      for (int h=0; h<myPaths.size(); h++){
+                        //find the roadnode for vehicle that I am checking
+                          if (myPaths[h]==pos1.p)
+                            //check if it is the next roadNode
+                            if (pos2.roadNodeID==myPaths[h+1]){
+                              length = pos2.p + (myPaths[h]-pos1.p);
+                              break;
+                            }
+                            else length = 1000; 
+                          }
+                    }
+                    //check if it can cover the distance in a tick
+                if (length<speed2*thread_args->sleep_time){
+                  //if yes then check others car speed and reduce speed to avoid crashing
+                  if (speed2<speed1){
+                    result = accelerate(vehiclesInEngine[q],vehiclesInEngine[p], -1, thread_args);
+                   }
+                  else
+                  result = accelerate(vehiclesInEngine[q],vehiclesInEngine[p], 2, thread_args);
                 }
+                //can't cover the distance
                 else{ 
-                  result = accelerate(vehiclesInEngine[q], 2, thread_args);
-                  //cout << "Car " << q<< " ACCELERATED ONCE MY NEW POSITION IS: " << vehiclesInEngine[q]->getCurrentPosition().roadNodeID << " at position " << vehiclesInEngine[q]->getCurrentPosition().p << "\n";
-                }
-                /*
-                if (result == 0) {
-                  //cout << "vgika apo to xarti car Which car p???" <<p<< endl;
-                  vehiclesInEngine.erase(vehiclesInEngine.begin()+q);
-                } */
-               break;
+                  result = accelerate(vehiclesInEngine[q],vehiclesInEngine[p], 2, thread_args);
+                 }             
               }
+              //not in the map yet
               else {
-                result = accelerate(vehiclesInEngine[q], 2, thread_args);
-                //cout << "Car " << q<< " acc once my new position is: " << vehiclesInEngine[q]->getCurrentPosition().roadNodeID << " at position " << vehiclesInEngine[q]->getCurrentPosition().p << "\n";
-              }
+                result = accelerate(vehiclesInEngine[q],vehiclesInEngine[p], 2, thread_args);
+               }
             }
       if (result == 0) {
          vehiclesInEngine.erase(vehiclesInEngine.begin()+q);
       }      
-   }    
-   // test code for vehicle accelerate ends
-  
-    // intersection?
+   }
+    // check for intersections
+   //we have to store them in an array and find a way to handle them
+   //such as vehicles from different roadnodes and how to handle all together
    /*vector<roadNode> ROADS = thread_args->mymap.getunfRoads();
-
    for(int i=0; i<vehiclesInEngine.size(); i++){    
       vector<int> vehiclePath = vehiclesInEngine[i]->getPath();
       vector<int> intersection;
@@ -169,32 +179,31 @@ void *engine(void *arguments)
       }*/
 
 
-// traffic lights handling
-for(int i=0; i<thread_args->mymap.trafficlights.size(); i++) {
-  if (thread_args->mymap.trafficlights[i].getTimer()!=0) {
-    if((thread_args->CurrentTimer % thread_args->mymap.trafficlights[i].getTimer())== 0 && thread_args->CurrentTimer !=0) {
-		  if (thread_args->mymap.trafficlights[i].getState() == 1) {
-          thread_args->mymap.trafficlights[i].setState(0);
-          //thread_args->mymap.trafficlights[i].setTimer(thread_args->mymap.trafficlights[i].getTimer()/2);
-		  } else {
-          thread_args->mymap.trafficlights[i].setState(1);
-          //thread_args->mymap.trafficlights[i].setTimer(thread_args->mymap.trafficlights[i].getTimer()*2);
-		  }
-    } 
+  // traffic lights handling
+  for(int i=0; i<thread_args->mymap.trafficlights.size(); i++) {
+    if (thread_args->mymap.trafficlights[i].getTimer()!=0) {
+      if((thread_args->CurrentTimer % thread_args->mymap.trafficlights[i].getTimer())== 0 && thread_args->CurrentTimer !=0) {
+  		  if (thread_args->mymap.trafficlights[i].getState() == 1) {
+            thread_args->mymap.trafficlights[i].setState(0);
+            //thread_args->mymap.trafficlights[i].setTimer(thread_args->mymap.trafficlights[i].getTimer()/2);
+  		  } else {
+            thread_args->mymap.trafficlights[i].setState(1);
+            //thread_args->mymap.trafficlights[i].setTimer(thread_args->mymap.trafficlights[i].getTimer()*2);
+  		  }
+      } 
+    }
+    //cout << "TESTING CURRENT LIGHT: " << i << " STATE: " <<thread_args->mymap.trafficlights[i].getState() << endl;
   }
-  //cout << "TESTING CURRENT LIGHT: " << i << " STATE: " <<thread_args->mymap.trafficlights[i].getState() << endl;
-}
   thread_args->tick_count++;
   thread_args->CurrentTimer++;
   // Update time in engine for every single vehicle
-for(int k=0; k<vehiclesInEngine.size(); k++){
-  int newtimer = vehiclesInEngine[k]->getTimer() + 1;
-  vehiclesInEngine[k]->setTimer(newtimer);
-}
+  for(int k=0; k<vehiclesInEngine.size(); k++){
+    int newtimer = vehiclesInEngine[k]->getTimer() + 1;
+    vehiclesInEngine[k]->setTimer(newtimer);
+  }
   thread_args->simstats.CaptureStatistics(&thread_args->mymap, vehiclesInEngine);
   sleep(thread_args->sleep_time);
 }
-
 
    pthread_exit(NULL);
    

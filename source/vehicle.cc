@@ -55,12 +55,21 @@ return exitPoint;
 
 void vehicle::setType(int type){
 	Type=type;
-	if (type == 0) 
+	if (type == 0){
 		setMaxSpeed(28);
-	else if (type == 1)
+		//after 5 sec will  have 72km/h
+		setAcceleration(4);
+	}
+	else if (type == 1){
 		setMaxSpeed(22);
-	else if (type == 2)
-		setMaxSpeed(17);	
+		//after 5 sec will  have 54km/h
+		setAcceleration(3);
+	}
+	else if (type == 2){
+		setMaxSpeed(17);
+		//after 5 sec will  have 36km/h
+		setAcceleration(2);	
+	}
 }
 
 void vehicle::setMaxSpeed(int speed){
