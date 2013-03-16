@@ -20,7 +20,7 @@ Copyright (c) King's College London
 statistics::statistics(){
 	VehMap = NULL;
 
-
+	vehicesRemoved = 0;
 	vehicletypenum.resize(3);
 	drivertypenum.resize(3);
 
@@ -134,6 +134,15 @@ int statistics::getDriverTypeNum(int driverType){
 int statistics::getTotalVehicles(){
 	return total;
 }
+
+void statistics::addRemVehi(){
+	vehicesRemoved++;
+}
+
+int statistics::getRemVehi(){
+	return vehicesRemoved;
+}
+
 
 map* statistics::getMap(){
 	return VehMap;

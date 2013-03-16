@@ -305,8 +305,8 @@ void *inout(void *arguments)
     mvwprintw(stdstats,1,40, "%d",thread_args->tick_count);
     mvwprintw(stdstats,3,27, "%.00f",thread_args->simstats.getAvSpeed());
     mvwaddstr(stdstats,3,2,"Average speed in engine: ");
-    mvwaddstr(stdstats,4,2,"Most visited roadNode:    Most Common Entry/Exit point:    /");
-    mvwprintw(stdstats,4,25,"%d", thread_args->simstats.getMostVisitedRoad());
+    mvwaddstr(stdstats,4,2,"Vehicles Completed:    Most Common Entry/Exit point:    /");
+    mvwprintw(stdstats,4,20,"%d", thread_args->simstats.getRemVehi());
     mvwprintw(stdstats,4,58,"%d", thread_args->simstats.getMostCommonEntryP());
     mvwprintw(stdstats,4,63,"%d", thread_args->simstats.getMostCommonExitP());
     mvwaddstr(helpwin,1,2,"For help press 'H'.           Copyright(c) 2013 Kings College London.");
@@ -371,7 +371,7 @@ void *inout(void *arguments)
         mvwprintw(stdstats,3,midpointx+16,"%d",thread_args->simstats.getDriverTypeNum(0));
         mvwprintw(stdstats,3,midpointx+30,"%d",thread_args->simstats.getDriverTypeNum(1));
         mvwprintw(stdstats,3,midpointx+45,"%d",thread_args->simstats.getDriverTypeNum(2));
-        mvwprintw(stdstats,4,25,"%d", thread_args->simstats.getMostVisitedRoad());
+        mvwprintw(stdstats,4,20,"%d", thread_args->simstats.getRemVehi());
         mvwprintw(stdstats,4,58,"%d", thread_args->simstats.getMostCommonEntryP());
         mvwprintw(stdstats,4,63,"%d", thread_args->simstats.getMostCommonExitP()); 
         mvwprintw(stdstats,1,40, "%d",thread_args->tick_count);

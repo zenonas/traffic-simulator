@@ -35,6 +35,8 @@ public:
    int getVehicleTypeNum(int vehicleType);
    int getDriverTypeNum(int driverType); 
    int getTotalVehicles();
+   int getRemVehi();
+   void addRemVehi();
    map* getMap();
    vector<vehicle *> getVehiclesInEngine();
 
@@ -42,6 +44,7 @@ private:
    map* VehMap;
    vector<vehicle *> VehEng;
    double avspeed;
+   int vehicesRemoved;
    double avtimeinengine;
    int most_visited_road;
    int most_common_exitP;

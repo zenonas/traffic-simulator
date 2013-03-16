@@ -73,6 +73,7 @@ void *engine(void *arguments)
       if (result == 0) {
         delete thread_args->vehiclesInEngine[q];
         thread_args->vehiclesInEngine.erase(thread_args->vehiclesInEngine.begin()+q);
+        thread_args->simstats.addRemVehi();
       }
    }    
    // test code for vehicle accelerate ends
