@@ -59,6 +59,7 @@ void map::ReadXMLFile()
 		graphNode newgraphNodeA;
 		graphNode newgraphNodeB;
 
+
 		int i=0;	
 
 		for (xml_node<> * node_node = road_node->first_node("Node"); node_node; node_node =node_node->next_sibling("Node"))
@@ -111,11 +112,22 @@ void map::ReadXMLFile()
 					//cout << "time: " << newgraphNodeA.getTimer() <<endl;
 				}
 			}
-			i++;				
+			i++;
+				
+
+			newgraphNodeA.setRoad(j+1);
+		//	cout << "j: " <<j+1 << "road " << newgraphNodeA.getRoad() <<endl;
+			newgraphNodeB.setRoad(j+1);
+			
 			newroadNode.setgraphNodeA(newgraphNodeA);
 			newroadNode.setgraphNodeB(newgraphNodeB);
+
 			newroadNode.getgraphNodeA().setTimer(newgraphNodeA.getTimer());
 			newroadNode.getgraphNodeB().setTimer(newgraphNodeB.getTimer());
+
+			//newroadNode.getgraphNodeA().setRoad(j+1);	
+			//newroadNode.getgraphNodeB().setRoad(j+1);	
+			//cout << "OPA : " << newroadNode.getgraphNodeA().getRoad() <<endl;
 		
 		}
 		for (xml_node<> * length= road_node->first_node("Length"); length; length=length->next_sibling("Length")){
@@ -125,6 +137,7 @@ void map::ReadXMLFile()
 			newroadNode.setMaxSpeed(atoi(maxSpeed->value()));
 		}
 		newroadNode.setId(j+1);
+
 		unfRoads.push_back(newroadNode);
 		j++;
 	}
@@ -149,11 +162,7 @@ void map::ReadXMLFile()
 			if (flagB == 0 && unfRoads[i].getgraphNodeB().getType() == 1) entryGraphNodes.push_back(unfRoads[i].getgraphNodeB());
  		}
  	}
- 	cout << "-------- ENTRY NODES----------" << endl;
- 	for(int k=0; k<entryGraphNodes.size(); k++){
- 		cout << entryGraphNodes[k].getCartesianX() << " " << entryGraphNodes[k].getCartesianY() << endl;
- 	}
- 	cout << "------------------------------" << endl;
+ 
 }
 
 void map::findConnectedRoadNodes(){

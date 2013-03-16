@@ -21,6 +21,7 @@ void *generator(void *arguments)
    
   // cout << "Generator Thread with id : " << "1" << "  is created" << endl;
    srand(time(NULL));
+   int vid =0;
   while(!thread_args->finished) {
 
   	/*
@@ -35,8 +36,8 @@ void *generator(void *arguments)
   		STEP 2 GET NUMBER OF VEHICLES/H NEEDED
 		BASED ON THIS DECIDE HOW MANY VEHICLES NEED TO BE CREATE IN THIS ROUND
 	*/
-		int actual_no_to_create = rand() % thread_args->max_no_vehicles + 2;
-		actual_no_to_create = 20;
+		int actual_no_to_create = rand() % thread_args->max_no_vehicles + 4;
+		actual_no_to_create = 4;
 		//if (actual_no_to_create > 4) actual_no_to_create = 0; //maybe revise
 		vehicle* temp_array[actual_no_to_create];
 		//cout << "I SHALL CREATE: " << actual_no_to_create << endl;
@@ -48,9 +49,14 @@ void *generator(void *arguments)
 		entryPoints= thread_args->mymap.entryGraphNodes;
 		for (int z=0; z<actual_no_to_create;z++) temp_array[z] = NULL; //initalize array to null pointers
 		for (int i=0; i<actual_no_to_create;i++) {
-			int entryP = rand() % entryPoints.size() + 1;
-			int exitP = rand() % entryPoints.size() + 1;
-			temp_array[i] = new vehicle(i, entryP, exitP, thread_args->mymap);
+			int exitP, entryP;
+			entryP = rand() % entryPoints.size();
+			do{
+			exitP = rand() % entryPoints.size();
+			}while(exitP == entryP);
+			
+			temp_array[i] = new vehicle(vid, thread_args->mymap.entryGraphNodes[entryP].getRoad(), thread_args->mymap.entryGraphNodes[exitP].getRoad(), thread_args->mymap);
+			vid++;
 			int type_no = rand() % 100 + 1;
 			if (type_no <= thread_args->vehicle_ratios[0]*100) {
 				temp_array[i]->setType(0); // car

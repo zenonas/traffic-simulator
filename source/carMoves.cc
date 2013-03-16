@@ -54,7 +54,9 @@ bool carFits(vehicle *v, vector<vehicle *> vIengine,vector<roadNode> allRoads,vo
 				closestP = vehiclesInMyRoadNode[k]->getCurrentPosition().p;
 			}
 		}
-		int spaceAvailable = allRoads[1].getLength() - closestP;
+		
+			
+		int spaceAvailable = closestP;
 		int safeDist = 1;
 
 		if (v->getType() == 0) {
@@ -121,66 +123,54 @@ int accelerate(vehicle *v,vehicle *s, float aRate, void *arguments) {
 		roadMaxSpeed = roads[v->getCurrentPosition().roadNodeID-1].getMaxSpeed();
 
 	if (cSpeed==v->getMaxSpeed() && cSpeed<=roadMaxSpeed){
-		//check if turn in order to decelerate
-		float remain = 0;
+		
 		//check if two roadnodes form a turn
-		/*if (thread_args->mymap.checkTurn(newPos.roadNodeID, nextRoadID) && (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength()-newPos.p)<cSpeed*ticktime)
+		if (thread_args->mymap.checkTurn(newPos.roadNodeID, nextRoadID) && (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength()-newPos.p)<cSpeed*ticktime)
 			{
+				float remain = 0;
 				remain = (cSpeed-11)/v->getAcceleration();
 			//	cout << "remain2:" <<remain;
-		distanceToTravel =  cSpeed*remain + (remain*remain*(0-aRate))/2.0 + (ticktime-remain)*v->getCurrentSpeed();
-		v->setCurrentSpeed(11); 
+				distanceToTravel =  cSpeed*(ticktime-remain) + (remain*remain*(0-aRate))/2.0 + remain*11;
+				v->setCurrentSpeed(11); 
 			}
-		else*/
+		else
 			distanceToTravel = cSpeed*ticktime;	
-		//cout << "eftasa to max speed tu car. actual distance: " << distanceToTravel<<endl;
-		}
+	}
 	else if (cSpeed==roadMaxSpeed && cSpeed<=v->getMaxSpeed() ){
-		float remain = 0.0;
+		
 		//check if two roadnodes form a turn
-	/*	if (thread_args->mymap.checkTurn(newPos.roadNodeID, nextRoadID) && (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength()-newPos.p)<cSpeed*ticktime)
+		if (thread_args->mymap.checkTurn(newPos.roadNodeID, nextRoadID) && (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength()-newPos.p)<cSpeed*ticktime)
 			{
-				remain = ((float) cSpeed-11.0)/(float)v->getAcceleration();
-			//	cout << "aRate: " <<aRate;
-		//		cout << "remain3:" <<endl<<remain<<endl;
-		distanceToTravel =  cSpeed*remain + (remain*remain*(0-aRate))/2.0 + (ticktime-remain)*11.0;
-		//cout << "distance: " <<distanceToTravel<<" cspeed: " <<cSpeed<<" tick: "<<ticktime;
-		v->setCurrentSpeed(11); 
+				float remain = 0;
+				remain = (cSpeed-11)/v->getAcceleration();
+				distanceToTravel =  cSpeed*(ticktime-remain) + (remain*remain*(0-aRate))/2.0 + remain*11;
+				v->setCurrentSpeed(11); 
 			}
-			else*/{
-				distanceToTravel = cSpeed*ticktime;
-				//cout << "here";
-			}
-		//cout << "eftasa to max speed tu road. actual distance: " << distanceToTravel<<endl;
+		else{
+				distanceToTravel = cSpeed*ticktime;		
+		}
 	}
 	else if (cSpeed<=v->getMaxSpeed() && cSpeed<=roadMaxSpeed)
 	{
-		float remain = 0;
+		
 		//check if two roadnodes form a turn
-	/*	if (thread_args->mymap.checkTurn(newPos.roadNodeID, nextRoadID) && (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength()-newPos.p)<cSpeed*ticktime)
+		if (thread_args->mymap.checkTurn(newPos.roadNodeID, nextRoadID) && (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength()-newPos.p)<cSpeed*ticktime)
 			{
+				float remain = 0;
 				remain = (cSpeed-11)/v->getAcceleration();
-	//			cout << "remain4:" <<remain;
-		distanceToTravel =  cSpeed*remain + (remain*remain*(0-aRate))/2.0 + (ticktime-remain)*v->getCurrentSpeed();
-		v->setCurrentSpeed(11); 
+				distanceToTravel =  cSpeed*(ticktime-remain) + (remain*remain*(0-aRate))/2.0 + remain*11;		v->setCurrentSpeed(11); 
 			}
-			else*/{
-
+		else{
 			float remain = (min(v->getMaxSpeed(),roadMaxSpeed) - cSpeed) / aRate;
-
-			//cout << "remain is " <<remain<<" with aRate " <<aRate <<" cSpeed: " <<cSpeed<<endl;
-			//cout << " carMAx: " <<v->getMaxSpeed() <<" roadSpeed: " <<roadMaxSpeed<<endl;
-				if (remain>ticktime){
-					distanceToTravel = ticktime*ticktime*aRate/2;
-					v->setCurrentSpeed(ticktime*aRate);
-					}
+			if (remain>ticktime){
+				distanceToTravel = ticktime*ticktime*aRate/2;
+				v->setCurrentSpeed(ticktime*aRate);
+			}
 			else{
-				//cout  << "mpainw edw  " << cSpeed;
-			distanceToTravel = remain*cSpeed + (remain*remain*aRate)/2;
-			distanceToTravel = distanceToTravel + min(v->getMaxSpeed(),roadMaxSpeed)*(ticktime-remain);
-			v->setCurrentSpeed(min(v->getMaxSpeed(),roadMaxSpeed)); 
-		}
-			//cout << "piga panw apo to max speed tu car. actual distance: " << distanceToTravel<<endl;
+				distanceToTravel = remain*cSpeed + (remain*remain*aRate)/2;
+				distanceToTravel = distanceToTravel + min(v->getMaxSpeed(),roadMaxSpeed)*(ticktime-remain);
+				v->setCurrentSpeed(min(v->getMaxSpeed(),roadMaxSpeed)); 
+			}
 		}
 	}
 	/*else if (newSpeed>roadMaxSpeed && roadMaxSpeed>0 && newSpeed<=v->getMaxSpeed()){

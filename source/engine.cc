@@ -25,10 +25,12 @@ void *engine(void *arguments)
   struct thread_arguments *thread_args;
   thread_args = (struct thread_arguments *)arguments;
   vector<queue <vehicle *> > entryQueues;
+  entryQueues.resize(thread_args->mymap.getunfRoads().size());
   vector<vehicle *> vehiclesInEngine;
   thread_args->CurrentTimer=0;
  // thread_args->mymap.printAllPaths();
   for (int i=0; i<thread_args->mymap.entryGraphNodes.size(); i++) {
+    //cout <<"size entry points: " <<thread_args->mymap.entryGraphNodes.size();
    	queue<vehicle *> currentQueue;
    	entryQueues.push_back(currentQueue);
   }
@@ -48,15 +50,18 @@ void *engine(void *arguments)
   	int max_entries = 0;
   	//CARS TAKEN OFF THE WAITING QUEUE AND SPLIT INTO THE SEPARATE QUEUES
   	while(!thread_args->VWaitingQ.empty() && max_entries < thread_args->max_no_vehicles) {
+      
     	vehicle *currentV = thread_args->VWaitingQ.front();
   	 	int queueToBe = currentV->getEntryPoint();
   	 	entryQueues[queueToBe-1].push(currentV);
+     //  cout << "Queue " << queueToBe-1 << endl;;
   	 	thread_args->VWaitingQ.pop();
   	 	max_entries++;
     }
 	//START HANDLING THE ENTRY QUEUES
   	int maxe = 0;
   	for (int k=0; k<entryQueues.size(); k++) { //iterate through all the entry queues
+
   		while(!entryQueues[k].empty() && maxe < 10) { //this will never be easily empty need to have && carfits() here
   		  if (vehiclesInEngine.size() == 0) { //first time car definitely fits
   			   vehiclesInEngine.push_back(entryQueues[k].front());
@@ -64,14 +69,14 @@ void *engine(void *arguments)
   				 //updatePosition(vehiclesInEngine.back());
   			} 
         else if (carFits(entryQueues[k].front(), vehiclesInEngine, thread_args->mymap.getunfRoads(), thread_args)) {
-				    vehiclesInEngine.push_back(entryQueues[k].front());
+            vehiclesInEngine.push_back(entryQueues[k].front());
 				    entryQueues[k].pop();
 				    //updatePosition(vehiclesInEngine.back());
 				}
 			
 			maxe++;
-		}
-	}
+		  }
+	 }
 
    vector<roadNode> roads = thread_args->mymap.getunfRoads();
    // test code for vehicle accelerate
@@ -83,7 +88,9 @@ void *engine(void *arguments)
       }
 
       int result;
+     // cout << "Vehicle ID: " << vehiclesInEngine[q]->vehi_id << " EntryP: " << vehiclesInEngine[q]->getEntryPoint() << " ExitP: "<< vehiclesInEngine[q]->getExitPoint() << endl;
       result = accelerate(vehiclesInEngine[q],vehiclesInEngine[q], 1, thread_args);
+
      //check every other vehicle
      /* for (int p=0; p<vehiclesInEngine.size(); p++)
         if (p!=q){

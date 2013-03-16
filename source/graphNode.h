@@ -31,6 +31,8 @@ public:
    int getTimer();
    void setState(int state);
    int getState();
+   int getRoad();
+   void setRoad(int r);
   
 private:
    int CartesianX, CartesianY;
@@ -38,6 +40,7 @@ private:
    int Type;// 0: nothing 1: entry/exit point and traffic light 2: only traffic light
    //trafficLight will be null if not trafficLight
    int State; 
+   int Road;
 };
 
 
