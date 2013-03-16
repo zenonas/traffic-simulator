@@ -64,5 +64,13 @@ int graphNode::getState(){
 	return State;
 }
 
+void graphNode::setRoad(int r){
+	Road=r;
+}
+
+int graphNode::getRoad(){
+	return Road;
+}
+
 
 

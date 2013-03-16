@@ -50,7 +50,7 @@ void updateVehicles(WINDOW *vehiclestats, void *arguments) {
         mvwprintw(vehiclestats,2+i,41,"%d",vehiclesInEngine[i]->getEntryPoint());
         mvwprintw(vehiclestats,2+i,51,"%d",vehiclesInEngine[i]->getExitPoint());
         for (int vp=0; vp<vehiclePath.size(); vp++) {
-            mvwprintw(vehiclestats,2+i,60+(2*vp)," %d", vehiclePath[vp]);
+            mvwprintw(vehiclestats,2+i,60+(3*vp)," %d", vehiclePath[vp]);
         }        
         mvwprintw(vehiclestats,2+i,80,"roadNode: %d",vehiclesInEngine[i]->getCurrentPosition().roadNodeID);
         mvwprintw(vehiclestats,2+i,93,"Pos: %d", vehiclesInEngine[i]->getCurrentPosition().p);

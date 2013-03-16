@@ -14,13 +14,12 @@ Copyright (c) King's College London
 #include <vector>
 using namespace std;
 
-vehicle::vehicle(int id, int entryP, int exitP,map mymap){
+vehicle::vehicle(int id, int entryP, int exitP, map mymap){
 	vehi_id = id;
 	setCurrentSpeed(0);
 	setAcceleration(0);
 	setEntryPoint(entryP);
 	setExitPoint(exitP);
-	//calculatePath() is called manually at the moment
 	calculatePath(mymap);
 
 	//initialize current pos
@@ -35,94 +34,103 @@ vehicle::~vehicle(){
 }
 
 void vehicle::setEntryPoint(int entryP){
-entryPoint=entryP;
+	entryPoint=entryP;
 }
 
 void vehicle::setExitPoint(int exitP){
-exitPoint=exitP;
+	exitPoint=exitP;
 }
 
 int vehicle::getEntryPoint(){
-return entryPoint;
+	return entryPoint;
 }
 
 int vehicle::getExitPoint(){
-return exitPoint;
+	return exitPoint;
 }
 
 void vehicle::setType(int type){
 	Type=type;
-	if (type == 0) 
+	if (type == 0){
 		setMaxSpeed(28);
-	else if (type == 1)
+		//after 5 sec will  have 72km/h
+		setAcceleration(4);
+	}
+	else if (type == 1){
 		setMaxSpeed(22);
-	else if (type == 2)
-		setMaxSpeed(17);	
+		//after 5 sec will  have 54km/h
+		setAcceleration(3);
+	}
+	else if (type == 2){
+		setMaxSpeed(17);
+		//after 5 sec will  have 36km/h
+		setAcceleration(2);	
+	}
 }
 
 void vehicle::setMaxSpeed(int speed){
-MaxSpeed=speed;
+	MaxSpeed=speed;
 }
 
 int vehicle::getMaxSpeed(){
-return MaxSpeed;
+	return MaxSpeed;
 }
 
 int vehicle::getType(){
-return Type;
+	return Type;
 }
 
 void vehicle::setCurrentSpeed(int x){
-CurrentSpeed=x;
+	CurrentSpeed=x;
 }
 
 int vehicle::getCurrentSpeed(){
-return CurrentSpeed;
+	return CurrentSpeed;
 }
 
 void vehicle::setDriverType(int type){
-DriverType=type;
+	DriverType=type;
 }
 
 int vehicle::getDriverType(){
-return DriverType;
+	return DriverType;
 }
 
 void vehicle::setAcceleration(int x){
-Acceleration=x;
+	Acceleration=x;
 }
 
 int vehicle::getAcceleration(){
-return Acceleration;
+	return Acceleration;
 }
 
 void vehicle::setCartesianPosition(int cartesianPosition[]){
-CartesianPosition[0]=cartesianPosition[0];
-CartesianPosition[1]=cartesianPosition[1];
+	CartesianPosition[0]=cartesianPosition[0];
+	CartesianPosition[1]=cartesianPosition[1];
 }
 
 int* vehicle::getCartesianPosition(){
-return CartesianPosition;
+	return CartesianPosition;
 }
 
 void vehicle::setCurrentPosition(Position pos){
-CurrentPosition.roadNodeID=pos.roadNodeID;
-CurrentPosition.lane =pos.lane;
-CurrentPosition.p =pos.p;
+	CurrentPosition.roadNodeID=pos.roadNodeID;
+	CurrentPosition.lane =pos.lane;
+	CurrentPosition.p =pos.p;
 }
 
 Position vehicle::getCurrentPosition(){
-return CurrentPosition;
+	return CurrentPosition;
 }
 
 void vehicle::setPreviousPosition(Position pos){
-CurrentPosition.roadNodeID=pos.roadNodeID;
-CurrentPosition.lane =pos.lane;
-CurrentPosition.p =pos.p;
+	CurrentPosition.roadNodeID=pos.roadNodeID;
+	CurrentPosition.lane =pos.lane;
+	CurrentPosition.p =pos.p;
 }
 
 Position vehicle::getPreviousPosition(){
-return PreviousPosition;
+	return PreviousPosition;
 }
 
 //calculate path depending on total LENGTH

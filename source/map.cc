@@ -42,7 +42,7 @@ void map::ReadXMLFile()
 	xml_document<> doc;
 	xml_node<> * root_node;
 	// Read the xml file into a vector
-	ifstream theFile ("xmlfile.xml");
+	ifstream theFile ("xmlfile2.xml");
 	vector<char> buffer((istreambuf_iterator<char>(theFile)), istreambuf_iterator<char>());
 	buffer.push_back('\0');
 	// Parse the buffer using the xml file parsing library into doc 
@@ -58,6 +58,7 @@ void map::ReadXMLFile()
 		roadNode newroadNode;
 		graphNode newgraphNodeA;
 		graphNode newgraphNodeB;
+
 
 		int i=0;	
 
@@ -96,7 +97,6 @@ void map::ReadXMLFile()
 				for (xml_node<> * timer_node = node_node->first_node("Timer"); timer_node; timer_node =timer_node->next_sibling("Timer"))
 				{ 
 					newgraphNodeB.setTimer(atoi(timer_node->value()));
-						//cout << "time: " << newgraphNodeB.getTimer() <<endl;
 				}
 			}	
 			else
@@ -108,13 +108,15 @@ void map::ReadXMLFile()
 				for (xml_node<> * timer_node = node_node->first_node("Timer"); timer_node; timer_node =timer_node->next_sibling("Timer"))
 				{ 
 					newgraphNodeA.setTimer(atoi(timer_node->value()));
-					//cout << "time: " << newgraphNodeA.getTimer() <<endl;
 				}
 			}
-			i++;				
+			i++;
+				
+
+			newgraphNodeA.setRoad(j+1);
+			newgraphNodeB.setRoad(j+1);
 			newroadNode.setgraphNodeA(newgraphNodeA);
 			newroadNode.setgraphNodeB(newgraphNodeB);
-		
 		}
 		for (xml_node<> * length= road_node->first_node("Length"); length; length=length->next_sibling("Length")){
 			newroadNode.setLength(atoi(length->value()));
@@ -147,6 +149,7 @@ void map::ReadXMLFile()
 			if (flagB == 0 && unfRoads[i].getgraphNodeB().getType() == 1) entryGraphNodes.push_back(unfRoads[i].getgraphNodeB());
  		}
  	}
+ 
 }
 
 void map::findConnectedRoadNodes(){
@@ -162,6 +165,7 @@ void map::findConnectedRoadNodes(){
 		for (int j=0; j<unfRoads.size(); j++){
 			graphNodeAMatcher = unfRoads[j].getgraphNodeA();
 			graphNodeBMatcher = unfRoads[j].getgraphNodeB();
+			temp.clear();
 		if (i != j) { //so that we don't match the same roadNodes
 			if ((graphNodeATestFirst.getCartesianX() == graphNodeAMatcher.getCartesianX() && graphNodeATestFirst.getCartesianY() == graphNodeAMatcher.getCartesianY())) 
 			{
@@ -169,28 +173,29 @@ void map::findConnectedRoadNodes(){
 				temp.push_back(unfRoads[j].getId());
 				array.push_back( temp);
 			}
-			if ((graphNodeATestFirst.getCartesianX() == graphNodeBMatcher.getCartesianX() && graphNodeATestFirst.getCartesianY() == graphNodeBMatcher.getCartesianY()))
+			else if ((graphNodeATestFirst.getCartesianX() == graphNodeBMatcher.getCartesianX() && graphNodeATestFirst.getCartesianY() == graphNodeBMatcher.getCartesianY()))
 			{
 				temp.push_back(unfRoads[i].getId());
 				temp.push_back(unfRoads[j].getId());
 				array.push_back( temp);
 			}			
-			if ((graphNodeBTestFirst.getCartesianX() == graphNodeBMatcher.getCartesianX() && graphNodeBTestFirst.getCartesianY() == graphNodeBMatcher.getCartesianY()))
+			else if ((graphNodeBTestFirst.getCartesianX() == graphNodeBMatcher.getCartesianX() && graphNodeBTestFirst.getCartesianY() == graphNodeBMatcher.getCartesianY()))
 			{
 				temp.push_back(unfRoads[i].getId());
 				temp.push_back(unfRoads[j].getId());
 				array.push_back( temp);
 			}			
-			if ((graphNodeBTestFirst.getCartesianX() == graphNodeAMatcher.getCartesianX() && graphNodeBTestFirst.getCartesianY() == graphNodeAMatcher.getCartesianY()))
+			else if ((graphNodeBTestFirst.getCartesianX() == graphNodeAMatcher.getCartesianX() && graphNodeBTestFirst.getCartesianY() == graphNodeAMatcher.getCartesianY()))
 			{
 				temp.push_back(unfRoads[i].getId());
 				temp.push_back(unfRoads[j].getId());
 				array.push_back( temp);
 			}
-			temp.clear();
+			
 		}	
 	}
 }
+
 }
 
 //find all paths
@@ -238,11 +243,7 @@ void map::printAllPaths(){
 		cout << k << ": ";
 		for(int l=0; l<allPaths[k].size(); l++){
 			cout << allPaths[k][l] << " ";
-			for (int i=0; i<unfRoads.size(); i++)
-				if (unfRoads[i].getId() == allPaths[k][l])
-					length = length + unfRoads[allPaths[k][l]-1].getLength();				
 		}
-		//cout << "\t\tTotalLength:" << length << endl;
 		length=0;
 		speed=0;
 	}
@@ -262,70 +263,71 @@ int map::checkTurn(int roadNode1Id, int roadNode2Id){
 					graphNode B2 = unfRoads[j].getgraphNodeB();
 					if ((A1.getCartesianX() == A2.getCartesianX() && A1.getCartesianY() == A2.getCartesianY())) 
 					{			
-						int deltaY = (A2.getCartesianY() - A1.getCartesianY());
-						int deltaX = (A2.getCartesianX() - A1.getCartesianX());
-						float angle = atan2(deltaY,deltaX) * 180 / PI;
-						if (angle == 180)
+						float deltaY = (B2.getCartesianY() - B1.getCartesianY());
+						float deltaX = (B2.getCartesianX() - B1.getCartesianX());
+						int len1 = unfRoads[i].getLength();
+						int len2 = unfRoads[j].getLength();
+						int len3 = sqrt(deltaY*deltaY+deltaX*deltaX);
+						int result = (len1*len1 + len2*len2 - len3*len3 ) / (2*len1*len2);
+						if (result == -1)
 						{
-						//	cout << "no turn";
 							return 0;
 						}
 						else {
-						//	cout << "turn";
 							return 1;
 						}
 					}
 					if ((A1.getCartesianX() == B2.getCartesianX() && A1.getCartesianY() == B2.getCartesianY()))
 					{
-						int deltaY = (B2.getCartesianY() - A1.getCartesianY());
-						int deltaX = (B2.getCartesianX() - A1.getCartesianX());
-						float angle = atan2(deltaY,deltaX) * 180 / PI;
-						if (angle == 180)
+						float deltaY = (A2.getCartesianY() - B1.getCartesianY());
+						float deltaX = (A2.getCartesianX() - B1.getCartesianX());
+						int len1 = unfRoads[i].getLength();
+						int len2 = unfRoads[j].getLength();
+						int len3 = sqrt(deltaY*deltaY+deltaX*deltaX);
+						int result = (len1*len1 + len2*len2 - len3*len3 ) / (2*len1*len2);
+						if (result == -1)
 						{
-						//	cout << "no turn";
 							return 0;
 						}
 						else {
-						//	cout << "turn";
 							return 1;
 						}	
 					}			
 					if ((B1.getCartesianX() == B2.getCartesianX() && B1.getCartesianY() == B2.getCartesianY()))
 					{
-						int deltaY = (B2.getCartesianY() - B1.getCartesianY());
-						int deltaX = (B2.getCartesianX() - B1.getCartesianX());
-						float angle = atan2(deltaY,deltaX) * 180 / PI;
-						if (angle == 180)
+						float deltaY = (A2.getCartesianY() - A1.getCartesianY());
+						float deltaX = (A2.getCartesianX() - A1.getCartesianX());
+						int len1 = unfRoads[i].getLength();
+						int len2 = unfRoads[j].getLength();
+						int len3 = sqrt(deltaY*deltaY+deltaX*deltaX);
+						int result = (len1*len1 + len2*len2 - len3*len3 ) / (2*len1*len2);
+						if (result == -1)
 						{
-					//		cout << "no turn";
 							return 0;
 						}
 						else {
-						//	cout << "turn";
 							return 1;
 						}
 					}			
 					if ((B1.getCartesianX() == A2.getCartesianX() && B1.getCartesianY() == A2.getCartesianY()))
 					{
-					//	cout << "checking " << roadNode1Id<<"and " <<roadNode2Id;
-						int deltaY = (A2.getCartesianY() - B1.getCartesianY());
-						int deltaX = (A2.getCartesianX() - B1.getCartesianX());
-
-						float angle = atan2(deltaY,deltaX) * 180 / PI;
-					//	cout <<"\nangle is " << angle;
-						if (angle == 180)
+						float deltaY = abs(B2.getCartesianY() - A1.getCartesianY());
+						float deltaX = abs(B2.getCartesianX() - A1.getCartesianX());
+						int len1 = unfRoads[i].getLength();
+						int len2 = unfRoads[j].getLength();
+						int len3 = sqrt(deltaY*deltaY+deltaX*deltaX);
+						int result = (len1*len1 + len2*len2 - len3*len3 ) / (2*len1*len2);
+						//when -1 is straight
+						if (result == -1)
 						{
-						//	cout << "no turn";
 							return 0;
 						}
 						else {
-						//	cout << "turn";
 							return 1;
 						}
 					}
 					else {
-						//cout << "not connected";
-						return -1;
+						return 0;
 					}
 				}
 }
@@ -368,15 +370,6 @@ void map::findTrafficLights(){
 		}
 	}
 }
-/*
-bool map::inTrafficLights(graphNode g)
-{
-	for(int i=0; i<trafficlights.size(); i++)
-		if((g.getCartesianX() == trafficlights[i]->getCartesianX()) && (g.getCartesianY() == trafficlights[i]->getCartesianY()) )
-			return true;
-	return false;
-}
-*/
 
 roadNode *map::getroadNode(int id) {
 	for (int i=0; i<unfRoads.size(); i++) {

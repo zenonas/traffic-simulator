@@ -25,28 +25,19 @@ void *engine(void *arguments)
   struct thread_arguments *thread_args;
   thread_args = (struct thread_arguments *)arguments;
   vector<queue <vehicle *> > entryQueues;
+  entryQueues.resize(thread_args->mymap.getunfRoads().size());
   thread_args->CurrentTimer=0;
   for (int i=0; i<thread_args->mymap.entryGraphNodes.size(); i++) {
    	queue<vehicle *> currentQueue;
    	entryQueues.push_back(currentQueue);
   }
 
-  vehicle *v1= new vehicle(0,2,3,thread_args->mymap);
-  vehicle *v2= new vehicle(1,2,3,thread_args->mymap);
-  //vehicle *v3= new vehicle(2,4,3,thread_args->mymap);
-  v1->setType(1);
-  v2->setType(0);
-  v1->setDriverType(0);
-  v2->setDriverType(2);
 
-  //v3->setType(1);
-  thread_args->VWaitingQ.push(v1);
-  thread_args->VWaitingQ.push(v2);
-  //thread_args->VWaitingQ.push(v3);
   while (!thread_args->finished && thread_args->mymap.created == true) {
   	int max_entries = 0;
   	//CARS TAKEN OFF THE WAITING QUEUE AND SPLIT INTO THE SEPARATE QUEUES
   	while(!thread_args->VWaitingQ.empty() && max_entries < thread_args->max_no_vehicles) {
+      
     	vehicle *currentV = thread_args->VWaitingQ.front();
   	 	int queueToBe = currentV->getEntryPoint();
   	 	entryQueues[queueToBe-1].push(currentV);
@@ -56,89 +47,42 @@ void *engine(void *arguments)
 	//START HANDLING THE ENTRY QUEUES
   	int maxe = 0;
   	for (int k=0; k<entryQueues.size(); k++) { //iterate through all the entry queues
+
   		while(!entryQueues[k].empty() && maxe < 10) { //this will never be easily empty need to have && carfits() here
-  			if (thread_args->vehiclesInEngine.size() == 0) { //first time car definitely fits
-  				thread_args->vehiclesInEngine.push_back(entryQueues[k].front());
-  				entryQueues[k].pop();
-  				//updatePosition(thread_args->vehiclesInEngine.back());
+  		  if (thread_args->vehiclesInEngine.size() == 0) { //first time car definitely fits
+  			   thread_args->vehiclesInEngine.push_back(entryQueues[k].front());
+  				 entryQueues[k].pop();
+  				 //updatePosition(vehiclesInEngine.back());
   			} 
         else if (carFits(entryQueues[k].front(), thread_args->vehiclesInEngine, thread_args->mymap.getunfRoads(), thread_args)) {
-				  thread_args->vehiclesInEngine.push_back(entryQueues[k].front());
-				  entryQueues[k].pop();
-				//updatePosition(thread_args->vehiclesInEngine.back());
+            thread_args->vehiclesInEngine.push_back(entryQueues[k].front());
+				    entryQueues[k].pop();
+				    //updatePosition(vehiclesInEngine.back());
 				}
 			
 			maxe++;
-		}
-	}
+		  }
+	 }
+
    vector<roadNode> roads = thread_args->mymap.getunfRoads();
    // test code for vehicle accelerate
    for(int q=0; q<thread_args->vehiclesInEngine.size(); q++){
       vector<int> myPaths = thread_args->vehiclesInEngine[q]->getPath();
-     // cout << "\n\nMY PATH IS : ";
-      for (int h=0; h<myPaths.size(); h++) {
-         //cout << myPaths[h] << " ";
-      }
       int result;
-      for (int p=0; p<thread_args->vehiclesInEngine.size(); p++)
-        if (p!=q)
-          if (checkVehicle(thread_args->vehiclesInEngine[q],thread_args->vehiclesInEngine[p]))
-            {
-              struct Position pos1;
-              struct Position pos2;
-              
-              pos1 = thread_args->vehiclesInEngine[q]->getCurrentPosition();
-              pos2 = thread_args->vehiclesInEngine[p]->getCurrentPosition();
-              
-              int speed1 = thread_args->vehiclesInEngine[q]->getCurrentSpeed();
-              int speed2 = thread_args->vehiclesInEngine[p]->getCurrentSpeed();
-              int length=1000;
-              if (pos1.roadNodeID>0){
-                if (pos1.roadNodeID == pos2.roadNodeID)
-                    if (pos2.p>pos1.p)
-                      length = pos2.p - pos1.p;
-                    else
-                      length = 1000;
-
-                if (length<400){
-                 // cout <<"\t\t\tlength < 400";
-                  result = accelerate(thread_args->vehiclesInEngine[q], -1, thread_args);
-                 // cout << "Car " << q<< " DECELERATED ONCE MY NEW POSITION IS: " << thread_args->vehiclesInEngine[q]->getCurrentPosition().roadNodeID << " at position " << thread_args->vehiclesInEngine[q]->getCurrentPosition().p << "\n";
-                }
-                else if (length<600){
-                 // cout <<"\t\t\tlength < 600";
-                  result = accelerate(thread_args->vehiclesInEngine[q], 0, thread_args);
-                 // cout << "Car " << q<< " MOVE ONCE MY NEW POSITION IS: " << thread_args->vehiclesInEngine[q]->getCurrentPosition().roadNodeID << " at position " << thread_args->vehiclesInEngine[q]->getCurrentPosition().p << "\n";
-                }
-                else{ 
-                  result = accelerate(thread_args->vehiclesInEngine[q], 2, thread_args);
-                  //cout << "Car " << q<< " ACCELERATED ONCE MY NEW POSITION IS: " << thread_args->vehiclesInEngine[q]->getCurrentPosition().roadNodeID << " at position " << thread_args->vehiclesInEngine[q]->getCurrentPosition().p << "\n";
-                }
-                /*
-                if (result == 0) {
-                  //cout << "vgika apo to xarti car Which car p???" <<p<< endl;
-                  thread_args->vehiclesInEngine.erase(thread_args->vehiclesInEngine.begin()+q);
-                } */
-               break;
-              }
-              else {
-                result = accelerate(thread_args->vehiclesInEngine[q], 2, thread_args);
-                //cout << "Car " << q<< " acc once my new position is: " << thread_args->vehiclesInEngine[q]->getCurrentPosition().roadNodeID << " at position " << thread_args->vehiclesInEngine[q]->getCurrentPosition().p << "\n";
-              }
-            }
-        
+      result = accelerate(thread_args->vehiclesInEngine[q],thread_args->vehiclesInEngine[q], 1, thread_args);
       if (result == 0) {
-         thread_args->vehiclesInEngine.erase(thread_args->vehiclesInEngine.begin()+q);
+        delete thread_args->vehiclesInEngine[q];
+        thread_args->vehiclesInEngine.erase(thread_args->vehiclesInEngine.begin()+q);
       }
-
    }    
    // test code for vehicle accelerate ends
-  
-    // intersection?
+   
+    // check for intersections
+   //we have to store them in an array and find a way to handle them
+   //such as vehicles from different roadnodes and how to handle all together
    /*vector<roadNode> ROADS = thread_args->mymap.getunfRoads();
-
-   for(int i=0; i<thread_args->vehiclesInEngine.size(); i++){    
-      vector<int> vehiclePath = thread_args->vehiclesInEngine[i]->getPath();
+   for(int i=0; i<vehiclesInEngine.size(); i++){    
+      vector<int> vehiclePath = vehiclesInEngine[i]->getPath();
       vector<int> intersection;
          for (int p=0; p<vehiclePath.size(); p++){
             for (int k=0; k<ROADS.size(); k++)
@@ -168,7 +112,6 @@ void *engine(void *arguments)
          }
       }*/
 
-
 // traffic lights handling
 for(int i=0; i<thread_args->mymap.trafficlights.size(); i++) {
   if (thread_args->mymap.trafficlights[i]->getTimer()!=0) {
@@ -184,29 +127,29 @@ for(int i=0; i<thread_args->mymap.trafficlights.size(); i++) {
   }
   //cout << "TESTING CURRENT LIGHT: " << i << " STATE: " <<thread_args->mymap.trafficlights[i].getState() << endl;
 }
+  
+/* TEST CODE FOR nextObstacle()
   int dist = 0;
   int retType = 0;
   void *obs = nextObstacle(v2,dist,retType,thread_args);  
-  if (thread_args->debug) cout << "dist: " << dist << " retType: " << retType << endl;  
+  
   if (retType == 1) {
     vehicle *v = (vehicle *)obs;
-    cout << "ime to car: " << v->vehi_id << endl;
   } else if (retType == 2) {
     trafficLight *tl = (trafficLight *)obs;
-    cout << "ime to state" << tl->getState() << endl;
   }
-
+Test code ends */
   thread_args->tick_count++;
   thread_args->CurrentTimer++;
   // Update time in engine for every single vehicle
-for(int k=0; k<thread_args->vehiclesInEngine.size(); k++){
-  int newtimer = thread_args->vehiclesInEngine[k]->getTimer() + 1;
-  thread_args->vehiclesInEngine[k]->setTimer(newtimer);
-}
+  for(int k=0; k<thread_args->vehiclesInEngine.size(); k++){
+    int newtimer = thread_args->vehiclesInEngine[k]->getTimer() + 1;
+    thread_args->vehiclesInEngine[k]->setTimer(newtimer);
+  }
   thread_args->simstats.CaptureStatistics(&thread_args->mymap, thread_args->vehiclesInEngine);
   sleep(1);
-}
 
+}
 
    pthread_exit(NULL);
    
