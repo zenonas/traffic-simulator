@@ -40,6 +40,45 @@ vector<vehicle *> carsInRoadNode(vector<vehicle *> vIengine, roadNode road) {
 	return carList;
 }
 
+int myNewLaneIs(Position cPos, roadNode nextRoad,void *arguments) {
+	struct thread_arguments *thread_args;
+	thread_args = (struct thread_arguments *)arguments;
+	roadNode *cRoad = thread_args->mymap.getroadNode(cPos.roadNodeID);
+	/*
+	// find non common graphnodes
+	if ((cRoad->getgraphNodeA().getCartesianX() == nextRoad.getgraphNodeB().getCartesianX()) || (cRoad->getgraphNodeA().getCartesianY() < nextRoad.getgraphNodeB().getCartesianY())){
+		return cPos.lane;
+	if ((cRoad->getgraphNodeA().getCartesianX() == nextRoad.getgraphNodeA().getCartesianX() && cRoad->getgraphNodeA().getCartesianY() == nextRoad.getgraphNodeA().getCartesianY())) 
+	{
+		if (cRoad->getgraphNodeB().getCartesianX() > nextRoad.getgraphNodeB().getCartesianX())
+			return 1;
+		else if (cRoad->getgraphNodeB().getCartesianY() > nextRoad.getgraphNodeB().getCartesianY()
+
+	}
+	else if ((cRoad->getgraphNodeA().getCartesianX() == nextRoad.getgraphNodeA().getCartesianX() && cRoad->getgraphNodeA().getCartesianY() == nextRoad.getgraphNodeA().getCartesianY()))
+	{
+					
+	}			
+	else if ((cRoad->getgraphNodeB().getCartesianX() == nextRoad.getgraphNodeA().getCartesianX() && cRoad->getgraphNodeB().getCartesianY() == nextRoad.getgraphNodeA().getCartesianY()))
+	{
+			
+	}			
+	else if ((cRoad->getgraphNodeB().getCartesianX() == nextRoad.getgraphNodeA().getCartesianX() && cRoad->getgraphNodeB().getCartesianY() == nextRoad.getgraphNodeA().getCartesianY()))
+	{
+					
+	}			
+
+	
+	} else if (entry->getgraphNodeA().getCartesianX() > entry->getgraphNodeB().getCartesianX()){
+		return 1;
+	} else if (entry->getgraphNodeA().getCartesianY() < entry->getgraphNodeB().getCartesianY()) {
+		return 0;
+	} else if (entry->getgraphNodeA().getCartesianY() > entry->getgraphNodeB().getCartesianY()){
+		return 1;
+	}
+*/
+}
+
 int calcDistance(vector<int> Path, Position p1, Position p2, void *arguments) {
 	struct thread_arguments *thread_args;
 	thread_args = (struct thread_arguments *)arguments;
@@ -280,6 +319,21 @@ int accelerate(vehicle *v,vehicle *s, float aRate, void *arguments) {
 			}
 		}
 	}
+	else if (cSpeed>roadMaxSpeed && roadMaxSpeed > 0)
+{
+if (thread_args->mymap.checkTurn(newPos.roadNodeID, nextRoadID) && (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength()-newPos.p)<cSpeed*ticktime)
+{
+float remain = 0;
+remain = (cSpeed-11)/v->getAcceleration();
+distanceToTravel = cSpeed*(ticktime-remain) + (remain*remain*(0-aRate))/2.0 + remain*11;	 v->setCurrentSpeed(11);
+}
+else {
+float remain = (cSpeed - roadMaxSpeed) / aRate;
+distanceToTravel = remain*cSpeed + (remain*remain*(0-aRate))/2;
+distanceToTravel = distanceToTravel + (ticktime-remain)*roadMaxSpeed;
+v->setCurrentSpeed(roadMaxSpeed);
+}
+}
 		//if is not in the map what???
 	else if (roadMaxSpeed<0)
 		{
@@ -291,7 +345,7 @@ int accelerate(vehicle *v,vehicle *s, float aRate, void *arguments) {
 	if (newPos.roadNodeID == -1) {
 		newPos.roadNodeID = vPath[0];
 		newPos.p = 0;
-		newPos.lane = 0;
+		newPos.lane = v->getCurrentPosition().lane;
 	}
 	
 	int z=0;

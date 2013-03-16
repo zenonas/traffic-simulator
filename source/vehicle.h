@@ -49,6 +49,7 @@ public:
    void printPath();
    void setTimer(int t);
    int getTimer();
+   int decideLane(map mymap);
    int vehi_id;
 
 private:

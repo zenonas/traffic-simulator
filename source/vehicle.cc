@@ -21,11 +21,11 @@ vehicle::vehicle(int id, int entryP, int exitP, map mymap){
 	setEntryPoint(entryP);
 	setExitPoint(exitP);
 	calculatePath(mymap);
-
 	//initialize current pos
 	CurrentPosition.roadNodeID = -1;
 	CurrentPosition.p=0;
-	CurrentPosition.lane=0;
+	CurrentPosition.lane = decideLane(mymap);
+	//cout << "I return pos lane: " << CurrentPosition.lane << endl;
 	Timer = 0;
 }
 
@@ -39,6 +39,19 @@ void vehicle::setEntryPoint(int entryP){
 
 void vehicle::setExitPoint(int exitP){
 	exitPoint=exitP;
+}
+
+int vehicle::decideLane(map mymap){
+	roadNode *entry = mymap.getroadNode(entryPoint);
+	if (entry->getgraphNodeA().getCartesianX() < entry->getgraphNodeB().getCartesianX()){
+		return 0;
+	} else if (entry->getgraphNodeA().getCartesianX() > entry->getgraphNodeB().getCartesianX()){
+		return 1;
+	} else if (entry->getgraphNodeA().getCartesianY() < entry->getgraphNodeB().getCartesianY()) {
+		return 0;
+	} else if (entry->getgraphNodeA().getCartesianY() > entry->getgraphNodeB().getCartesianY()){
+		return 1;
+	}
 }
 
 int vehicle::getEntryPoint(){
