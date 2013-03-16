@@ -32,17 +32,17 @@ void *engine(void *arguments)
    	queue<vehicle *> currentQueue;
    	entryQueues.push_back(currentQueue);
   }
-
+/*
   vehicle *v1= new vehicle(0,2,3,thread_args->mymap);
   v1->setType(2);
   v1->setDriverType(0);
   vehicle *v2= new vehicle(1,1,3,thread_args->mymap);
   v2->setType(0);
-  v2->setDriverType(2);
+  v2->setDriverType(2);*/
  
   cout <<endl;
-  thread_args->VWaitingQ.push(v1);
-  thread_args->VWaitingQ.push(v2);
+  //thread_args->VWaitingQ.push(v1);
+  //thread_args->VWaitingQ.push(v2);
   //thread_args->VWaitingQ.push(v3);
   while (!thread_args->finished && thread_args->mymap.created == true) {
   	int max_entries = 0;
@@ -81,9 +81,11 @@ void *engine(void *arguments)
       for (int h=0; h<myPaths.size(); h++) {
          //cout << myPaths[h] << " ";
       }
+
       int result;
+      result = accelerate(vehiclesInEngine[q],vehiclesInEngine[q], 1, thread_args);
      //check every other vehicle
-      for (int p=0; p<vehiclesInEngine.size(); p++)
+     /* for (int p=0; p<vehiclesInEngine.size(); p++)
         if (p!=q){
           //if they have same path
           if (checkVehicle(vehiclesInEngine[q],vehiclesInEngine[p]))
@@ -127,21 +129,22 @@ void *engine(void *arguments)
                     result = accelerate(vehiclesInEngine[q],vehiclesInEngine[p], -1, thread_args);
                    }
                   else
-                  result = accelerate(vehiclesInEngine[q],vehiclesInEngine[p], 2, thread_args);
+                  result = accelerate(vehiclesInEngine[q],vehiclesInEngine[p], 1, thread_args);
                 }
                 //can't cover the distance
                 else{ 
-                  result = accelerate(vehiclesInEngine[q],vehiclesInEngine[p], 2, thread_args);
+                  result = accelerate(vehiclesInEngine[q],vehiclesInEngine[p], 1, thread_args);
                  }             
               }
               //not in the map yet
               else {
-                result = accelerate(vehiclesInEngine[q],vehiclesInEngine[p], 2, thread_args);
+                result = accelerate(vehiclesInEngine[q],vehiclesInEngine[p], 1, thread_args);
                }
             }
           }
-            else
-            result = accelerate(vehiclesInEngine[q],vehiclesInEngine[p], 2, thread_args); 
+          */
+         //   else
+       //     result = accelerate(vehiclesInEngine[q],vehiclesInEngine[p], 1, thread_args); 
       if (result == 0) {
          vehiclesInEngine.erase(vehiclesInEngine.begin()+q);
          vehicle *v1= new vehicle(3,1,2,thread_args->mymap);

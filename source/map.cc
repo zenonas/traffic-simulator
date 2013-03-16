@@ -149,6 +149,11 @@ void map::ReadXMLFile()
 			if (flagB == 0 && unfRoads[i].getgraphNodeB().getType() == 1) entryGraphNodes.push_back(unfRoads[i].getgraphNodeB());
  		}
  	}
+ 	cout << "-------- ENTRY NODES----------" << endl;
+ 	for(int k=0; k<entryGraphNodes.size(); k++){
+ 		cout << entryGraphNodes[k].getCartesianX() << " " << entryGraphNodes[k].getCartesianY() << endl;
+ 	}
+ 	cout << "------------------------------" << endl;
 }
 
 void map::findConnectedRoadNodes(){
