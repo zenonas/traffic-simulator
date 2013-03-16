@@ -51,3 +51,13 @@ void trafficLight::setCartesianY(int y){
 int trafficLight::getCartesianY(){
 	return CartesianY;
 }
+
+void trafficLight::setPos(int roadnode, int p, int lane){
+	LightPos.roadNodeID = roadnode;
+	LightPos.p = p;
+	LightPos.lane = lane;
+}
+
+Position trafficLight::getPos(){
+	return LightPos;
+}

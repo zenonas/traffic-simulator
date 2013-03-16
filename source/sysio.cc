@@ -87,6 +87,9 @@ void updateTrafficLights(WINDOW *trafficlstats, void *arguments){
             mvwaddstr(trafficlstats,2+i,30,"GREEN");
             wattroff(trafficlstats,COLOR_PAIR(3));
         }
+        mvwprintw(trafficlstats,2+i,40,"%d",thread_args->mymap.trafficlights[i]->getPos().roadNodeID);
+        mvwprintw(trafficlstats,2+i,45,"%d",thread_args->mymap.trafficlights[i]->getPos().p);
+        mvwprintw(trafficlstats,2+i,55,"%d",thread_args->mymap.trafficlights[i]->getPos().lane);
     }
 
 

@@ -13,6 +13,7 @@ Copyright (c) King's College London
 #define RTRAFFICL_H
 
 #include "th_structs.h"
+#include "map.h"
 
 void ResetTrafficLights(void *arguments);
 void ToggleLights(void *arguments);

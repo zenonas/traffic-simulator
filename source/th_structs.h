@@ -33,6 +33,7 @@ struct thread_arguments {
       int CurrentTimer;
       statistics simstats;
       bool debug;
+      vector<vehicle *> vehiclesInEngine;
 
 };
 

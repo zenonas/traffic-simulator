@@ -11,11 +11,24 @@ Copyright (c) King's College London
 #include "th_structs.h"
 #include "map.h"
 #include "vehicle.h"
+#include "trafficLight.h"
+#include "position.h"
 #include <vector>
 #include <iostream>
 #include <math.h>
+#include <stdlib.h>
 
 using namespace std;
+
+int checkVehicle(vehicle *veh1, vehicle *veh2){
+     vector<int> vehicle1Path = veh1->getPath();
+     vector<int> vehicle2Path = veh2->getPath();
+     for (int p=0; p<vehicle1Path.size(); p++)
+            for (int q=0; q<vehicle2Path.size(); q++)                           
+               if (vehicle1Path[p]==vehicle2Path[q])	
+               		return 1;
+    return 0;
+}
 
 vector<vehicle *> carsInRoadNode(vector<vehicle *> vIengine, roadNode road) {
 	vector<vehicle *> carList;
@@ -27,6 +40,109 @@ vector<vehicle *> carsInRoadNode(vector<vehicle *> vIengine, roadNode road) {
 	return carList;
 }
 
+int calcDistance(vector<int> Path, Position p1, Position p2, void *arguments) {
+	struct thread_arguments *thread_args;
+	thread_args = (struct thread_arguments *)arguments;
+	int distance = 0;
+	for (int i=0; i<Path.size(); i++) {
+		if (Path[i] == p1.roadNodeID && Path[i] != p2.roadNodeID) {
+			roadNode *cRoad = thread_args->mymap.getroadNode(Path[i]);
+			distance = cRoad->getLength() - p1.p;
+		} 
+		if (Path[i] != p1.roadNodeID && Path[i] != p2.roadNodeID) {
+			roadNode *cRoad = thread_args->mymap.getroadNode(Path[i]);
+			distance += cRoad->getLength();
+		}
+		if (Path[i] != p1.roadNodeID && Path[i] == p2.roadNodeID) {
+			roadNode *cRoad = thread_args->mymap.getroadNode(Path[i]);
+			distance += (cRoad->getLength() - p2.p);
+			break;
+		}
+		if (Path[i] == p1.roadNodeID && Path[i] == p2.roadNodeID) {
+			distance = p1.p - p2.p;
+			break;
+		}
+	}
+	return distance;
+}
+
+void *nextObstacle(vehicle *cv, int &dist, int &retType, void *arguments) {
+	void *obs;
+	struct thread_arguments *thread_args;
+	thread_args = (struct thread_arguments *)arguments;
+	int minDistanceV = 0;
+	int minDistanceTL = 0;
+	bool nextVfound = false;
+	bool nextTLfound = false;
+	vehicle *vObs;
+	trafficLight *tlObs;
+	vector<int> cvPath = cv->getPath();
+	int startat;
+	// first find current point in path
+	for (int x=0; x<cvPath.size(); x++) {
+		if (cv->getCurrentPosition().roadNodeID == cvPath[x]) {
+			startat = x;
+			break;
+		}
+	}
+	// from current point move on
+	for (int p=startat; p<cvPath.size(); p++) {
+		int tempDistanceV;
+		roadNode *road = thread_args->mymap.getroadNode(cvPath[p]);
+		vector<vehicle *> roadNodeVehicles = carsInRoadNode(thread_args->vehiclesInEngine, *road);
+		if (cv->getCurrentPosition().roadNodeID == cvPath[p] && roadNodeVehicles.size() > 1) {
+			for (int y=0; y<roadNodeVehicles.size(); y++) {
+				if (cv->vehi_id != roadNodeVehicles[y]->vehi_id) {
+					tempDistanceV = calcDistance(cv->getPath(), cv->getCurrentPosition(), roadNodeVehicles[y]->getCurrentPosition(), thread_args);
+					if (tempDistanceV < minDistanceV){
+						minDistanceV = abs(tempDistanceV);
+						vObs = roadNodeVehicles[y];
+						nextVfound = true;
+					}
+				}
+			}
+		} else if (roadNodeVehicles.size() > 0) {
+			for (int y=0; y<roadNodeVehicles.size(); y++) {
+				if (cv->vehi_id != roadNodeVehicles[y]->vehi_id) {
+					tempDistanceV = calcDistance(cv->getPath(), cv->getCurrentPosition(), roadNodeVehicles[y]->getCurrentPosition(), thread_args);
+					if (tempDistanceV < minDistanceV){
+						minDistanceV = abs(tempDistanceV);
+						vObs = roadNodeVehicles[y];
+						nextVfound = true;
+					}
+				}
+			}
+		}
+		/*if (nextVfound == true) break;
+			else minDistanceV += road->getLength(); //prepi na afereso to p tou vehicle an ine to current road node*/
+	}
+	for (int tl=startat; tl<cvPath.size(); tl++){
+		for (int z = 0; z<thread_args->mymap.trafficlights.size(); z++) {
+			if (thread_args->mymap.trafficlights[z]->getPos().roadNodeID == cvPath[tl] && thread_args->mymap.trafficlights[z]->getState() == 0)  {
+				int tempDistanceTL = calcDistance(cv->getPath(), cv->getCurrentPosition(), thread_args->mymap.trafficlights[z]->getPos(), thread_args);
+				if (tempDistanceTL < minDistanceTL){
+					minDistanceTL = abs(tempDistanceTL);
+					tlObs = thread_args->mymap.trafficlights[z];
+					nextTLfound = true;
+				}
+			}
+		}
+	}
+	if ((minDistanceV < minDistanceTL && nextVfound == true) || (minDistanceTL == 0 && nextVfound == true)) {
+		dist = minDistanceV;
+		retType = 1;
+		obs = vObs;
+	} else if ((minDistanceV > minDistanceTL && nextTLfound == true) || (minDistanceV == 0 && nextTLfound == true)) {
+		dist = minDistanceTL;
+		retType = 2;
+		obs = tlObs;
+	} else {
+		dist = 0;
+		retType = 0;
+		obs = NULL;
+	}
+	return obs;
+}
 
 
 bool carFits(vehicle *v, vector<vehicle *> vIengine,vector<roadNode> allRoads,void *arguments) {
@@ -55,7 +171,7 @@ bool carFits(vehicle *v, vector<vehicle *> vIengine,vector<roadNode> allRoads,vo
 				closestP = vehiclesInMyRoadNode[k]->getCurrentPosition().p;
 			}
 		}
-		int spaceAvailable = allRoads[1].getLength() - closestP;
+		int spaceAvailable = closestP;
 		int safeDist = 1;
 
 		if (v->getType() == 0) {
@@ -272,15 +388,5 @@ int moveVehicle(vehicle *v, void *arguments) {
 	v->setCurrentPosition(newPos);
 	return 1;
 }*/
-
-int checkVehicle(vehicle *veh1, vehicle *veh2){
-     vector<int> vehicle1Path = veh1->getPath();
-     vector<int> vehicle2Path = veh2->getPath();
-     for (int p=0; p<vehicle1Path.size(); p++)
-            for (int q=0; q<vehicle2Path.size(); q++)                           
-               if (vehicle1Path[p]==vehicle2Path[q])	
-               		return 1;
-    return 0;
-   }
 
  

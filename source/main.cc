@@ -53,8 +53,8 @@ int main (int argc, char *argv[])
 
    if (th_args.debug) cout << "Traffic Lights: " << th_args.mymap.trafficlights.size() << endl;
 
-/* MULTI-THREADING STUFF */
 
+/* MULTI-THREADING STUFF */
    int rc;
    pthread_t threads[3];
    pthread_attr_t attr;

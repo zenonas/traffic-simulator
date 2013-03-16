@@ -10,9 +10,6 @@ Copyright (c) King's College London
 */
 
 #include "vehicle.h"
-#include "roadNode.h"
-#include "graphNode.h"
-#include "map.h"
 #include <iostream>
 #include <vector>
 using namespace std;

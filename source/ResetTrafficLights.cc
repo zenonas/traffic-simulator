@@ -9,9 +9,7 @@ Description: This file includes functions pertaining to the Traffic Light switch
 Copyright (c) King's College London
 */
 
-#include "th_structs.h"
 #include "ResetTrafficLights.h"
-#include "map.h"
 #include <vector>
 #include <iostream>
 

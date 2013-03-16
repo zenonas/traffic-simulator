@@ -12,18 +12,11 @@ Copyright (c) King's College London
 #ifndef vehicle_h
 #define vehicle_h
 
-#include "graphNode.h"
-#include "roadNode.h"
 #include "map.h"
+#include "position.h"
 #include <vector>
 
 using namespace std;
-struct Position
-    {
-        int roadNodeID;
-        int lane;
-        int p;
-    };
 
 class vehicle
 {

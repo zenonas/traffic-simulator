@@ -9,7 +9,6 @@ Description: This file includes the implementation for the map class.
 Copyright (c) King's College London
 */
 #include "map.h"
-#include "trafficLight.h"
 #include <string.h>
 #include <stdio.h>
 #include <iostream>
@@ -348,24 +347,28 @@ void map::findTrafficLights(){
 
 	for (int i=0; i<unfRoads.size(); i++)
 	{
-		trafficLight *newTrafficLight = new trafficLight();
 		a = unfRoads[i].getgraphNodeA();
 		b = unfRoads[i].getgraphNodeB();
 		
-		if(a.getType()==1 || a.getType()==2)
-			newTrafficLight->setCartesianX(a.getCartesianX());
-			newTrafficLight->setCartesianY(a.getCartesianY());
-			if(!inTrafficLights(a))
-				trafficlights.push_back(newTrafficLight);
-		if(b.getType()==1 || b.getType()==2)
-			newTrafficLight->setCartesianX(b.getCartesianX());
-			newTrafficLight->setCartesianY(b.getCartesianY());
-			if(!inTrafficLights(b))
-				trafficlights.push_back(newTrafficLight);
+		if(a.getType()==2) {
+			trafficLight *newTrafficLightA = new trafficLight();
+			newTrafficLightA->setCartesianX(a.getCartesianX());
+			newTrafficLightA->setCartesianY(a.getCartesianY());
+			newTrafficLightA->setTimer(a.getTimer());
+			newTrafficLightA->setPos(unfRoads[i].getId(), unfRoads[i].getLength(), 0);
+			trafficlights.push_back(newTrafficLightA);
+		}
+		if(b.getType()==2) {
+			trafficLight *newTrafficLightB = new trafficLight();
+			newTrafficLightB->setCartesianX(b.getCartesianX());
+			newTrafficLightB->setCartesianY(b.getCartesianY());
+			newTrafficLightB->setTimer(b.getTimer());
+			newTrafficLightB->setPos(unfRoads[i].getId(), 0, 0);
+			trafficlights.push_back(newTrafficLightB);
+		}
 	}
-
 }
-
+/*
 bool map::inTrafficLights(graphNode g)
 {
 	for(int i=0; i<trafficlights.size(); i++)
@@ -373,6 +376,7 @@ bool map::inTrafficLights(graphNode g)
 			return true;
 	return false;
 }
+*/
 
 roadNode *map::getroadNode(int id) {
 	for (int i=0; i<unfRoads.size(); i++) {
