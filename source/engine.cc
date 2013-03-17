@@ -65,11 +65,38 @@ void *engine(void *arguments)
 	 }
 
    vector<roadNode> roads = thread_args->mymap.getunfRoads();
-   // test code for vehicle accelerate
    for(int q=0; q<thread_args->vehiclesInEngine.size(); q++){
-      vector<int> myPaths = thread_args->vehiclesInEngine[q]->getPath();
       int result;
-      result = accelerate(thread_args->vehiclesInEngine[q],thread_args->vehiclesInEngine[q], 1, thread_args);
+      int distance=0;
+      int type=0;
+      void *obstacle;
+      obstacle = nextObstacle(thread_args->vehiclesInEngine[q], distance, type, thread_args); 
+
+      // if vehicle check the distance. If less than the distance that you can cover then reduce speed
+      if (type==1)
+      {
+         if (distance < (thread_args->vehiclesInEngine[q]->getMaxSpeed()*thread_args->sleep_time))
+            {
+             // cout << "\nVehicle: "<< distance;
+              result = accelerate(thread_args->vehiclesInEngine[q], obstacle, -1, distance, thread_args);        
+          } else
+           result = accelerate(thread_args->vehiclesInEngine[q], obstacle, 1, distance, thread_args);
+      }
+      // if traffic lights then reduce to 0 speed
+      else if (type==2){
+          if (distance < (thread_args->vehiclesInEngine[q]->getMaxSpeed()*thread_args->sleep_time))
+              {
+                result = accelerate(thread_args->vehiclesInEngine[q], obstacle, 0, distance, thread_args);    
+               // cout << "\nTraffic Lights: "<<distance;
+              } 
+          else
+             result = accelerate(thread_args->vehiclesInEngine[q], obstacle, 1, distance, thread_args);
+      }
+      //move with the maximum possible speed
+      else
+        result = accelerate(thread_args->vehiclesInEngine[q], obstacle, 1, distance, thread_args);
+      
+      //vehicle out of map
       if (result == 0) {
         delete thread_args->vehiclesInEngine[q];
         thread_args->vehiclesInEngine.erase(thread_args->vehiclesInEngine.begin()+q);

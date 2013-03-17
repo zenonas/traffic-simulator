@@ -4,15 +4,15 @@
 <Road name="1">
 <Node name="1a">
 <Point name="x">0</Point>
-<Point name="y">0</Point>
-<Type name="type">0</Type>
+<Point name="y">-1500</Point>
+<Type name="type">1</Type>
 <Timer name="timer">-1</Timer>
 </Node>
 
 <Node name="1b">
 <Point name="x">0</Point>
-<Point name="y">-1500</Point>
-<Type name="type">1</Type>
+<Point name="y">0</Point>
+<Type name="type">2</Type>
 <Timer name="timer">3</Timer>
 </Node>
 <Length name="length">1500</Length>
@@ -22,15 +22,15 @@
 <Road name="2">
 <Node name="2a">
 <Point name="x">0</Point>
-<Point name="y">0</Point>
-<Type name="type">0</Type>
+<Point name="y">2000</Point>
+<Type name="type">1</Type>
 <Timer name="timer">-1</Timer>
 </Node>
 
 <Node name="2b">
 <Point name="x">0</Point>
-<Point name="y">2000</Point>
-<Type name="type">1</Type>
+<Point name="y">0</Point>
+<Type name="type">2</Type>
 <Timer name="timer">3</Timer>
 </Node>
 <Length name="length">2000</Length>
@@ -39,16 +39,16 @@
 
 <Road name="3">
 <Node name="3a">
-<Point name="x">0</Point>
+<Point name="x">-2000</Point>
 <Point name="y">0</Point>
-<Type name="type">0</Type>
+<Type name="type">1</Type>
 <Timer name="timer">-1</Timer>
 </Node>
 
 <Node name="3b">
-<Point name="x">-2000</Point>
+<Point name="x">0</Point>
 <Point name="y">0</Point>
-<Type name="type">1</Type>
+<Type name="type">2</Type>
 <Timer name="timer">3</Timer>
 </Node>
 <Length name="length">2000</Length>
@@ -58,15 +58,15 @@
 <Node name="4a">
 <Point name="x">0</Point>
 <Point name="y">0</Point>
-<Type name="type">0</Type>
-<Timer name="timer">-1</Timer>
+<Type name="type">2</Type>
+<Timer name="timer">3</Timer>
 </Node>
 
 <Node name="4b">
 <Point name="x">1000</Point>
 <Point name="y">0</Point>
 <Type name="type">2</Type>
-<Timer name="timer">5</Timer>
+<Timer name="timer">3</Timer>
 </Node>
 <Length name="length">1000</Length>
 <MaxSpeed name="maxSpeed">17</MaxSpeed>
@@ -175,8 +175,8 @@
 <Node name="10b">
 <Point name="x">1000</Point>
 <Point name="y">-1000</Point>
-<Type name="type">2</Type>
-<Timer name="timer">5</Timer>
+<Type name="type">0</Type>
+<Timer name="timer">-1</Timer>
 </Node>
 <Length name="length">1000</Length>
 <MaxSpeed name="maxSpeed">17</MaxSpeed>
