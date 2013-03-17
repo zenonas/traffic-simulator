@@ -38,7 +38,6 @@ map::~map(){
 
 void map::ReadXMLFile()
 {
-	//cout << "Parsing my road..." << endl;
 	xml_document<> doc;
 	xml_node<> * root_node;
 	// Read the xml file into a vector
