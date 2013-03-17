@@ -94,7 +94,7 @@ void *generator(void *arguments)
 			sleep(1);
 		}
 		sleep(1);
-		if (thread_args->vehiclesInEngine.size() == 10) {
+		if (thread_args->vehiclesInEngine.size() == 20) {
 			pthread_exit(NULL);
 		}
 
