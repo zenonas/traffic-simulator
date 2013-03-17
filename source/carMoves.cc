@@ -130,7 +130,10 @@ int myNewLaneIs(Position cPos, roadNode *nextRoad,void *arguments) {
 			return cPos.lane;
 		else if (cRoad->getgraphNodeA().getCartesianX() == nextRoad->getgraphNodeA().getCartesianX()&& cRoad->getgraphNodeA().getCartesianY() < nextRoad->getgraphNodeA().getCartesianY())
 			return cPos.lane;
-	}
+	} else if ((cRoad->getgraphNodeA().getCartesianX() == nextRoad->getgraphNodeA().getCartesianX() && cRoad->getgraphNodeA().getCartesianY() == nextRoad->getgraphNodeA().getCartesianY()) && (cRoad->getgraphNodeB().getCartesianX() == nextRoad->getgraphNodeB().getCartesianX() && cRoad->getgraphNodeB().getCartesianY() == nextRoad->getgraphNodeB().getCartesianY()))
+	{
+		return cPos.lane;
+	} 
 	
 
 }
@@ -150,7 +153,7 @@ int calcDistance(vector<int> Path, Position p1, Position p2, void *arguments) {
 		}
 		if (Path[i] != p1.roadNodeID && Path[i] == p2.roadNodeID) {
 			roadNode *cRoad = thread_args->mymap.getroadNode(Path[i]);
-			distance += (cRoad->getLength() - p2.p);
+			distance += p2.p;
 			break;
 		}
 		if (Path[i] == p1.roadNodeID && Path[i] == p2.roadNodeID) {
@@ -166,13 +169,14 @@ void *nextObstacle(vehicle *cv, int &dist, int &retType, void *arguments) {
 	struct thread_arguments *thread_args;
 	thread_args = (struct thread_arguments *)arguments;
 	int minDistanceV = 0;
-	int minDistanceTL = 0;
+	int minDistanceTL = 10000;
 	bool nextVfound = false;
 	bool nextTLfound = false;
 	vehicle *vObs;
 	trafficLight *tlObs;
 	vector<int> cvPath = cv->getPath();
 	int startat;
+	int correctLane;
 	// first find current point in path
 	for (int x=0; x<cvPath.size(); x++) {
 		if (cv->getCurrentPosition().roadNodeID == cvPath[x]) {
@@ -185,9 +189,12 @@ void *nextObstacle(vehicle *cv, int &dist, int &retType, void *arguments) {
 		int tempDistanceV;
 		roadNode *road = thread_args->mymap.getroadNode(cvPath[p]);
 		vector<vehicle *> roadNodeVehicles = carsInRoadNode(thread_args->vehiclesInEngine, *road);
+
+		correctLane = myNewLaneIs(cv->getCurrentPosition(), road, thread_args);
+
 		if (cv->getCurrentPosition().roadNodeID == cvPath[p] && roadNodeVehicles.size() > 1) {
 			for (int y=0; y<roadNodeVehicles.size(); y++) {
-				if (cv->vehi_id != roadNodeVehicles[y]->vehi_id) {
+				if (cv->vehi_id != roadNodeVehicles[y]->vehi_id && roadNodeVehicles[y]->getCurrentPosition().lane == correctLane) {
 					tempDistanceV = calcDistance(cv->getPath(), cv->getCurrentPosition(), roadNodeVehicles[y]->getCurrentPosition(), thread_args);
 					if (tempDistanceV < minDistanceV){
 						minDistanceV = abs(tempDistanceV);
@@ -198,7 +205,7 @@ void *nextObstacle(vehicle *cv, int &dist, int &retType, void *arguments) {
 			}
 		} else if (roadNodeVehicles.size() > 0) {
 			for (int y=0; y<roadNodeVehicles.size(); y++) {
-				if (cv->vehi_id != roadNodeVehicles[y]->vehi_id) {
+				if (cv->vehi_id != roadNodeVehicles[y]->vehi_id && roadNodeVehicles[y]->getCurrentPosition().lane == correctLane) {
 					tempDistanceV = calcDistance(cv->getPath(), cv->getCurrentPosition(), roadNodeVehicles[y]->getCurrentPosition(), thread_args);
 					if (tempDistanceV < minDistanceV){
 						minDistanceV = abs(tempDistanceV);
@@ -210,8 +217,9 @@ void *nextObstacle(vehicle *cv, int &dist, int &retType, void *arguments) {
 		}
 	}
 	for (int tl=startat; tl<cvPath.size(); tl++){
+		correctLane = myNewLaneIs(cv->getCurrentPosition(), thread_args->mymap.getroadNode(cvPath[tl]), thread_args);
 		for (int z = 0; z<thread_args->mymap.trafficlights.size(); z++) {
-			if (thread_args->mymap.trafficlights[z]->getPos().roadNodeID == cvPath[tl] && thread_args->mymap.trafficlights[z]->getState() == 0)  {
+			if (thread_args->mymap.trafficlights[z]->getPos().roadNodeID == cvPath[tl] && thread_args->mymap.trafficlights[z]->getState() == 0 &&  thread_args->mymap.trafficlights[z]->getPos().lane == correctLane)  {
 				int tempDistanceTL = calcDistance(cv->getPath(), cv->getCurrentPosition(), thread_args->mymap.trafficlights[z]->getPos(), thread_args);
 				if (tempDistanceTL < minDistanceTL){
 					minDistanceTL = abs(tempDistanceTL);

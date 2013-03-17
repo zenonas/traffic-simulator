@@ -52,10 +52,22 @@ int trafficLight::getCartesianY(){
 	return CartesianY;
 }
 
-void trafficLight::setPos(int roadnode, int p, int lane){
-	LightPos.roadNodeID = roadnode;
-	LightPos.p = p;
+void trafficLight::setLane(int lane) {
 	LightPos.lane = lane;
+}
+
+void trafficLight::setPos(roadNode *roadnode){
+	LightPos.roadNodeID = roadnode->getId();
+	LightPos.p = roadnode->getLength();
+	if (roadnode->getgraphNodeA().getCartesianX() < roadnode->getgraphNodeB().getCartesianX()){
+		LightPos.lane = 0;
+	} else if (roadnode->getgraphNodeA().getCartesianX() > roadnode->getgraphNodeB().getCartesianX()){
+		LightPos.lane = 1;
+	} else if (roadnode->getgraphNodeA().getCartesianY() < roadnode->getgraphNodeB().getCartesianY()) {
+		LightPos.lane = 0;
+	} else if (roadnode->getgraphNodeA().getCartesianY() > roadnode->getgraphNodeB().getCartesianY()){
+		LightPos.lane = 1;
+	}
 }
 
 Position trafficLight::getPos(){

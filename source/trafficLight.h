@@ -12,6 +12,7 @@ Copyright (c) King's College London
 #define trafficLight_h
 
 #include "position.h"
+#include "roadNode.h"
 
 using namespace std;
 
@@ -31,7 +32,8 @@ public:
    int getState();
    void setTimer(int timer);
    int getTimer();
-   void setPos(int roadnode, int p, int lane);
+   void setPos(roadNode *roadnode);
+   void setLane(int lane);
    Position getPos();
 
 private:

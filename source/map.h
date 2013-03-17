@@ -41,6 +41,7 @@ private:
    void findTrafficLights();
    bool inTrafficLights(graphNode g);
    void findAllPaths();
+   void adjustTLlane(trafficLight *tlA, trafficLight *tlB);
    void find_childs(vector<int> initial,int value,vector<vector<int> > array);
    vector<vector<int> > array;
    vector<roadNode > unfRoads;

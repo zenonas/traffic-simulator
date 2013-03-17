@@ -342,31 +342,52 @@ vector<roadNode> map::getunfRoads(){
 	return unfRoads;
 }
 
+void map::adjustTLlane(trafficLight *tlA, trafficLight *tlB){
+	if (tlA->getCartesianX() > tlB->getCartesianX()) {
+		tlA->setLane(0);
+		tlB->setLane(1);
+	} else if (tlA->getCartesianX() < tlB->getCartesianX()) {
+		tlA->setLane(1);
+		tlB->setLane(0);
+	} else if (tlA->getCartesianY() > tlB->getCartesianY()) {
+		tlA->setLane(0);
+		tlB->setLane(1);
+	} else if (tlA->getCartesianY() < tlB->getCartesianY()) {
+		tlA->setLane(1);
+		tlB->setLane(0);
+	}
+}
 
 void map::findTrafficLights(){
 	graphNode a;
 	graphNode b;
-
 	for (int i=0; i<unfRoads.size(); i++)
 	{
 		a = unfRoads[i].getgraphNodeA();
 		b = unfRoads[i].getgraphNodeB();
-		
+		int count = 0;
+		trafficLight *newTrafficLightA;
+		trafficLight *newTrafficLightB;
 		if(a.getType()==2) {
-			trafficLight *newTrafficLightA = new trafficLight();
+			newTrafficLightA = new trafficLight();
 			newTrafficLightA->setCartesianX(a.getCartesianX());
 			newTrafficLightA->setCartesianY(a.getCartesianY());
 			newTrafficLightA->setTimer(a.getTimer());
-			newTrafficLightA->setPos(unfRoads[i].getId(), unfRoads[i].getLength(), 0);
+			newTrafficLightA->setPos(getroadNode(unfRoads[i].getId()));
 			trafficlights.push_back(newTrafficLightA);
+			count++;
 		}
 		if(b.getType()==2) {
-			trafficLight *newTrafficLightB = new trafficLight();
+			newTrafficLightB = new trafficLight();
 			newTrafficLightB->setCartesianX(b.getCartesianX());
 			newTrafficLightB->setCartesianY(b.getCartesianY());
 			newTrafficLightB->setTimer(b.getTimer());
-			newTrafficLightB->setPos(unfRoads[i].getId(), 0, 0);
+			newTrafficLightB->setPos(getroadNode(unfRoads[i].getId()));
 			trafficlights.push_back(newTrafficLightB);
+			count++;
+		}
+		if (count == 2) {
+			adjustTLlane(newTrafficLightA,newTrafficLightB);
 		}
 	}
 }
