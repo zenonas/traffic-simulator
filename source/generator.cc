@@ -35,8 +35,8 @@ void *generator(void *arguments)
   		STEP 2 GET NUMBER OF VEHICLES/H NEEDED
 		BASED ON THIS DECIDE HOW MANY VEHICLES NEED TO BE CREATE IN THIS ROUND
 	*/
-		int actual_no_to_create = rand() % thread_args->max_no_vehicles + 4;
-		actual_no_to_create = 2;
+		int actual_no_to_create = rand() % thread_args->max_no_vehicles + 2;
+		actual_no_to_create = 5;
 		//if (actual_no_to_create > 4) actual_no_to_create = 0; //maybe revise
 		vehicle* temp_array[actual_no_to_create];
 		//cout << "I SHALL CREATE: " << actual_no_to_create << endl;
@@ -90,11 +90,9 @@ void *generator(void *arguments)
 			curr_vehicles--;
 		}	
 	/* STEP 7: WAIT FOR THE NEXT ROUND DEPENDING ON THE SLEEP TIMER */
-		while (thread_args->sim_paused) {
-			sleep(1);
-		}
 		sleep(1);
-		if (thread_args->vehiclesInEngine.size() == 30) {
+		break;
+		if (thread_args->vehiclesInEngine.size()<30) {
 			pthread_exit(NULL);
 		}
 

@@ -373,6 +373,3 @@ v->setCurrentSpeed(roadMaxSpeed);
 	v->setCurrentPosition(newPos);
 	return 1;
 }
-
-
- 
