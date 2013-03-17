@@ -34,6 +34,7 @@ struct thread_arguments {
       statistics simstats;
       bool debug;
       vector<vehicle *> vehiclesInEngine;
+      bool sim_paused;
 
 };
 

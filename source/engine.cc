@@ -148,6 +148,9 @@ Test code ends */
     thread_args->vehiclesInEngine[k]->setTimer(newtimer);
   }
   thread_args->simstats.CaptureStatistics(&thread_args->mymap, thread_args->vehiclesInEngine);
+  while (thread_args->sim_paused) {
+    sleep(1);
+  }
   sleep(1);
 
 }

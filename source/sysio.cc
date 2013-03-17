@@ -321,7 +321,7 @@ void *inout(void *arguments)
     mvwaddstr(helpbox,3,2,"1. Set No of Vehicles ");
     mvwaddstr(helpbox,4,2,"2. Set Vehicle Type Ratio ");
     mvwaddstr(helpbox,5,2,"3. Set Driver Type Ratio ");
-    mvwaddstr(helpbox,3,35,"4. Stop Simulation ");
+    mvwaddstr(helpbox,3,35,"4. Pause Simulation ");
     mvwaddstr(helpbox,4,35,"5. Change Granularity");
     mvwaddstr(helpbox,5,35,"6. Toggle Traffic Lights");
     mvwaddstr(helpbox,3,65,"H. Close this menu");
@@ -402,7 +402,14 @@ void *inout(void *arguments)
             }
             if (ch == '2') break; 
             if (ch == '3') break;
-            if (ch == '4') break;
+            if (ch == '4') {
+                if (!thread_args->sim_paused) {
+                    thread_args->sim_paused = true;
+                } else {
+                    thread_args->sim_paused = false;
+                }
+            }
+
             if (ch == '5') {
                 if (cmdbox_status == 0) {
                     hide_panel(panels[3]);

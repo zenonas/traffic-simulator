@@ -90,6 +90,9 @@ void *generator(void *arguments)
 			curr_vehicles--;
 		}	
 	/* STEP 7: WAIT FOR THE NEXT ROUND DEPENDING ON THE SLEEP TIMER */
+		while (thread_args->sim_paused) {
+			sleep(1);
+		}
 		sleep(1);
 		if (thread_args->vehiclesInEngine.size() == 30) {
 			pthread_exit(NULL);
