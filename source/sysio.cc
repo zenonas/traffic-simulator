@@ -54,11 +54,8 @@ void updateVehicles(WINDOW *vehiclestats, void *arguments) {
         }        
         mvwprintw(vehiclestats,2+i,80,"roadNode: %d",vehiclesInEngine[i]->getCurrentPosition().roadNodeID);
         mvwprintw(vehiclestats,2+i,93,"Pos: %d", vehiclesInEngine[i]->getCurrentPosition().p);
-        if (vehiclesInEngine[i]->getCurrentPosition().lane == 0)
-            mvwaddstr(vehiclestats,2+i,103,"Lane: L");
-        else
-            mvwaddstr(vehiclestats,2+i,103,"Lane: R");
-        mvwprintw(vehiclestats,2+i,113,"%d s",vehiclesInEngine[i]->getTimer()*thread_args->sleep_time);
+        mvwprintw(vehiclestats,2+i,105,"Lane: %d", vehiclesInEngine[i]->getCurrentPosition().lane);
+        mvwprintw(vehiclestats,2+i,117,"%d s",vehiclesInEngine[i]->getTimer()*thread_args->sleep_time);
 
         //mvwprintw(vehiclestats,2+i,51,"%d",vehiclesInEngine[i]->getCurrentSpeed()); //path
         //vwprintw(vehiclestats,2+i,16,"%d",vehiclesInEngine[i]->getCurrentSpeed());  //current position in path
@@ -335,7 +332,7 @@ void *inout(void *arguments)
     mvwaddstr(vehiclestats,1,50,"ExitP");
     mvwaddstr(vehiclestats,1,60,"Path");
     mvwaddstr(vehiclestats,1,80,"Current Position in Path");
-    mvwaddstr(vehiclestats,1,113,"Timer");
+    mvwaddstr(vehiclestats,1,116,"Timer");
 
     mvwaddstr(roadnodestats,1,2,"RoadNode ID");
     mvwaddstr(roadnodestats,1,15,"Length");

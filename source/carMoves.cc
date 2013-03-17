@@ -40,43 +40,99 @@ vector<vehicle *> carsInRoadNode(vector<vehicle *> vIengine, roadNode road) {
 	return carList;
 }
 
-int myNewLaneIs(Position cPos, roadNode nextRoad,void *arguments) {
+int myNewLaneIs(Position cPos, roadNode *nextRoad,void *arguments) {
 	struct thread_arguments *thread_args;
 	thread_args = (struct thread_arguments *)arguments;
 	roadNode *cRoad = thread_args->mymap.getroadNode(cPos.roadNodeID);
-	/*
-	// find non common graphnodes
-	if ((cRoad->getgraphNodeA().getCartesianX() == nextRoad.getgraphNodeB().getCartesianX()) || (cRoad->getgraphNodeA().getCartesianY() < nextRoad.getgraphNodeB().getCartesianY())){
-		return cPos.lane;
-	if ((cRoad->getgraphNodeA().getCartesianX() == nextRoad.getgraphNodeA().getCartesianX() && cRoad->getgraphNodeA().getCartesianY() == nextRoad.getgraphNodeA().getCartesianY())) 
-	{
-		if (cRoad->getgraphNodeB().getCartesianX() > nextRoad.getgraphNodeB().getCartesianX())
-			return 1;
-		else if (cRoad->getgraphNodeB().getCartesianY() > nextRoad.getgraphNodeB().getCartesianY()
-
-	}
-	else if ((cRoad->getgraphNodeA().getCartesianX() == nextRoad.getgraphNodeA().getCartesianX() && cRoad->getgraphNodeA().getCartesianY() == nextRoad.getgraphNodeA().getCartesianY()))
-	{
-					
-	}			
-	else if ((cRoad->getgraphNodeB().getCartesianX() == nextRoad.getgraphNodeA().getCartesianX() && cRoad->getgraphNodeB().getCartesianY() == nextRoad.getgraphNodeA().getCartesianY()))
-	{
-			
-	}			
-	else if ((cRoad->getgraphNodeB().getCartesianX() == nextRoad.getgraphNodeA().getCartesianX() && cRoad->getgraphNodeB().getCartesianY() == nextRoad.getgraphNodeA().getCartesianY()))
-	{
-					
-	}			
-
 	
-	} else if (entry->getgraphNodeA().getCartesianX() > entry->getgraphNodeB().getCartesianX()){
-		return 1;
-	} else if (entry->getgraphNodeA().getCartesianY() < entry->getgraphNodeB().getCartesianY()) {
-		return 0;
-	} else if (entry->getgraphNodeA().getCartesianY() > entry->getgraphNodeB().getCartesianY()){
-		return 1;
+	// find non common graphnodes
+	
+	if ((cRoad->getgraphNodeA().getCartesianX() == nextRoad->getgraphNodeA().getCartesianX() && cRoad->getgraphNodeA().getCartesianY() == nextRoad->getgraphNodeA().getCartesianY())) 
+	{
+		if (cRoad->getgraphNodeB().getCartesianX() > nextRoad->getgraphNodeB().getCartesianX() && cRoad->getgraphNodeB().getCartesianY() > nextRoad->getgraphNodeB().getCartesianY())
+			return cPos.lane;
+		else if (cRoad->getgraphNodeB().getCartesianX() < nextRoad->getgraphNodeB().getCartesianX()&& cRoad->getgraphNodeB().getCartesianY() < nextRoad->getgraphNodeB().getCartesianY())
+			return cPos.lane;
+		else if (cRoad->getgraphNodeB().getCartesianX() > nextRoad->getgraphNodeB().getCartesianX()&& cRoad->getgraphNodeB().getCartesianY() < nextRoad->getgraphNodeB().getCartesianY())
+			if (cPos.lane == 1) return 0;
+				else return 1;
+		else if (cRoad->getgraphNodeB().getCartesianX() < nextRoad->getgraphNodeB().getCartesianX()&& cRoad->getgraphNodeB().getCartesianY() > nextRoad->getgraphNodeB().getCartesianY())
+			if (cPos.lane == 1) return 0;
+				else return 1;
+		else if (cRoad->getgraphNodeB().getCartesianX() < nextRoad->getgraphNodeB().getCartesianX()&& cRoad->getgraphNodeB().getCartesianY() == nextRoad->getgraphNodeB().getCartesianY())
+			return cPos.lane;
+		else if (cRoad->getgraphNodeB().getCartesianX() == nextRoad->getgraphNodeB().getCartesianX()&& cRoad->getgraphNodeB().getCartesianY() > nextRoad->getgraphNodeB().getCartesianY())
+			return cPos.lane;
+		else if (cRoad->getgraphNodeB().getCartesianX() > nextRoad->getgraphNodeB().getCartesianX()&& cRoad->getgraphNodeB().getCartesianY() == nextRoad->getgraphNodeB().getCartesianY())
+			return cPos.lane;
+		else if (cRoad->getgraphNodeB().getCartesianX() == nextRoad->getgraphNodeB().getCartesianX()&& cRoad->getgraphNodeB().getCartesianY() < nextRoad->getgraphNodeB().getCartesianY())
+			return cPos.lane;
 	}
-*/
+	else if((cRoad->getgraphNodeA().getCartesianX() == nextRoad->getgraphNodeB().getCartesianX() && cRoad->getgraphNodeA().getCartesianY() == nextRoad->getgraphNodeB().getCartesianY())) 
+	{
+		if (cRoad->getgraphNodeB().getCartesianX() > nextRoad->getgraphNodeA().getCartesianX() && cRoad->getgraphNodeB().getCartesianY() > nextRoad->getgraphNodeA().getCartesianY())
+			return cPos.lane;
+		else if (cRoad->getgraphNodeB().getCartesianX() < nextRoad->getgraphNodeA().getCartesianX()&& cRoad->getgraphNodeB().getCartesianY() < nextRoad->getgraphNodeA().getCartesianY())
+			return cPos.lane;
+		else if (cRoad->getgraphNodeB().getCartesianX() > nextRoad->getgraphNodeA().getCartesianX()&& cRoad->getgraphNodeB().getCartesianY() < nextRoad->getgraphNodeA().getCartesianY())
+			if (cPos.lane == 1) return 0;
+				else return 1;
+		else if (cRoad->getgraphNodeB().getCartesianX() < nextRoad->getgraphNodeA().getCartesianX()&& cRoad->getgraphNodeB().getCartesianY() > nextRoad->getgraphNodeA().getCartesianY())
+			if (cPos.lane == 1) return 0;
+				else return 1;
+		else if (cRoad->getgraphNodeB().getCartesianX() < nextRoad->getgraphNodeA().getCartesianX()&& cRoad->getgraphNodeB().getCartesianY() == nextRoad->getgraphNodeA().getCartesianY())
+			return cPos.lane;
+		else if (cRoad->getgraphNodeB().getCartesianX() == nextRoad->getgraphNodeA().getCartesianX()&& cRoad->getgraphNodeB().getCartesianY() > nextRoad->getgraphNodeA().getCartesianY())
+			return cPos.lane;
+		else if (cRoad->getgraphNodeB().getCartesianX() > nextRoad->getgraphNodeA().getCartesianX()&& cRoad->getgraphNodeB().getCartesianY() == nextRoad->getgraphNodeA().getCartesianY())
+			return cPos.lane;
+		else if (cRoad->getgraphNodeB().getCartesianX() == nextRoad->getgraphNodeA().getCartesianX()&& cRoad->getgraphNodeB().getCartesianY() < nextRoad->getgraphNodeA().getCartesianY())
+			return cPos.lane;
+	}
+	else if((cRoad->getgraphNodeB().getCartesianX() == nextRoad->getgraphNodeA().getCartesianX() && cRoad->getgraphNodeB().getCartesianY() == nextRoad->getgraphNodeA().getCartesianY())) 
+	{
+		if (cRoad->getgraphNodeA().getCartesianX() > nextRoad->getgraphNodeB().getCartesianX() && cRoad->getgraphNodeA().getCartesianY() > nextRoad->getgraphNodeB().getCartesianY())
+			return cPos.lane;
+		else if (cRoad->getgraphNodeA().getCartesianX() < nextRoad->getgraphNodeB().getCartesianX()&& cRoad->getgraphNodeA().getCartesianY() < nextRoad->getgraphNodeB().getCartesianY())
+			return cPos.lane;
+		else if (cRoad->getgraphNodeA().getCartesianX() > nextRoad->getgraphNodeB().getCartesianX()&& cRoad->getgraphNodeA().getCartesianY() < nextRoad->getgraphNodeB().getCartesianY())
+			if (cPos.lane == 1) return 0;
+				else return 1;
+		else if (cRoad->getgraphNodeA().getCartesianX() < nextRoad->getgraphNodeB().getCartesianX()&& cRoad->getgraphNodeA().getCartesianY() > nextRoad->getgraphNodeB().getCartesianY())
+			if (cPos.lane == 1) return 0;
+				else return 1;
+		else if (cRoad->getgraphNodeA().getCartesianX() < nextRoad->getgraphNodeB().getCartesianX()&& cRoad->getgraphNodeA().getCartesianY() == nextRoad->getgraphNodeB().getCartesianY())
+			return cPos.lane;
+		else if (cRoad->getgraphNodeA().getCartesianX() == nextRoad->getgraphNodeB().getCartesianX()&& cRoad->getgraphNodeA().getCartesianY() > nextRoad->getgraphNodeB().getCartesianY())
+			return cPos.lane;
+		else if (cRoad->getgraphNodeA().getCartesianX() > nextRoad->getgraphNodeB().getCartesianX()&& cRoad->getgraphNodeA().getCartesianY() == nextRoad->getgraphNodeB().getCartesianY())
+			return cPos.lane;
+		else if (cRoad->getgraphNodeA().getCartesianX() == nextRoad->getgraphNodeB().getCartesianX()&& cRoad->getgraphNodeA().getCartesianY() < nextRoad->getgraphNodeB().getCartesianY())
+			return cPos.lane;
+	}
+	else if ((cRoad->getgraphNodeB().getCartesianX() == nextRoad->getgraphNodeB().getCartesianX() && cRoad->getgraphNodeB().getCartesianY() == nextRoad->getgraphNodeB().getCartesianY())) 
+	{
+		if (cRoad->getgraphNodeA().getCartesianX() > nextRoad->getgraphNodeA().getCartesianX() && cRoad->getgraphNodeA().getCartesianY() > nextRoad->getgraphNodeA().getCartesianY())
+			return cPos.lane;
+		else if (cRoad->getgraphNodeA().getCartesianX() < nextRoad->getgraphNodeA().getCartesianX()&& cRoad->getgraphNodeA().getCartesianY() < nextRoad->getgraphNodeA().getCartesianY())
+			return cPos.lane;
+		else if (cRoad->getgraphNodeA().getCartesianX() > nextRoad->getgraphNodeA().getCartesianX()&& cRoad->getgraphNodeA().getCartesianY() < nextRoad->getgraphNodeA().getCartesianY())
+			if (cPos.lane == 1) return 0;
+				else return 1;
+		else if (cRoad->getgraphNodeA().getCartesianX() < nextRoad->getgraphNodeA().getCartesianX()&& cRoad->getgraphNodeA().getCartesianY() > nextRoad->getgraphNodeA().getCartesianY())
+			if (cPos.lane == 1) return 0;
+				else return 1;
+		else if (cRoad->getgraphNodeA().getCartesianX() < nextRoad->getgraphNodeA().getCartesianX()&& cRoad->getgraphNodeA().getCartesianY() == nextRoad->getgraphNodeA().getCartesianY())
+			return cPos.lane;
+		else if (cRoad->getgraphNodeA().getCartesianX() == nextRoad->getgraphNodeA().getCartesianX()&& cRoad->getgraphNodeA().getCartesianY() > nextRoad->getgraphNodeA().getCartesianY())
+			return cPos.lane;
+		else if (cRoad->getgraphNodeA().getCartesianX() > nextRoad->getgraphNodeA().getCartesianX()&& cRoad->getgraphNodeA().getCartesianY() == nextRoad->getgraphNodeA().getCartesianY())
+			return cPos.lane;
+		else if (cRoad->getgraphNodeA().getCartesianX() == nextRoad->getgraphNodeA().getCartesianX()&& cRoad->getgraphNodeA().getCartesianY() < nextRoad->getgraphNodeA().getCartesianY())
+			return cPos.lane;
+	}
+	
+
 }
 
 int calcDistance(vector<int> Path, Position p1, Position p2, void *arguments) {
@@ -360,6 +416,7 @@ v->setCurrentSpeed(roadMaxSpeed);
 				else return 0; 
 			newPos.roadNodeID = vPath[z];
 			newPos.p = 0;
+			newPos.lane = myNewLaneIs(v->getCurrentPosition(),thread_args->mymap.getroadNode(vPath[z]),thread_args);
 			break;
 			}		
 		}

@@ -48,7 +48,7 @@ void *engine(void *arguments)
   	int maxe = 0;
   	for (int k=0; k<entryQueues.size(); k++) { //iterate through all the entry queues
 
-  		while(!entryQueues[k].empty() && maxe < 10) { //this will never be easily empty need to have && carfits() here
+  		while(!entryQueues[k].empty() && maxe < 10 && thread_args->vehiclesInEngine.size() < 1) { //this will never be easily empty need to have && carfits() here
   		  if (thread_args->vehiclesInEngine.size() == 0) { //first time car definitely fits
   			   thread_args->vehiclesInEngine.push_back(entryQueues[k].front());
   				 entryQueues[k].pop();
