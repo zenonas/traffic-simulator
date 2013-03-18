@@ -17,7 +17,7 @@ LDFLAG = -lpthread -lncurses -lpanel
 
 all: trafficsim
 
-trafficsim: bin/main.o bin/position.o bin/vehicle.o bin/map.o bin/graphNode.o bin/roadNode.o bin/statistics.o bin/sysio.o bin/ResetTrafficLights.o bin/trafficLight.o bin/vehicleUpdate.o
+trafficsim: bin/main.o bin/position.o bin/vehicle.o bin/map.o bin/graphNode.o bin/roadNode.o bin/statistics.o bin/sysio.o bin/ResetTrafficLights.o bin/trafficLight.o bin/vehicleUpdate.o bin/carMoves.o
 	@echo "Linking everything together to produce the Traffic Simulation System"
 	$(CC) -o $@ $^ $(LDFLAG)
 
@@ -33,6 +33,9 @@ bin/vehicle.o: source/vehicle.cc
 	$(CC) -c $(CFLAGS) -o $@ $< 
 
 bin/map.o: source/map.cc
+	$(CC) -c $(CFLAGS) -o $@ $< 
+
+bin/carMoves.o: source/carMoves.cc
 	$(CC) -c $(CFLAGS) -o $@ $< 
 
 bin/sysio.o: source/sysio.cc

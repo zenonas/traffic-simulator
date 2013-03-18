@@ -2,21 +2,14 @@
 
 Group Project 7CCSMGPR - Team B
 Created: 5/3/2013
-Updated: 8/3/2013
+Updated: 17/3/2013
 File: carMoves.cc
 Description: This file contains functions used for the movement of vehicles
 Copyright (c) King's College London
 
 */
-#include "th_structs.h"
-#include "map.h"
-#include "vehicle.h"
-#include "trafficLight.h"
-#include "position.h"
-#include <vector>
-#include <iostream>
-#include <math.h>
-#include <stdlib.h>
+
+#include "carMoves.h"
 
 using namespace std;
 
@@ -38,6 +31,7 @@ vector<vehicle *> carsInRoadNode(vector<vehicle *> vIengine, roadNode road) {
 			carList.push_back(vIengine[i]);
 	}
 	return carList;
+
 }
 
 int myNewLaneIs(Position cPos, roadNode *nextRoad,void *arguments) {
@@ -195,6 +189,89 @@ void *nextObstacle(vehicle *cv, int &dist, int &retType, void *arguments) {
 		correctLane = myNewLaneIs(cv->getCurrentPosition(), road, thread_args);
 		if (cv->getCurrentPosition().roadNodeID == cvPath[p] && roadNodeVehicles.size() > 1) {
 			for (int y=0; y<roadNodeVehicles.size(); y++) {
+				if (cv->vehi_id != roadNodeVehicles[y]->vehi_id && roadNodeVehicles[y]->getCurrentPosition().lane != correctLane) {
+					tempDistanceV = calcDistance(cv->getPath(), cv->getCurrentPosition(), roadNodeVehicles[y]->getCurrentPosition(), thread_args);
+					if (tempDistanceV < minDistanceV){
+						minDistanceV = abs(tempDistanceV);
+						vObs = roadNodeVehicles[y];
+						nextVfound = true;
+					}
+				}
+			}
+		} else if (roadNodeVehicles.size() > 0) {
+			for (int y=0; y<roadNodeVehicles.size(); y++) {
+				if (cv->vehi_id != roadNodeVehicles[y]->vehi_id && roadNodeVehicles[y]->getCurrentPosition().lane != correctLane) {
+					tempDistanceV = calcDistance(cv->getPath(), cv->getCurrentPosition(), roadNodeVehicles[y]->getCurrentPosition(), thread_args);
+					if (tempDistanceV < minDistanceV){
+						minDistanceV = abs(tempDistanceV);
+						vObs = roadNodeVehicles[y];
+						nextVfound = true;
+					}
+				}
+			}
+		}
+
+	}
+	for (int tl=startat; tl<cvPath.size(); tl++){
+		correctLane = myNewLaneIs(cv->getCurrentPosition(), thread_args->mymap.getroadNode(cvPath[tl]), thread_args);
+
+		for (int z = 0; z<thread_args->mymap.trafficlights.size(); z++) {
+			if (thread_args->mymap.trafficlights[z]->getPos().roadNodeID == cvPath[tl] && thread_args->mymap.trafficlights[z]->getState() == 0 &&  thread_args->mymap.trafficlights[z]->getPos().lane != correctLane)  {
+				int tempDistanceTL = calcDistance(cv->getPath(), cv->getCurrentPosition(), thread_args->mymap.trafficlights[z]->getPos(), thread_args);
+				if (tempDistanceTL < minDistanceTL){
+					minDistanceTL = abs(tempDistanceTL);
+					tlObs = thread_args->mymap.trafficlights[z];
+					nextTLfound = true;
+				}
+			}
+		}
+
+	}
+	if ((minDistanceV < minDistanceTL && nextVfound == true) || (minDistanceTL == 0 && nextVfound == true)) {
+		dist = minDistanceV;
+		retType = 1;
+		obs = vObs;
+	} else if ((minDistanceV > minDistanceTL && nextTLfound == true) || (minDistanceV == 0 && nextTLfound == true)) {
+		dist = minDistanceTL;
+		retType = 2;
+		obs = tlObs;
+	} else {
+		dist = 0;
+		retType = 0;
+		obs = NULL;
+	}
+	return obs;
+	
+}
+
+void *nextObstacleOL(vehicle *cv, int &dist, int &retType, void *arguments) {
+	void *obs;
+	struct thread_arguments *thread_args;
+	thread_args = (struct thread_arguments *)arguments;
+	int minDistanceV = 0;
+	int minDistanceTL = 10000;
+	bool nextVfound = false;
+	bool nextTLfound = false;
+	vehicle *vObs;
+	trafficLight *tlObs;
+	vector<int> cvPath = cv->getPath();
+	int startat;
+	int correctLane;
+	// first find current point in path
+	for (int x=0; x<cvPath.size(); x++) {
+		if (cv->getCurrentPosition().roadNodeID == cvPath[x]) {
+			startat = x;
+			break;
+		}
+	}
+	// from current point move on
+	for (int p=startat; p<cvPath.size(); p++) {
+		int tempDistanceV;
+		roadNode *road = thread_args->mymap.getroadNode(cvPath[p]);
+		vector<vehicle *> roadNodeVehicles = carsInRoadNode(thread_args->vehiclesInEngine, *road);
+		correctLane = myNewLaneIs(cv->getCurrentPosition(), road, thread_args);
+		if (cv->getCurrentPosition().roadNodeID == cvPath[p] && roadNodeVehicles.size() > 1) {
+			for (int y=0; y<roadNodeVehicles.size(); y++) {
 				if (cv->vehi_id != roadNodeVehicles[y]->vehi_id && roadNodeVehicles[y]->getCurrentPosition().lane == correctLane) {
 					tempDistanceV = calcDistance(cv->getPath(), cv->getCurrentPosition(), roadNodeVehicles[y]->getCurrentPosition(), thread_args);
 					if (tempDistanceV < minDistanceV){
@@ -250,7 +327,6 @@ void *nextObstacle(vehicle *cv, int &dist, int &retType, void *arguments) {
 	
 }
 
-
 bool carFits(vehicle *v, vector<vehicle *> vIengine,vector<roadNode> allRoads,void *arguments) {
 	struct thread_arguments *thread_args;
 	thread_args =(struct thread_arguments *)arguments;
@@ -291,6 +367,83 @@ bool carFits(vehicle *v, vector<vehicle *> vIengine,vector<roadNode> allRoads,vo
 			return true;
 		}
 		return false;
+	}
+}
+
+bool canIovertake(vehicle *v, void *arguments){
+	struct thread_arguments *thread_args;
+	thread_args =(struct thread_arguments *)arguments;
+	int distanceFRONT;
+	int distanceOL;
+	int distanceTHIRD;
+	int retType;
+	int retTypeTHIRD;
+	void *nextObs = nextObstacle(v,distanceFRONT,retType,thread_args);
+	void *OLobstacle;
+	void *thirdObstacle;
+	vehicle *VehicleOL;
+	vehicle *nextVehicle;
+	vehicle *thirdVehicle;
+	trafficLight *thirdTL;
+	if (retType == 1) {
+		nextVehicle = (vehicle *)nextObs;
+		OLobstacle = nextObstacleOL(nextVehicle,distanceOL, retType,thread_args);
+		thirdObstacle = nextObstacle(nextVehicle,distanceTHIRD,retTypeTHIRD,thread_args);
+		if (retType == 1) {
+			VehicleOL = (vehicle *)OLobstacle;
+		}
+		if (retTypeTHIRD == 1) {
+			vehicle *thirdVehicle = (vehicle *)thirdObstacle;
+		} else if (retTypeTHIRD == 2) {
+			trafficLight *thirdTL = (trafficLight *)thirdObstacle;
+		}
+
+	}
+	if (OLobstacle == NULL && thirdObstacle == NULL) return true; // no on coming car and no car infront of the on going vehicle
+	if (v->getDriverType() == 1) {
+		return false; 
+	} else if (v->getDriverType() == 0 && nextVehicle->getDriverType() == 1) {
+		distanceOL -= (thread_args->sleep_time * VehicleOL->getMaxSpeed());
+		double timeToAcs = (v->getMaxSpeed() - v->getCurrentSpeed())/v->getAcceleration();
+		double distanceTravelledWhileAccellerating = (timeToAcs *v->getCurrentSpeed()) + ((v->getAcceleration() * timeToAcs * timeToAcs)/2.0);
+		double restOfTheDistance = (thread_args->sleep_time - timeToAcs) * v->getMaxSpeed();
+		double totalDistance = distanceTravelledWhileAccellerating + restOfTheDistance + 10; //10 is a safe gap
+		if (totalDistance < distanceOL) {
+			if (totalDistance < distanceTHIRD && retTypeTHIRD == 2) {
+				return true;
+			} else if (totalDistance >= distanceTHIRD && retTypeTHIRD == 2) {
+				return false;
+			}
+			if (retTypeTHIRD == 1) {
+				distanceTHIRD += (thirdVehicle->getCurrentSpeed() * thread_args->sleep_time);
+				if (totalDistance < distanceTHIRD) {
+					return true;
+				} else if (totalDistance >= distanceTHIRD) {
+					return false;
+				}
+			}
+		}
+	} else if (v->getDriverType() == 2) {
+		distanceOL -= (thread_args->sleep_time * VehicleOL->getMaxSpeed());
+		double timeToAcs = (v->getMaxSpeed() - v->getCurrentSpeed())/v->getAcceleration();
+		double distanceTravelledWhileAccellerating = (timeToAcs *v->getCurrentSpeed()) + ((v->getAcceleration() * timeToAcs * timeToAcs)/2.0);
+		double restOfTheDistance = (thread_args->sleep_time - timeToAcs) * v->getMaxSpeed();
+		double totalDistance = distanceTravelledWhileAccellerating + restOfTheDistance + 3; //3 smaller safe gap for aggressive
+		if (totalDistance < distanceOL) {
+			if (totalDistance < distanceTHIRD && retTypeTHIRD == 2) {
+				return true;
+			} else if (totalDistance >= distanceTHIRD && retTypeTHIRD == 2) {
+				return false;
+			}
+			if (retTypeTHIRD == 1) {
+				distanceTHIRD += (thirdVehicle->getCurrentSpeed() * thread_args->sleep_time);
+				if (totalDistance < distanceTHIRD) {
+					return true;
+				} else if (totalDistance >= distanceTHIRD) {
+					return false;
+				}
+			}
+		}
 	}
 }
 
