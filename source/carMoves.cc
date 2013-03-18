@@ -222,7 +222,7 @@ void *nextObstacle(vehicle *cv, int &dist, int &retType, void *arguments) {
 		correctLane = myNewLaneIs(cv->getCurrentPosition(), thread_args->mymap.getroadNode(cvPath[tl]), thread_args);
 
 		for (int z = 0; z<thread_args->mymap.trafficlights.size(); z++) {
-			if (thread_args->mymap.trafficlights[z]->getPos().roadNodeID == cvPath[tl] && thread_args->mymap.trafficlights[z]->getState() == 0 &&  thread_args->mymap.trafficlights[z]->getPos().lane == correctLane)  {
+			if (thread_args->mymap.trafficlights[z]->getPos().roadNodeID == cvPath[tl] && thread_args->mymap.trafficlights[z]->getState() == 0 &&  thread_args->mymap.trafficlights[z]->getPos().lane != correctLane)  {
 				int tempDistanceTL = calcDistance(cv->getPath(), cv->getCurrentPosition(), thread_args->mymap.trafficlights[z]->getPos(), thread_args);
 				if (tempDistanceTL < minDistanceTL){
 					minDistanceTL = abs(tempDistanceTL);
@@ -230,6 +230,7 @@ void *nextObstacle(vehicle *cv, int &dist, int &retType, void *arguments) {
 					nextTLfound = true;
 				}
 			}
+			
 		}
 
 	}
@@ -474,19 +475,55 @@ int accelerate(vehicle *v, void *obstacle, int aRate, int distanceFromObs, void 
 						v->setCurrentSpeed(11);
 					}
 			}
-			else{
-				float remain = cSpeed / aRate;
-				distanceToTravel = (ticktime-remain)*cSpeed + remain*cSpeed + (remain*remain*(0-aRate))/2;
-				v->setCurrentSpeed(cSpeed-(aRate*remain));
+			else{	
+				float remain = cSpeed / v->getAcceleration();
+			// << " cSpeed:" <<cSpeed <<" Acc: " << v->getAcceleration();
+				int distanceToReduce = cSpeed*remain + (remain*remain*v->getAcceleration())/2;
+			//cout << " remain: " <<remain<< " dToReduce: " << distanceToReduce;
+				int gap=10;
+				int lengthWithCurrentSpeed = distanceFromObs - (distanceToReduce + gap);
+				float timeWithCurrentSpeed = lengthWithCurrentSpeed / (cSpeed);
+			cout << " time: " <<timeWithCurrentSpeed;
+				//tha paw me tin taxitita m gia length k meta gia oso menei that kanw decelerate
+				if (timeWithCurrentSpeed>ticktime){
+					distanceToTravel = ticktime*cSpeed;
+					v->setCurrentSpeed(cSpeed);
+					cout << "No change";
+				}
+				else{
+					distanceToTravel = timeWithCurrentSpeed*cSpeed + (ticktime-timeWithCurrentSpeed)*cSpeed + (ticktime-timeWithCurrentSpeed)*(ticktime-timeWithCurrentSpeed)*(0-aRate)/2;
+					cout <<"distanceToTravel: "<< distanceToTravel;
+					cout << "timeWithCurrentSpeed" <<timeWithCurrentSpeed;
+					v->setCurrentSpeed(cSpeed-(aRate*(ticktime-timeWithCurrentSpeed)));
+					cout << "cspeed: " << v->getCurrentSpeed();
+				}
+				
 			}
 		}
-		else{
-			float remain = cSpeed / aRate;
-			distanceToTravel = (ticktime-remain)*cSpeed + remain*cSpeed + (remain*remain*(0-aRate))/2;
-			v->setCurrentSpeed(cSpeed-(aRate*remain));
-			}
-
-
+			else{
+				float remain = cSpeed / v->getAcceleration();
+			// << " cSpeed:" <<cSpeed <<" Acc: " << v->getAcceleration();
+				int distanceToReduce = cSpeed*remain + (remain*remain*v->getAcceleration())/2;
+			//cout << " remain: " <<remain<< " dToReduce: " << distanceToReduce;
+				int gap=10;
+				int lengthWithCurrentSpeed = distanceFromObs - (distanceToReduce + gap);
+				float timeWithCurrentSpeed = lengthWithCurrentSpeed / (cSpeed);
+			cout << " time: " <<timeWithCurrentSpeed;
+				//tha paw me tin taxitita m gia length k meta gia oso menei that kanw decelerate
+				if (timeWithCurrentSpeed>ticktime){
+					distanceToTravel = ticktime*cSpeed;
+					v->setCurrentSpeed(cSpeed);
+					cout << "No change";
+				}
+				else{
+					distanceToTravel = timeWithCurrentSpeed*cSpeed + (ticktime-timeWithCurrentSpeed)*cSpeed + (ticktime-timeWithCurrentSpeed)*(ticktime-timeWithCurrentSpeed)*(0-aRate)/2;
+					cout <<"distanceToTravel: "<< distanceToTravel;
+					cout << "timeWithCurrentSpeed" <<timeWithCurrentSpeed;
+					v->setCurrentSpeed(cSpeed-(aRate*(ticktime-timeWithCurrentSpeed)));
+					cout << "cspeed: " << v->getCurrentSpeed();
+				}
+				
+				}
 	}
 	
 

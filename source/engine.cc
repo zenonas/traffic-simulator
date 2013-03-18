@@ -31,7 +31,23 @@ void *engine(void *arguments)
    	queue<vehicle *> currentQueue;
    	entryQueues.push_back(currentQueue);
   }
+vehicle *v1 = new vehicle(0,2,3,thread_args->mymap);
+vehicle *v2 = new vehicle(1,1,3,thread_args->mymap);
+v1->setDriverType(0);
+v1->setType(0);
+v2->setDriverType(0);
+v2->setType(0);
+thread_args->VWaitingQ.push(v1);
+thread_args->VWaitingQ.push(v2);
 
+vehicle *v3 = new vehicle(2,3,2,thread_args->mymap);
+vehicle *v4 = new vehicle(3,6,3,thread_args->mymap);
+v3->setDriverType(0);
+v3->setType(0);
+v4->setDriverType(0);
+v4->setType(0);
+thread_args->VWaitingQ.push(v3);
+//thread_args->VWaitingQ.push(v4);
 
   while (!thread_args->finished && thread_args->mymap.created == true) {
   	int max_entries = 0;
@@ -76,18 +92,18 @@ void *engine(void *arguments)
       if (type==1)
       {
          if (distance < (thread_args->vehiclesInEngine[q]->getMaxSpeed()*thread_args->sleep_time))
-            {
-             // cout << "\nVehicle: "<< distance;
+            {             
               result = accelerate(thread_args->vehiclesInEngine[q], obstacle, -1, distance, thread_args);        
           } else
            result = accelerate(thread_args->vehiclesInEngine[q], obstacle, 1, distance, thread_args);
       }
       // if traffic lights then reduce to 0 speed
       else if (type==2){
-          if (distance < (thread_args->vehiclesInEngine[q]->getMaxSpeed()*thread_args->sleep_time))
+          float remain = (thread_args->vehiclesInEngine[q]->getMaxSpeed() / thread_args->vehiclesInEngine[q]->getAcceleration());
+          float d = thread_args->vehiclesInEngine[q]->getMaxSpeed()*remain + (thread_args->vehiclesInEngine[q]->getAcceleration()*remain*remain) / 2;
+          if (distance < remain*thread_args->vehiclesInEngine[q]->getMaxSpeed()*thread_args->sleep_time && distance > d)
               {
-                result = accelerate(thread_args->vehiclesInEngine[q], obstacle, 0, distance, thread_args);    
-               // cout << "\nTraffic Lights: "<<distance;
+                result = accelerate(thread_args->vehiclesInEngine[q], obstacle, 0, distance, thread_args);                
               } 
           else
              result = accelerate(thread_args->vehiclesInEngine[q], obstacle, 1, distance, thread_args);
