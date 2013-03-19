@@ -29,4 +29,4 @@ void *nextObstacle(vehicle *cv, int &dist, int &retType, void *arguments);
 bool carFits(vehicle *v, vector<vehicle *> vIengine,vector<roadNode> allRoads,void *arguments);
 int accelerate(vehicle *v, void *obstacle, int aRate, int distanceFromObs, void *arguments);
 void *nextObstacleOL(vehicle *cv, int &dist, int &retType, void *arguments);
-bool canIovertake(vehicle *v,void *arguments);
+bool canIovertake(vehicle *v, void *nextObs, int distanceFRONT, void *arguments);

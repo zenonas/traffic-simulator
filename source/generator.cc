@@ -16,6 +16,7 @@ using namespace std;
 
 void *generator(void *arguments)
 {  
+	pthread_exit(NULL);
    struct thread_arguments *thread_args;
    thread_args = (struct thread_arguments *)arguments;
    

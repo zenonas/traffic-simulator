@@ -32,7 +32,13 @@ void *engine(void *arguments)
    	entryQueues.push_back(currentQueue);
   }
 
-
+  vehicle *v1 = new vehicle(0,1,2,thread_args->mymap);
+  vehicle *v2 = new vehicle(1,1,2,thread_args->mymap);
+  vehicle *v3 = new vehicle(2,1,2,thread_args->mymap);
+  v1->setType(2); v2->setType(1); v3->setType(0);
+  v1->setDriverType(2); v2->setDriverType(1); v3->setDriverType(2);
+  thread_args->VWaitingQ.push(v3); thread_args->VWaitingQ.push(v2); thread_args->VWaitingQ.push(v1);
+  //vehicle *v3 = new vehicle(0,2,1,thread-args->mymap);
   while (!thread_args->finished && thread_args->mymap.created == true) {
   	int max_entries = 0;
   	//CARS TAKEN OFF THE WAITING QUEUE AND SPLIT INTO THE SEPARATE QUEUES
@@ -48,7 +54,7 @@ void *engine(void *arguments)
   	int maxe = 0;
   	for (int k=0; k<entryQueues.size(); k++) { //iterate through all the entry queues
 
-  		while(!entryQueues[k].empty() && maxe < 2) { //this will never be easily empty need to have && carfits() here
+  		while(!entryQueues[k].empty() && maxe < 1) { //this will never be easily empty need to have && carfits() here
   		  if (thread_args->vehiclesInEngine.size() == 0) { //first time car definitely fits
   			   thread_args->vehiclesInEngine.push_back(entryQueues[k].front());
   				 entryQueues[k].pop();
@@ -78,6 +84,10 @@ void *engine(void *arguments)
          if (distance < (thread_args->vehiclesInEngine[q]->getMaxSpeed()*thread_args->sleep_time))
             {
              // cout << "\nVehicle: "<< distance;
+              bool overTakeResult = canIovertake(thread_args->vehiclesInEngine[q], obstacle, distance,thread_args);
+              if (overTakeResult == true) {
+                result = accelerate(thread_args->vehiclesInEngine[q], obstacle, 2, distance, thread_args);
+              } else 
               result = accelerate(thread_args->vehiclesInEngine[q], obstacle, -1, distance, thread_args);        
           } else
            result = accelerate(thread_args->vehiclesInEngine[q], obstacle, 1, distance, thread_args);

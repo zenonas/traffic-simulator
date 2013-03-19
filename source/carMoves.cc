@@ -2,7 +2,7 @@
 
 Group Project 7CCSMGPR - Team B
 Created: 5/3/2013
-Updated: 17/3/2013
+Updated: 19/3/2013
 File: carMoves.cc
 Description: This file contains functions used for the movement of vehicles
 Copyright (c) King's College London
@@ -370,81 +370,73 @@ bool carFits(vehicle *v, vector<vehicle *> vIengine,vector<roadNode> allRoads,vo
 	}
 }
 
-bool canIovertake(vehicle *v, void *arguments){
+bool canIovertake(vehicle *v, void *nextObs, int distanceFRONT, void *arguments){
 	struct thread_arguments *thread_args;
 	thread_args =(struct thread_arguments *)arguments;
-	int distanceFRONT;
 	int distanceOL;
 	int distanceTHIRD;
 	int retType;
 	int retTypeTHIRD;
-	void *nextObs = nextObstacle(v,distanceFRONT,retType,thread_args);
 	void *OLobstacle;
 	void *thirdObstacle;
+	vehicle *nextVehicle = (vehicle *)nextObs;
 	vehicle *VehicleOL;
-	vehicle *nextVehicle;
 	vehicle *thirdVehicle;
 	trafficLight *thirdTL;
+	OLobstacle = nextObstacleOL(nextVehicle,distanceOL, retType,thread_args);
+	thirdObstacle = nextObstacle(nextVehicle,distanceTHIRD,retTypeTHIRD,thread_args);
 	if (retType == 1) {
-		nextVehicle = (vehicle *)nextObs;
-		OLobstacle = nextObstacleOL(nextVehicle,distanceOL, retType,thread_args);
-		thirdObstacle = nextObstacle(nextVehicle,distanceTHIRD,retTypeTHIRD,thread_args);
-		if (retType == 1) {
-			VehicleOL = (vehicle *)OLobstacle;
-		}
-		if (retTypeTHIRD == 1) {
-			vehicle *thirdVehicle = (vehicle *)thirdObstacle;
-		} else if (retTypeTHIRD == 2) {
-			trafficLight *thirdTL = (trafficLight *)thirdObstacle;
-		}
-
+		VehicleOL = (vehicle *)OLobstacle;
+	} else if (retType == 2) {
+		OLobstacle = NULL;
 	}
-	if (OLobstacle == NULL && thirdObstacle == NULL) return true; // no on coming car and no car infront of the on going vehicle
+	if (retTypeTHIRD == 1) {
+		vehicle *thirdVehicle = (vehicle *)thirdObstacle;
+	} else if (retTypeTHIRD == 2) {
+		trafficLight *thirdTL = (trafficLight *)thirdObstacle;
+	}
+	double timeToAcs = (v->getMaxSpeed() - v->getCurrentSpeed())/v->getAcceleration();
+	double distanceTravelledWhileAccellerating = (timeToAcs *v->getCurrentSpeed()) + ((v->getAcceleration() * timeToAcs * timeToAcs)/2.0);
+	double restOfTheDistance = (thread_args->sleep_time - timeToAcs) * v->getMaxSpeed();
+	int gap;
+	if (v->getDriverType() == 0) gap = 10; else gap = 3;
+	double totalDistance = distanceTravelledWhileAccellerating + restOfTheDistance + gap;
+
 	if (v->getDriverType() == 1) {
 		return false; 
-	} else if (v->getDriverType() == 0 && nextVehicle->getDriverType() == 1) {
-		distanceOL -= (thread_args->sleep_time * VehicleOL->getMaxSpeed());
-		double timeToAcs = (v->getMaxSpeed() - v->getCurrentSpeed())/v->getAcceleration();
-		double distanceTravelledWhileAccellerating = (timeToAcs *v->getCurrentSpeed()) + ((v->getAcceleration() * timeToAcs * timeToAcs)/2.0);
-		double restOfTheDistance = (thread_args->sleep_time - timeToAcs) * v->getMaxSpeed();
-		double totalDistance = distanceTravelledWhileAccellerating + restOfTheDistance + 10; //10 is a safe gap
-		if (totalDistance < distanceOL) {
-			if (totalDistance < distanceTHIRD && retTypeTHIRD == 2) {
-				return true;
-			} else if (totalDistance >= distanceTHIRD && retTypeTHIRD == 2) {
-				return false;
-			}
+	} else if ((v->getDriverType() == 0 && nextVehicle->getDriverType() == 1) || v->getDriverType() == 2) {
+		if (OLobstacle == NULL && thirdObstacle == NULL) return true; // no on coming car and no car infront of the on going vehicle
+		if (OLobstacle == NULL && thirdObstacle != NULL) {
 			if (retTypeTHIRD == 1) {
 				distanceTHIRD += (thirdVehicle->getCurrentSpeed() * thread_args->sleep_time);
-				if (totalDistance < distanceTHIRD) {
+			} 
+			if (totalDistance < distanceTHIRD) return true; else if (totalDistance >= distanceTHIRD) return false;
+		}
+		if (OLobstacle != NULL && thirdObstacle == NULL) {
+			distanceOL -= (thread_args->sleep_time * VehicleOL->getMaxSpeed());
+			distanceOL += distanceFRONT;
+			if (totalDistance < distanceOL) return true; else if (totalDistance >= distanceOL) return false;
+		}
+		if (OLobstacle != NULL && thirdObstacle != NULL) {
+			distanceOL -= (thread_args->sleep_time * VehicleOL->getMaxSpeed());
+			distanceOL += distanceFRONT;
+			if (totalDistance < distanceOL) {
+				if (totalDistance < distanceTHIRD && retTypeTHIRD == 2) {
 					return true;
-				} else if (totalDistance >= distanceTHIRD) {
+				} else if (totalDistance >= distanceTHIRD && retTypeTHIRD == 2) {
 					return false;
+				}
+				if (retTypeTHIRD == 1) {
+					distanceTHIRD += (thirdVehicle->getCurrentSpeed() * thread_args->sleep_time);
+					if (totalDistance < distanceTHIRD) {
+						return true;
+					} else if (totalDistance >= distanceTHIRD) {
+						return false;
+					}
 				}
 			}
 		}
-	} else if (v->getDriverType() == 2) {
-		distanceOL -= (thread_args->sleep_time * VehicleOL->getMaxSpeed());
-		double timeToAcs = (v->getMaxSpeed() - v->getCurrentSpeed())/v->getAcceleration();
-		double distanceTravelledWhileAccellerating = (timeToAcs *v->getCurrentSpeed()) + ((v->getAcceleration() * timeToAcs * timeToAcs)/2.0);
-		double restOfTheDistance = (thread_args->sleep_time - timeToAcs) * v->getMaxSpeed();
-		double totalDistance = distanceTravelledWhileAccellerating + restOfTheDistance + 3; //3 smaller safe gap for aggressive
-		if (totalDistance < distanceOL) {
-			if (totalDistance < distanceTHIRD && retTypeTHIRD == 2) {
-				return true;
-			} else if (totalDistance >= distanceTHIRD && retTypeTHIRD == 2) {
-				return false;
-			}
-			if (retTypeTHIRD == 1) {
-				distanceTHIRD += (thirdVehicle->getCurrentSpeed() * thread_args->sleep_time);
-				if (totalDistance < distanceTHIRD) {
-					return true;
-				} else if (totalDistance >= distanceTHIRD) {
-					return false;
-				}
-			}
-		}
-	}
+	} 
 }
 
 //vehicle movement
@@ -499,6 +491,9 @@ int accelerate(vehicle *v, void *obstacle, int aRate, int distanceFromObs, void 
 		tl = (trafficLight *)obstacle;
 		flag=2;
 		aRate= (0 - v->getAcceleration());		
+	} else if (aRate == 2) {
+		flag=3;
+		aRate = v->getAcceleration();
 	}
 
 	if (flag==0){
@@ -632,6 +627,12 @@ int accelerate(vehicle *v, void *obstacle, int aRate, int distanceFromObs, void 
 				distanceToTravel = (ticktime-remain)*cSpeed + remain*cSpeed + (remain*remain*(0-aRate))/2;
 				v->setCurrentSpeed(cSpeed-(aRate*remain));
 			}
+		} else if (flag == 3) {
+			double timeToAcs = (v->getMaxSpeed() - v->getCurrentSpeed())/v->getAcceleration();
+			double distanceTravelledWhileAccellerating = (timeToAcs *v->getCurrentSpeed()) + ((v->getAcceleration() * timeToAcs * timeToAcs)/2.0);
+			double restOfTheDistance = (thread_args->sleep_time - timeToAcs) * v->getMaxSpeed();
+			double distanceToTravel = distanceTravelledWhileAccellerating + restOfTheDistance;
+			v->setCurrentSpeed(v->getMaxSpeed());
 		}
 		else{
 			float remain = cSpeed / aRate;
