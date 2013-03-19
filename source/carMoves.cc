@@ -440,258 +440,68 @@ bool canIovertake(vehicle *v, void *nextObs, int distanceFRONT, void *arguments)
 	} 
 }
 
-//vehicle movement
-int accelerate(vehicle *v, void *obstacle, int aRate, int distanceFromObs, void *arguments) {
+double move(vehicle *v, double targetSpeed, void *arguments) {
 	struct thread_arguments *thread_args;
 	thread_args =(struct thread_arguments *)arguments;
-	int ticktime = thread_args->sleep_time;
-    vector<roadNode> roads = thread_args->mymap.getunfRoads();
+	double distanceToTravel;
+	vector<roadNode> roads = thread_args->mymap.getunfRoads();
 
-	struct Position newPos;
+	Position newPos;
 	newPos.roadNodeID = v->getCurrentPosition().roadNodeID;
 	newPos.lane = v->getCurrentPosition().lane;
 	newPos.p = v->getCurrentPosition().p;
 
 	vector<int> vPath = v->getPath();
-
+	double newspeed;
 	//find the next roadnode to check if there is a turn
 	int nextRoadID=-1;
 	for (int i=0; i<vPath.size(); i++)
 		if (vPath[i] == newPos.roadNodeID)
+		{
 			nextRoadID=vPath[i+1];
+			break;
+		}
 
-	float cSpeed = v->getCurrentSpeed();
-	float newSpeed=0;
-	int distanceToTravel=0;
-	int roadMaxSpeed=-1;
-	//get roadNode maximum speed
-	if (newPos.roadNodeID>0)
-		roadMaxSpeed = roads[v->getCurrentPosition().roadNodeID-1].getMaxSpeed();
+	double timeToAcs = (v->getCurrentSpeed() - targetSpeed)/v->getAcceleration();
+	if (timeToAcs >= 0) {
+		if (timeToAcs == thread_args->sleep_time)
+			distanceToTravel = (v->getCurrentSpeed() * thread_args->sleep_time) + ((v->getAcceleration() * timeToAcs * timeToAcs)/2.0);
+		else if (timeToAcs < thread_args->sleep_time) {
+			double restOfTime = thread_args->sleep_time - timeToAcs;
+			double acsDistance = (v->getCurrentSpeed() * timeToAcs) + ((v->getAcceleration() * timeToAcs * timeToAcs)/2.0);
+			double restOfTheDistance = targetSpeed * restOfTime;
+			double distanceToTravel = acsDistance + restOfTheDistance;
 
-	//0: continue as you are
-	//1: decelerate depending on vehicle
-	//2: decelerate and stop for traffic lights
-	int flag=0;
-	vehicle *s;
-	trafficLight *tl;
-	//get the vehicle's acceleration if the vehicle can accelerate
-	//else the vehicle's acceleration will pass to this function
-	if (aRate==1){
-		aRate = v->getAcceleration();
-		flag=0;
-	}
-	//object vehicle and need to reduce
-	else if (aRate==-1)
-	{
-		s = (vehicle *)obstacle;
-		flag=1;
-		aRate= (0 - v->getAcceleration());
-	}
-	else if (aRate==0)
-	{
-		tl = (trafficLight *)obstacle;
-		flag=2;
-		aRate= (0 - v->getAcceleration());		
-	} else if (aRate == 2) {
-		flag=3;
-		aRate = v->getAcceleration();
+		}	
+		newspeed = v->getCurrentSpeed() + v->getAcceleration() * timeToAcs;
+		v->setCurrentSpeed(newspeed);
+	} else if (timeToAcs < 0) {
+		timeToAcs = timeToAcs * -1;
+		if (timeToAcs == thread_args->sleep_time)
+			distanceToTravel = (v->getCurrentSpeed() * thread_args->sleep_time) - ((v->getAcceleration() * timeToAcs * timeToAcs)/2.0);
+		else if (timeToAcs < thread_args->sleep_time) {
+			double restOfTime = thread_args->sleep_time - timeToAcs;
+			double acsDistance = (v->getCurrentSpeed() * timeToAcs) - ((v->getAcceleration() * timeToAcs * timeToAcs)/2.0);
+			double restOfTheDistance = targetSpeed * restOfTime;
+			double distanceToTravel = acsDistance + restOfTheDistance;
+
+		}
+		newspeed = v->getCurrentSpeed() - v->getAcceleration() * timeToAcs;
+		v->setCurrentSpeed(newspeed);
 	}
 
-	if (flag==0){
-		if (cSpeed==v->getMaxSpeed() && cSpeed<=roadMaxSpeed){
-			
-			//check if two roadnodes form a turn
-			if (thread_args->mymap.checkTurn(newPos.roadNodeID, nextRoadID) && (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength()-newPos.p)<cSpeed*ticktime)
-				{
-					float remain = 0;
-					remain = (cSpeed-11)/v->getAcceleration();
-				//	cout << "remain2:" <<remain;
-					distanceToTravel =  cSpeed*(ticktime-remain) + (remain*remain*(0-aRate))/2.0 + remain*11;
-					v->setCurrentSpeed(11); 
-				}
-			else
-				distanceToTravel = cSpeed*ticktime;	
-		}
-		else if (cSpeed==roadMaxSpeed && cSpeed<=v->getMaxSpeed() ){
-			
-			//check if two roadnodes form a turn
-			if (thread_args->mymap.checkTurn(newPos.roadNodeID, nextRoadID) && (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength()-newPos.p)<cSpeed*ticktime)
-				{
-					float remain = 0;
-					remain = (cSpeed-11)/v->getAcceleration();
-					distanceToTravel =  cSpeed*(ticktime-remain) + (remain*remain*(0-aRate))/2.0 + remain*11;
-					v->setCurrentSpeed(11); 
-				}
-			else{
-					distanceToTravel = cSpeed*ticktime;		
-			}
-		}
-		else if (cSpeed<=v->getMaxSpeed() && cSpeed<=roadMaxSpeed)
-		{
-			//check if two roadnodes form a turn
-			if (thread_args->mymap.checkTurn(newPos.roadNodeID, nextRoadID) && (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength()-newPos.p)<cSpeed*ticktime)
-				{
-					if (cSpeed>11){
-						float remain = 0;
-						remain = (cSpeed-11)/v->getAcceleration();
-						distanceToTravel =  cSpeed*(ticktime-remain) + (remain*remain*(0-aRate))/2.0 + remain*11;		v->setCurrentSpeed(11); 
-						v->setCurrentSpeed(11);
-					}
-					else {
-						float remain = 0;
-						remain = (11-cSpeed)/v->getAcceleration();
-						distanceToTravel =  cSpeed*remain + (remain*remain*(aRate))/2.0 + (ticktime-remain)*11;
-						v->setCurrentSpeed(11);
-					}				
-				}
-			else{
-				//cout << "lol" <<endl;
-				float remain = (min(v->getMaxSpeed(),roadMaxSpeed) - cSpeed) / aRate;
-				if (remain>ticktime){
-					distanceToTravel = ticktime*ticktime*aRate/2;
-					v->setCurrentSpeed(ticktime*aRate);
-				}
-				else{
-					distanceToTravel = remain*cSpeed + (remain*remain*aRate)/2;
-					distanceToTravel = distanceToTravel + min(v->getMaxSpeed(),roadMaxSpeed)*(ticktime-remain);
-					v->setCurrentSpeed(min(v->getMaxSpeed(),roadMaxSpeed)); 
-				}
-			}
-		}
-		else if (cSpeed>roadMaxSpeed && roadMaxSpeed > 0)
-		{
-			if (thread_args->mymap.checkTurn(newPos.roadNodeID, nextRoadID) && (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength()-newPos.p)<cSpeed*ticktime)
-			{
-				float remain = 0;
-				remain = (cSpeed-11)/v->getAcceleration();
-				distanceToTravel = cSpeed*(ticktime-remain) + (remain*remain*(0-aRate))/2.0 + remain*11;	 
-				v->setCurrentSpeed(11);
-			}
-			else {
-				float remain = (cSpeed - roadMaxSpeed) / aRate;
-				distanceToTravel = remain*cSpeed + (remain*remain*(0-aRate))/2;
-				distanceToTravel = distanceToTravel + (ticktime-remain)*roadMaxSpeed;
-				v->setCurrentSpeed(roadMaxSpeed);
-			}
-		}
-	}
-	else if (flag==-1)
-	{
-		if (thread_args->mymap.checkTurn(newPos.roadNodeID, nextRoadID)){
-			if (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength()-newPos.p < distanceFromObs)
-        		{
-        		if (cSpeed>11){
-					float remain = 0;
-					remain = (cSpeed-11)/v->getAcceleration();
-					distanceToTravel = cSpeed*(ticktime-remain) + (remain*remain*(0-aRate))/2.0 + remain*11;	 
-					v->setCurrentSpeed(11);
-				}
-				else {
-						float remain = 0;
-						remain = (11-cSpeed)/v->getAcceleration();
-						distanceToTravel =  cSpeed*remain + (remain*remain*(aRate))/2.0 + (ticktime-remain)*11;
-						v->setCurrentSpeed(11);
-					}
-			}
-			else{
-				float remain = (cSpeed - s->getCurrentSpeed()) / aRate;
-				distanceToTravel = remain*cSpeed + (remain*remain*(0-aRate))/2 + (ticktime-remain)*s->getCurrentSpeed();
-				v->setCurrentSpeed(s->getCurrentSpeed());
-			}
-		}
-		else{
-			float remain = (cSpeed - s->getCurrentSpeed()) / aRate;
-			distanceToTravel = remain*cSpeed + (remain*remain*(0-aRate))/2 + (ticktime-remain)*s->getCurrentSpeed();				
-			v->setCurrentSpeed(s->getCurrentSpeed());
-			}
-	}
-	else if (flag==2)
-	{
-		if (thread_args->mymap.checkTurn(newPos.roadNodeID, nextRoadID)){
-			if (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength()-newPos.p < distanceFromObs)
-        		{
-        		if (cSpeed>11){
-					float remain = 0;
-					remain = (cSpeed-11)/v->getAcceleration();
-					distanceToTravel = cSpeed*(ticktime-remain) + (remain*remain*(0-aRate))/2.0 + remain*11;	 
-					v->setCurrentSpeed(11);
-				}
-				else {
-						float remain = 0;
-						remain = (11-cSpeed)/v->getAcceleration();
-						distanceToTravel =  cSpeed*remain + (remain*remain*(aRate))/2.0 + (ticktime-remain)*11;
-						v->setCurrentSpeed(11);
-					}
-			}
-			else{	
-				float remain = cSpeed / v->getAcceleration();
-				int distanceToReduce = cSpeed*remain + (remain*remain*v->getAcceleration())/2;
-				int gap=10;
-				int lengthWithCurrentSpeed = distanceFromObs - (distanceToReduce + gap);
-				float timeWithCurrentSpeed = lengthWithCurrentSpeed / (cSpeed);
-				//tha paw me tin taxitita m gia length k meta gia oso menei that kanw decelerate
-				if (timeWithCurrentSpeed>ticktime){
-					distanceToTravel = ticktime*cSpeed;
-					v->setCurrentSpeed(cSpeed);
-				}
-				else{
-					distanceToTravel = (ticktime-timeWithCurrentSpeed)*(ticktime-timeWithCurrentSpeed)*(0-aRate)/2;
-					v->setCurrentSpeed(cSpeed+(aRate*(ticktime-timeWithCurrentSpeed)));
-					if(v->getCurrentSpeed() < 0)
-						v->setCurrentSpeed(0);
-				}	
-			}
-		} else if (flag == 3) {
-			double timeToAcs = (v->getMaxSpeed() - v->getCurrentSpeed())/v->getAcceleration();
-			double distanceTravelledWhileAccellerating = (timeToAcs *v->getCurrentSpeed()) + ((v->getAcceleration() * timeToAcs * timeToAcs)/2.0);
-			double restOfTheDistance = (thread_args->sleep_time - timeToAcs) * v->getMaxSpeed();
-			double distanceToTravel = distanceTravelledWhileAccellerating + restOfTheDistance;
-			v->setCurrentSpeed(v->getMaxSpeed());
-		}
-			else{
-				float remain = cSpeed / v->getAcceleration();
-				int distanceToReduce = cSpeed*remain + (remain*remain*v->getAcceleration())/2;
-				int gap=10;
-				int lengthWithCurrentSpeed = distanceFromObs - (distanceToReduce + gap);
-				float timeWithCurrentSpeed = lengthWithCurrentSpeed / (cSpeed);
-				//tha paw me tin taxitita m gia length k meta gia oso menei that kanw decelerate
-				if (timeWithCurrentSpeed>ticktime){
-					distanceToTravel = ticktime*cSpeed;
-					v->setCurrentSpeed(cSpeed+(aRate*(ticktime-timeWithCurrentSpeed)));
-				}
-				else{
-					distanceToTravel =  (ticktime-timeWithCurrentSpeed)*(ticktime-timeWithCurrentSpeed)*(0-aRate)/2;
-					v->setCurrentSpeed(cSpeed+(aRate*(ticktime-timeWithCurrentSpeed)));
-					if(v->getCurrentSpeed() < 0)
-						v->setCurrentSpeed(0);
-				}				
-			}
-	}
-	
-		//if is not in the map what???
- if (roadMaxSpeed<0)
-		{
-			distanceToTravel=0;
-			//cout << "road0. distance: " << distanceToTravel<<endl;
-		}
-	//else v->setCurrentSpeed(newSpeed);
-	
-	if (newPos.roadNodeID == -1) {
-		newPos.roadNodeID = vPath[0];
-		newPos.p = 0;
-		newPos.lane = v->getCurrentPosition().lane;
-	}
-	
+
+
 	int z=0;
 	bool roadChange = false;
 	while(distanceToTravel >= (thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength() - newPos.p)) {
-		if (newPos.roadNodeID == vPath.back() && vPath.size() > 1) return 0;	
+		if (newPos.roadNodeID == vPath.back() && vPath.size() > 1) return -1;	
 		int tempDistance = thread_args->mymap.getroadNode(newPos.roadNodeID)->getLength() - newPos.p;
 		distanceToTravel -= tempDistance;
 		for (z=0; z<vPath.size(); z++) {
 			if (vPath[z] == newPos.roadNodeID) {
 				if (z+1<vPath.size()) z++;
-				else return 0; 
+				else return -1; 
 			newPos.roadNodeID = vPath[z];
 			newPos.p = 0;
 			newPos.lane = myNewLaneIs(v->getCurrentPosition(),thread_args->mymap.getroadNode(vPath[z]),thread_args);
@@ -706,5 +516,105 @@ int accelerate(vehicle *v, void *obstacle, int aRate, int distanceFromObs, void 
 
 		}
 	v->setCurrentPosition(newPos);
-	return 1;
+	return distanceToTravel;
 }
+
+double speedForMinGap(vehicle *v, double distanceTarget, void *arguments){
+	struct thread_arguments *thread_args;
+	thread_args =(struct thread_arguments *)arguments;
+	double newSpeed;
+	double timeToDecel;
+	if (v->getDriverType() == 0) 
+		distanceTarget -= 3; //2M SAFE GAP
+	else if (v->getDriverType() == 1)
+		distanceTarget -= 4; //4M SAFE GAP
+	else if (v->getDriverType() == 2)
+		distanceTarget -= 1; //1M SAFE GAP
+	
+	double Delta = (v->getCurrentSpeed() * v->getCurrentSpeed()) - 2 * (v->getAcceleration() * distanceTarget);
+	if (Delta < 0) {
+		return v->getCurrentSpeed();
+	} else {
+		timeToDecel = (sqrt(Delta) - v->getCurrentSpeed())/(v->getAcceleration() * (-1));
+		if (timeToDecel <= thread_args->sleep_time) {
+			newSpeed = v->getCurrentSpeed() - (v->getAcceleration() * timeToDecel);
+		} else if (timeToDecel > thread_args->sleep_time) {
+			newSpeed = v->getCurrentSpeed() - (v->getAcceleration() * thread_args->sleep_time);
+		}
+	}
+	return newSpeed;
+}
+
+bool DriverDecision(vehicle* v, void *arguments)
+{	
+	struct thread_arguments *thread_args;
+	thread_args =(struct thread_arguments *)arguments;
+	int distance=0;
+	int NextType=0;
+	void *obstacle;
+	obstacle = nextObstacle(v, distance, NextType, thread_args); 
+	double result;
+	vehicle *nextVehicle;
+	trafficLight *nextTL;
+	vector<int> vPath = v->getPath();
+
+	//find the next roadnode to check if there is a turn
+	int nextRoadID=-1;
+	/*for (int i=0; i<vPath.size()-1; i++)
+		if (vPath[i] == v->getCurrentPosition().roadNodeID) nextRoadID=vPath[i+1];
+	int distanceFROMrn = thread_args->mymap.getroadNode(v->getCurrentPosition().roadNodeID)->getLength() - v->getCurrentPosition().p;
+	if (thread_args->mymap.checkTurn(v->getCurrentPosition().roadNodeID, nextRoadID) && distanceFROMrn < (v->getCurrentSpeed() * thread_args->sleep_time)){
+		result = move(v, 11, thread_args);
+		v->updated = true;
+		return true;		
+	}*/
+	if (NextType == 0) {
+		double targetSpeed = thread_args->mymap.getroadNode(v->getCurrentPosition().roadNodeID)->getMaxSpeed();
+		if(v->getDriverType() == 2){
+
+			if (v->getCurrentSpeed() < v->getMaxSpeed()){
+				if (v->getCurrentSpeed() < targetSpeed){
+					result = move(v, targetSpeed*1.2, thread_args);
+					v->updated = true;
+					return true;
+				}
+			}
+		} else if (v->getDriverType() == 1){
+			if (v->getCurrentSpeed() < v->getMaxSpeed()){
+				if (v->getCurrentSpeed() < targetSpeed){
+					result = move(v, targetSpeed*0.9,thread_args);
+					v->updated = true;
+					return true;
+				}
+			}
+		} else if (v->getDriverType() == 0){
+			if (v->getCurrentSpeed() < v->getMaxSpeed()){
+				if (v->getCurrentSpeed() <targetSpeed) {
+					result = move(v, targetSpeed, thread_args);
+					v->updated = true;
+					return true;
+				}
+			}
+		}
+	} else if (NextType == 1) {
+		nextVehicle = (vehicle *)obstacle;
+		if (nextVehicle->updated) {
+			result = move(v, speedForMinGap(v, distance, thread_args), thread_args);
+			v->updated = true;
+			return true;
+		} else {
+			DriverDecision(nextVehicle, thread_args);
+		}
+	} else if (NextType == 2) {
+		nextTL = (trafficLight *)obstacle;
+		result = move(v, speedForMinGap(v, distance, thread_args), thread_args);
+		v->updated = true;
+		return true;
+	} 
+}
+
+
+
+
+
+

@@ -36,7 +36,7 @@ void *engine(void *arguments)
   vehicle *v2 = new vehicle(1,1,2,thread_args->mymap);
   vehicle *v3 = new vehicle(2,1,2,thread_args->mymap);
   v1->setType(2); v2->setType(1); v3->setType(0);
-  v1->setDriverType(2); v2->setDriverType(1); v3->setDriverType(2);
+  v1->setDriverType(1); v2->setDriverType(1); v3->setDriverType(1);
   thread_args->VWaitingQ.push(v3); thread_args->VWaitingQ.push(v2); thread_args->VWaitingQ.push(v1);
   //vehicle *v3 = new vehicle(0,2,1,thread-args->mymap);
   while (!thread_args->finished && thread_args->mymap.created == true) {
@@ -70,87 +70,17 @@ void *engine(void *arguments)
 		  }
 	 }
 
-   vector<roadNode> roads = thread_args->mymap.getunfRoads();
-   for(int q=0; q<thread_args->vehiclesInEngine.size(); q++){
-      int result;
-      int distance=0;
-      int type=0;
-      void *obstacle;
-      obstacle = nextObstacle(thread_args->vehiclesInEngine[q], distance, type, thread_args); 
-
-      // if vehicle check the distance. If less than the distance that you can cover then reduce speed
-      if (type==1)
-      {
-         if (distance < (thread_args->vehiclesInEngine[q]->getMaxSpeed()*thread_args->sleep_time))
-            {
-             // cout << "\nVehicle: "<< distance;
-              bool overTakeResult = canIovertake(thread_args->vehiclesInEngine[q], obstacle, distance,thread_args);
-              if (overTakeResult == true) {
-                result = accelerate(thread_args->vehiclesInEngine[q], obstacle, 2, distance, thread_args);
-              } else 
-                result = accelerate(thread_args->vehiclesInEngine[q], obstacle, -1, distance, thread_args);        
-          } else
-           result = accelerate(thread_args->vehiclesInEngine[q], obstacle, 1, distance, thread_args);
-      }
-      // if traffic lights then reduce to 0 speed
-      else if (type==2){
-          float remain = (thread_args->vehiclesInEngine[q]->getMaxSpeed() / thread_args->vehiclesInEngine[q]->getAcceleration());
-          float d = thread_args->vehiclesInEngine[q]->getMaxSpeed()*remain + (thread_args->vehiclesInEngine[q]->getAcceleration()*remain*remain) / 2;
-          if (distance < remain*thread_args->vehiclesInEngine[q]->getMaxSpeed()*thread_args->sleep_time + d)
-              {
-                result = accelerate(thread_args->vehiclesInEngine[q], obstacle, 0, distance, thread_args);                
-              } 
-          else
-             result = accelerate(thread_args->vehiclesInEngine[q], obstacle, 1, distance, thread_args);
-      }
-      //move with the maximum possible speed
-      else
-        result = accelerate(thread_args->vehiclesInEngine[q], obstacle, 1, distance, thread_args);
-      
-      //vehicle out of map
-
+    vector<roadNode> roads = thread_args->mymap.getunfRoads();
+    for(int q=0; q<thread_args->vehiclesInEngine.size(); q++){
+      if (!thread_args->vehiclesInEngine[q]->updated)
+        DriverDecision(thread_args->vehiclesInEngine[q],thread_args);
+/*
       if (result == 0) {
         delete thread_args->vehiclesInEngine[q];
         thread_args->vehiclesInEngine.erase(thread_args->vehiclesInEngine.begin()+q);
         thread_args->simstats.addRemVehi();
-      }
-   }    
-   // test code for vehicle accelerate ends
-   
-    // check for intersections
-   //we have to store them in an array and find a way to handle them
-   //such as vehicles from different roadnodes and how to handle all together
-   /*vector<roadNode> ROADS = thread_args->mymap.getunfRoads();
-   for(int i=0; i<vehiclesInEngine.size(); i++){    
-      vector<int> vehiclePath = vehiclesInEngine[i]->getPath();
-      vector<int> intersection;
-         for (int p=0; p<vehiclePath.size(); p++){
-            for (int k=0; k<ROADS.size(); k++)
-               if (ROADS[k].getId()==vehiclePath[p]){
-                  graphNode A1 = ROADS[k].getgraphNodeA();
-                  graphNode B1 = ROADS[k].getgraphNodeB();
-                  int count = 1;
-                  for (int s = 0; s < ROADS.size(); s++){
-                     graphNode A2 = ROADS[s].getgraphNodeA();
-                     graphNode B2 = ROADS[s].getgraphNodeB();
-                     if (s!=k){
-                        if ((A1.getCartesianX() == A2.getCartesianX() && A1.getCartesianY() == A2.getCartesianY()))                    
-                           count++;                
-                        if ((A1.getCartesianX() == B2.getCartesianX() && A1.getCartesianY() == B2.getCartesianY()))   
-                           count++;
-                        if ((B1.getCartesianX() == B2.getCartesianX() && B1.getCartesianY() == B2.getCartesianY()))     
-                           count++;
-                        if ((B1.getCartesianX() == A2.getCartesianX() && B1.getCartesianY() == A2.getCartesianY()))
-                           count++;
-                        if (count>2){
-                           break;
-                        }
-                     }
-                  }
-                break;  
-               }
-         }
       }*/
+   }    
 
 // traffic lights handling
 for(int i=0; i<thread_args->mymap.trafficlights.size(); i++) {
@@ -181,6 +111,9 @@ for(int i=0; i<thread_args->mymap.trafficlights.size(); i++) {
     sleep(1);
   }
   sleep(1);
+   for(int yy=0; yy<thread_args->vehiclesInEngine.size(); yy++)
+      if (!thread_args->vehiclesInEngine[yy]->updated)
+        thread_args->vehiclesInEngine[yy]->updated = false;
 
 }
 

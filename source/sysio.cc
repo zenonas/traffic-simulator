@@ -210,7 +210,7 @@ void *inout(void *arguments)
     }
     
     start_color();
-    init_pair(1, COLOR_RED, COLOR_BLACK );
+    init_pair(1, COLOR_WHITE, COLOR_BLUE );
     init_pair(2, COLOR_WHITE, COLOR_BLUE );
     init_pair(3, COLOR_GREEN,  COLOR_BLUE );
     init_pair(4, COLOR_RED,  COLOR_BLUE );
@@ -280,7 +280,7 @@ void *inout(void *arguments)
     mvwaddstr(headerwin, 1, midpointx-12,"Traffic Simulation System");
     mvwaddstr(headerwin, 2, 2,"TEAM B: Zinon Kyprianou, Panikos Lazarou, Maria Leventopoulou,");
     mvwaddstr(headerwin, 3, 10,"Adesinmisola Ogunsanya, Kosmas Tsakmakidis");
-    mvwaddstr(headerwin,4,2,"build date: 11/3/2013");
+    mvwaddstr(headerwin,4,2,"build date: 19/3/2013");
     mvwaddstr(headerwin,5,COLS-40,"Simulation Status: Running");
     mvwaddstr(stdstats,1,midpointx, "Total Vehicles in engine:");
     mvwprintw(stdstats,1,midpointx+27, "%d",thread_args->simstats.getTotalVehicles());

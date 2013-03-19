@@ -51,6 +51,7 @@ public:
    int getTimer();
    int decideLane(map mymap);
    int vehi_id;
+   bool updated;
 
 private:
    int Type, CurrentSpeed, DriverType, Acceleration, MaxSpeed;
