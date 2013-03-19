@@ -477,57 +477,43 @@ int accelerate(vehicle *v, void *obstacle, int aRate, int distanceFromObs, void 
 			}
 			else{	
 				float remain = cSpeed / v->getAcceleration();
-			// << " cSpeed:" <<cSpeed <<" Acc: " << v->getAcceleration();
 				int distanceToReduce = cSpeed*remain + (remain*remain*v->getAcceleration())/2;
-			//cout << " remain: " <<remain<< " dToReduce: " << distanceToReduce;
 				int gap=10;
 				int lengthWithCurrentSpeed = distanceFromObs - (distanceToReduce + gap);
 				float timeWithCurrentSpeed = lengthWithCurrentSpeed / (cSpeed);
-			cout << " time: " <<timeWithCurrentSpeed;
 				//tha paw me tin taxitita m gia length k meta gia oso menei that kanw decelerate
 				if (timeWithCurrentSpeed>ticktime){
 					distanceToTravel = ticktime*cSpeed;
 					v->setCurrentSpeed(cSpeed);
-					cout << "No change";
 				}
 				else{
-					distanceToTravel = timeWithCurrentSpeed*cSpeed + (ticktime-timeWithCurrentSpeed)*cSpeed + (ticktime-timeWithCurrentSpeed)*(ticktime-timeWithCurrentSpeed)*(0-aRate)/2;
-					cout <<"distanceToTravel: "<< distanceToTravel;
-					cout << "timeWithCurrentSpeed" <<timeWithCurrentSpeed;
-					v->setCurrentSpeed(cSpeed-(aRate*(ticktime-timeWithCurrentSpeed)));
-					cout << "cspeed: " << v->getCurrentSpeed();
-				}
-				
+					distanceToTravel = (ticktime-timeWithCurrentSpeed)*(ticktime-timeWithCurrentSpeed)*(0-aRate)/2;
+					v->setCurrentSpeed(cSpeed+(aRate*(ticktime-timeWithCurrentSpeed)));
+					if(v->getCurrentSpeed() < 0)
+						v->setCurrentSpeed(0);
+				}	
 			}
 		}
 			else{
 				float remain = cSpeed / v->getAcceleration();
-			// << " cSpeed:" <<cSpeed <<" Acc: " << v->getAcceleration();
 				int distanceToReduce = cSpeed*remain + (remain*remain*v->getAcceleration())/2;
-			//cout << " remain: " <<remain<< " dToReduce: " << distanceToReduce;
 				int gap=10;
 				int lengthWithCurrentSpeed = distanceFromObs - (distanceToReduce + gap);
 				float timeWithCurrentSpeed = lengthWithCurrentSpeed / (cSpeed);
-			cout << " time: " <<timeWithCurrentSpeed;
 				//tha paw me tin taxitita m gia length k meta gia oso menei that kanw decelerate
 				if (timeWithCurrentSpeed>ticktime){
 					distanceToTravel = ticktime*cSpeed;
-					v->setCurrentSpeed(cSpeed);
-					cout << "No change";
+					v->setCurrentSpeed(cSpeed+(aRate*(ticktime-timeWithCurrentSpeed)));
 				}
 				else{
-					distanceToTravel = timeWithCurrentSpeed*cSpeed + (ticktime-timeWithCurrentSpeed)*cSpeed + (ticktime-timeWithCurrentSpeed)*(ticktime-timeWithCurrentSpeed)*(0-aRate)/2;
-					cout <<"distanceToTravel: "<< distanceToTravel;
-					cout << "timeWithCurrentSpeed" <<timeWithCurrentSpeed;
-					v->setCurrentSpeed(cSpeed-(aRate*(ticktime-timeWithCurrentSpeed)));
-					cout << "cspeed: " << v->getCurrentSpeed();
-				}
-				
-				}
+					distanceToTravel =  (ticktime-timeWithCurrentSpeed)*(ticktime-timeWithCurrentSpeed)*(0-aRate)/2;
+					v->setCurrentSpeed(cSpeed+(aRate*(ticktime-timeWithCurrentSpeed)));
+					if(v->getCurrentSpeed() < 0)
+						v->setCurrentSpeed(0);
+				}				
+			}
 	}
 	
-
-
 		//if is not in the map what???
  if (roadMaxSpeed<0)
 		{

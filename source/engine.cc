@@ -34,10 +34,10 @@ void *engine(void *arguments)
 vehicle *v1 = new vehicle(0,2,3,thread_args->mymap);
 vehicle *v2 = new vehicle(1,1,3,thread_args->mymap);
 v1->setDriverType(0);
-v1->setType(0);
+v1->setType(1);
 v2->setDriverType(0);
 v2->setType(0);
-thread_args->VWaitingQ.push(v1);
+//thread_args->VWaitingQ.push(v1);
 thread_args->VWaitingQ.push(v2);
 
 vehicle *v3 = new vehicle(2,3,2,thread_args->mymap);
@@ -46,7 +46,7 @@ v3->setDriverType(0);
 v3->setType(0);
 v4->setDriverType(0);
 v4->setType(0);
-thread_args->VWaitingQ.push(v3);
+//thread_args->VWaitingQ.push(v3);
 //thread_args->VWaitingQ.push(v4);
 
   while (!thread_args->finished && thread_args->mymap.created == true) {
@@ -101,7 +101,7 @@ thread_args->VWaitingQ.push(v3);
       else if (type==2){
           float remain = (thread_args->vehiclesInEngine[q]->getMaxSpeed() / thread_args->vehiclesInEngine[q]->getAcceleration());
           float d = thread_args->vehiclesInEngine[q]->getMaxSpeed()*remain + (thread_args->vehiclesInEngine[q]->getAcceleration()*remain*remain) / 2;
-          if (distance < remain*thread_args->vehiclesInEngine[q]->getMaxSpeed()*thread_args->sleep_time && distance > d)
+          if (distance < remain*thread_args->vehiclesInEngine[q]->getMaxSpeed()*thread_args->sleep_time + d)
               {
                 result = accelerate(thread_args->vehiclesInEngine[q], obstacle, 0, distance, thread_args);                
               } 
