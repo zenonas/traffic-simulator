@@ -88,16 +88,17 @@ void *engine(void *arguments)
               if (overTakeResult == true) {
                 result = accelerate(thread_args->vehiclesInEngine[q], obstacle, 2, distance, thread_args);
               } else 
-              result = accelerate(thread_args->vehiclesInEngine[q], obstacle, -1, distance, thread_args);        
+                result = accelerate(thread_args->vehiclesInEngine[q], obstacle, -1, distance, thread_args);        
           } else
            result = accelerate(thread_args->vehiclesInEngine[q], obstacle, 1, distance, thread_args);
       }
       // if traffic lights then reduce to 0 speed
       else if (type==2){
-          if (distance < (thread_args->vehiclesInEngine[q]->getMaxSpeed()*thread_args->sleep_time))
+          float remain = (thread_args->vehiclesInEngine[q]->getMaxSpeed() / thread_args->vehiclesInEngine[q]->getAcceleration());
+          float d = thread_args->vehiclesInEngine[q]->getMaxSpeed()*remain + (thread_args->vehiclesInEngine[q]->getAcceleration()*remain*remain) / 2;
+          if (distance < remain*thread_args->vehiclesInEngine[q]->getMaxSpeed()*thread_args->sleep_time + d)
               {
-                result = accelerate(thread_args->vehiclesInEngine[q], obstacle, 0, distance, thread_args);    
-               // cout << "\nTraffic Lights: "<<distance;
+                result = accelerate(thread_args->vehiclesInEngine[q], obstacle, 0, distance, thread_args);                
               } 
           else
              result = accelerate(thread_args->vehiclesInEngine[q], obstacle, 1, distance, thread_args);
