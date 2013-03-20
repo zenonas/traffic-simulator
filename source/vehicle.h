@@ -30,8 +30,8 @@ public:
    int getExitPoint();
    void setType(int type);
    int getType();
-   void setCurrentSpeed(int x);
-   int getCurrentSpeed();
+   void setCurrentSpeed(double x);
+   double getCurrentSpeed();
    void setMaxSpeed(int speed);
    int getMaxSpeed();
    void setDriverType(int type);
@@ -54,7 +54,8 @@ public:
    bool updated;
 
 private:
-   int Type, CurrentSpeed, DriverType, Acceleration, MaxSpeed;
+   int Type, DriverType, Acceleration, MaxSpeed;
+   double CurrentSpeed;
    int CartesianPosition[2];
    int Timer;
    int entryPoint;

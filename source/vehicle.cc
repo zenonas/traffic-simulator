@@ -93,11 +93,11 @@ int vehicle::getType(){
 	return Type;
 }
 
-void vehicle::setCurrentSpeed(int x){
+void vehicle::setCurrentSpeed(double x){
 	CurrentSpeed=x;
 }
 
-int vehicle::getCurrentSpeed(){
+double vehicle::getCurrentSpeed(){
 	return CurrentSpeed;
 }
 

@@ -454,13 +454,7 @@ double move(vehicle *v, double targetSpeed, void *arguments) {
 	vector<int> vPath = v->getPath();
 	double newspeed;
 	//find the next roadnode to check if there is a turn
-	int nextRoadID=-1;
-	for (int i=0; i<vPath.size()-1; i++)
-		if (vPath[i] == newPos.roadNodeID)
-		{
-			nextRoadID=vPath[i+1];
-			break;
-		}
+
 	//cout <<	"Next Road " << nextRoadID  << " targetSpeed " << targetSpeed << endl;
 	double timeToAcs = fabs((v->getCurrentSpeed() - targetSpeed)/v->getAcceleration());
 	//cout << "timeToAcs " << timeToAcs << endl;
@@ -478,7 +472,7 @@ double move(vehicle *v, double targetSpeed, void *arguments) {
 		newspeed = v->getCurrentSpeed() + v->getAcceleration() * timeToAcs;
 		v->setCurrentSpeed(newspeed);
 	} else if (timeToAcs < 0) {
-		timeToAcs = timeToAcs * -1;
+		//timeToAcs = timeToAcs * -1;
 		if (timeToAcs == thread_args->sleep_time)
 			distanceToTravel = (v->getCurrentSpeed() * thread_args->sleep_time) - ((v->getAcceleration() * timeToAcs * timeToAcs)/2.0);
 		else if (timeToAcs < thread_args->sleep_time) {
@@ -534,10 +528,15 @@ double speedForMinGap(vehicle *v, double distanceTarget, void *arguments){
 		distanceTarget -= 1; //1M SAFE GAP
 	
 	double Delta = (v->getCurrentSpeed() * v->getCurrentSpeed()) + 2 * (v->getAcceleration() * distanceTarget);
+	Delta = -1;
 	//cout << "Delta " << Delta << endl;
-	if (Delta < 0) {
+	if (Delta < 0 && v->getCurrentSpeed() == 0) {
+		newSpeed = v->getAcceleration() * thread_args->sleep_time;
+	}
+	else if (Delta < 0) {
 		return v->getCurrentSpeed();
-	} else {
+	} 
+	else if (Delta > 0){
 		timeToDecel = (sqrt(Delta) - v->getCurrentSpeed())/v->getAcceleration() ;
 		if (timeToDecel <= thread_args->sleep_time) {
 			newSpeed = v->getCurrentSpeed() - (v->getAcceleration() * timeToDecel);
@@ -545,6 +544,7 @@ double speedForMinGap(vehicle *v, double distanceTarget, void *arguments){
 			newSpeed = v->getCurrentSpeed() - (v->getAcceleration() * thread_args->sleep_time);
 		}
 	}
+	cout << "speed gap: " << newSpeed;
 	return newSpeed;
 }
 
