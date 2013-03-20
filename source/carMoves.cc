@@ -457,11 +457,12 @@ double move(vehicle *v, double targetSpeed, void *arguments) {
 
 	//cout <<	"Next Road " << nextRoadID  << " targetSpeed " << targetSpeed << endl;
 	double timeToAcs = fabs((v->getCurrentSpeed() - targetSpeed)/v->getAcceleration());
-	//cout << "timeToAcs " << timeToAcs << endl;
+	cout << "timeToAcs " << timeToAcs << endl;
 
-	if (timeToAcs >= 0) {
-		if (timeToAcs == thread_args->sleep_time)
+	if (v->getCurrentSpeed() <= targetSpeed) {
+		if (timeToAcs == thread_args->sleep_time) {
 			distanceToTravel = (v->getCurrentSpeed() * thread_args->sleep_time) + ((v->getAcceleration() * timeToAcs * timeToAcs)/2.0);
+		}
 		else if (timeToAcs < thread_args->sleep_time) {
 			double restOfTime = thread_args->sleep_time - timeToAcs;
 			double acsDistance = (v->getCurrentSpeed() * timeToAcs) + ((v->getAcceleration() * timeToAcs * timeToAcs)/2.0);
@@ -471,7 +472,7 @@ double move(vehicle *v, double targetSpeed, void *arguments) {
 		}	
 		newspeed = v->getCurrentSpeed() + v->getAcceleration() * timeToAcs;
 		v->setCurrentSpeed(newspeed);
-	} else if (timeToAcs < 0) {
+	} else if (v->getCurrentSpeed() > targetSpeed) {
 		//timeToAcs = timeToAcs * -1;
 		if (timeToAcs == thread_args->sleep_time)
 			distanceToTravel = (v->getCurrentSpeed() * thread_args->sleep_time) - ((v->getAcceleration() * timeToAcs * timeToAcs)/2.0);
@@ -527,8 +528,8 @@ double speedForMinGap(vehicle *v, double distanceTarget, void *arguments){
 	else if (v->getDriverType() == 2)
 		distanceTarget -= 1; //1M SAFE GAP
 	
-	double Delta = (v->getCurrentSpeed() * v->getCurrentSpeed()) + 2 * (v->getAcceleration() * distanceTarget);
-	Delta = -1;
+	double Delta = (v->getCurrentSpeed() * v->getCurrentSpeed()) - 2 * (v->getAcceleration() * distanceTarget);
+	//Delta = -1;
 	//cout << "Delta " << Delta << endl;
 	if (Delta < 0 && v->getCurrentSpeed() == 0) {
 		newSpeed = v->getAcceleration() * thread_args->sleep_time;
@@ -610,7 +611,7 @@ bool DriverDecision(vehicle* v, void *arguments)
 		}
 	} else if (NextType == 2) {
 		nextTL = (trafficLight *)obstacle;
-		result = move(v, speedForMinGap(v, distance, thread_args), thread_args);
+		result = move(v, 15, thread_args);
 		v->updated = true;
 		return true;
 	} 

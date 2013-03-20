@@ -46,7 +46,7 @@ void updateVehicles(WINDOW *vehiclestats, void *arguments) {
             mvwaddstr(vehiclestats,2+i,16,"Bus");
         else if (vehiclesInEngine[i]->getType() == 2)
             mvwaddstr(vehiclestats,2+i,16,"Lorry");
-        mvwprintw(vehiclestats,2+i,31,"%d",vehiclesInEngine[i]->getCurrentSpeed());
+        mvwprintw(vehiclestats,2+i,31,"%.f",vehiclesInEngine[i]->getCurrentSpeed());
         mvwprintw(vehiclestats,2+i,41,"%d",vehiclesInEngine[i]->getEntryPoint());
         mvwprintw(vehiclestats,2+i,51,"%d",vehiclesInEngine[i]->getExitPoint());
         for (int vp=0; vp<vehiclePath.size(); vp++) {
