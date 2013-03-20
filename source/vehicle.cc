@@ -22,7 +22,7 @@ vehicle::vehicle(int id, int entryP, int exitP, map mymap){
 	setExitPoint(exitP);
 	calculatePath(mymap);
 	//initialize current pos
-	CurrentPosition.roadNodeID = -1;
+	CurrentPosition.roadNodeID = entryPoint;
 	CurrentPosition.p=0;
 	CurrentPosition.lane = decideLane(mymap);
 	//cout << "I return pos lane: " << CurrentPosition.lane << endl;

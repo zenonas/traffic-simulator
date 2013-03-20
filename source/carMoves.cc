@@ -455,14 +455,16 @@ double move(vehicle *v, double targetSpeed, void *arguments) {
 	double newspeed;
 	//find the next roadnode to check if there is a turn
 	int nextRoadID=-1;
-	for (int i=0; i<vPath.size(); i++)
+	for (int i=0; i<vPath.size()-1; i++)
 		if (vPath[i] == newPos.roadNodeID)
 		{
 			nextRoadID=vPath[i+1];
 			break;
 		}
+	//cout <<	"Next Road " << nextRoadID  << " targetSpeed " << targetSpeed << endl;
+	double timeToAcs = fabs((v->getCurrentSpeed() - targetSpeed)/v->getAcceleration());
+	//cout << "timeToAcs " << timeToAcs << endl;
 
-	double timeToAcs = (v->getCurrentSpeed() - targetSpeed)/v->getAcceleration();
 	if (timeToAcs >= 0) {
 		if (timeToAcs == thread_args->sleep_time)
 			distanceToTravel = (v->getCurrentSpeed() * thread_args->sleep_time) + ((v->getAcceleration() * timeToAcs * timeToAcs)/2.0);
@@ -531,11 +533,12 @@ double speedForMinGap(vehicle *v, double distanceTarget, void *arguments){
 	else if (v->getDriverType() == 2)
 		distanceTarget -= 1; //1M SAFE GAP
 	
-	double Delta = (v->getCurrentSpeed() * v->getCurrentSpeed()) - 2 * (v->getAcceleration() * distanceTarget);
+	double Delta = (v->getCurrentSpeed() * v->getCurrentSpeed()) + 2 * (v->getAcceleration() * distanceTarget);
+	//cout << "Delta " << Delta << endl;
 	if (Delta < 0) {
 		return v->getCurrentSpeed();
 	} else {
-		timeToDecel = (sqrt(Delta) - v->getCurrentSpeed())/(v->getAcceleration() * (-1));
+		timeToDecel = (sqrt(Delta) - v->getCurrentSpeed())/v->getAcceleration() ;
 		if (timeToDecel <= thread_args->sleep_time) {
 			newSpeed = v->getCurrentSpeed() - (v->getAcceleration() * timeToDecel);
 		} else if (timeToDecel > thread_args->sleep_time) {
@@ -559,7 +562,7 @@ bool DriverDecision(vehicle* v, void *arguments)
 	vector<int> vPath = v->getPath();
 
 	//find the next roadnode to check if there is a turn
-	int nextRoadID=-1;
+	//int nextRoadID=-1;
 	/*for (int i=0; i<vPath.size()-1; i++)
 		if (vPath[i] == v->getCurrentPosition().roadNodeID) nextRoadID=vPath[i+1];
 	int distanceFROMrn = thread_args->mymap.getroadNode(v->getCurrentPosition().roadNodeID)->getLength() - v->getCurrentPosition().p;
