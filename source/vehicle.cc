@@ -16,7 +16,7 @@ using namespace std;
 
 vehicle::vehicle(int id, int entryP, int exitP, map mymap){
 	vehi_id = id;
-	setCurrentSpeed(0.0);
+	setCurrentSpeed(0);
 	setAcceleration(0);
 	setEntryPoint(entryP);
 	setExitPoint(exitP);
@@ -109,11 +109,11 @@ int vehicle::getDriverType(){
 	return DriverType;
 }
 
-void vehicle::setAcceleration(int x){
+void vehicle::setAcceleration(double x){
 	Acceleration=x;
 }
 
-int vehicle::getAcceleration(){
+double vehicle::getAcceleration(){
 	return Acceleration;
 }
 

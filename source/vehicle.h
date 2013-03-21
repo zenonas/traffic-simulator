@@ -36,8 +36,8 @@ public:
    int getMaxSpeed();
    void setDriverType(int type);
    int getDriverType();
-   void setAcceleration(int x);
-   int getAcceleration();
+   void setAcceleration(double x);
+   double getAcceleration();
    void setCartesianPosition(int CartesianPosition[]);
    int* getCartesianPosition();
    void setCurrentPosition(Position C);

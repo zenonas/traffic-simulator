@@ -29,6 +29,8 @@ void *nextObstacle(vehicle *cv, int &dist, int &retType, void *arguments);
 bool carFits(vehicle *v, vector<vehicle *> vIengine,vector<roadNode> allRoads,void *arguments);
 void *nextObstacleOL(vehicle *cv, int &dist, int &retType, void *arguments);
 bool canIovertake(vehicle *v, void *nextObs, int distanceFRONT, void *arguments);
-double move(vehicle *v, double targetSpeed, void *arguments);
-double speedForMinGap(vehicle *v, double distanceTarget, void *arguments);
-bool DriverDecision(vehicle* v, void *arguments);
+
+
+int DriverDecision(vehicle* v, void *arguments);
+int go(vehicle* v, int c, void *arguments, Position &newPos, double &newspeed);
+
