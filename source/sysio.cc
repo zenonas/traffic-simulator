@@ -53,7 +53,7 @@ void updateVehicles(WINDOW *vehiclestats, void *arguments) {
             mvwprintw(vehiclestats,2+i,60+(3*vp)," %d", vehiclePath[vp]);
         }        
         mvwprintw(vehiclestats,2+i,80,"roadNode: %d",vehiclesInEngine[i]->getCurrentPosition().roadNodeID);
-        mvwprintw(vehiclestats,2+i,93,"Pos: %d", vehiclesInEngine[i]->getCurrentPosition().p);
+        mvwprintw(vehiclestats,2+i,93,"Pos: %.f", vehiclesInEngine[i]->getCurrentPosition().p);
         mvwprintw(vehiclestats,2+i,105,"Lane: %d", vehiclesInEngine[i]->getCurrentPosition().lane);
         mvwprintw(vehiclestats,2+i,117,"%d s",vehiclesInEngine[i]->getTimer()*thread_args->sleep_time);
 

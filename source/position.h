@@ -19,7 +19,7 @@ public:
 	Position();
 	~Position();
 	int roadNodeID;
-	int p;
+	double p;
 	int lane;
 
 };
