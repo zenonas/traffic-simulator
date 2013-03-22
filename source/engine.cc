@@ -43,7 +43,7 @@ void *engine(void *arguments)
   v3->setDriverType(1);
   thread_args->VWaitingQ.push(v1); 
   thread_args->VWaitingQ.push(v2);
-  //thread_args->VWaitingQ.push(v3);
+
    
   //vehicle *v3 = new vehicle(0,2,1,thread-args->mymap);
   while (!thread_args->finished && thread_args->mymap.created == true) {
@@ -78,14 +78,20 @@ void *engine(void *arguments)
 	 }
     int re;
     vector<roadNode> roads = thread_args->mymap.getunfRoads();
+
+    if (thread_args->tick_count == 5) {
+      thread_args->vehiclesInEngine.push_back(v3);
+      vehicle *tempv3 = thread_args->vehiclesInEngine[2];
+      vehicle *tempv2 = thread_args->vehiclesInEngine[1];
+      vehicle *tempv1 = thread_args->vehiclesInEngine[0];
+      thread_args->vehiclesInEngine[0] = tempv3;
+      thread_args->vehiclesInEngine[1] = tempv2;
+      thread_args->vehiclesInEngine[2] = tempv1;
+    }
+
     for(int q=0; q<thread_args->vehiclesInEngine.size(); q++){
       if (!thread_args->vehiclesInEngine[q]->updated){
         re = DriverDecision(thread_args->vehiclesInEngine[q],thread_args);
-        if (re == -1) {
-          delete thread_args->vehiclesInEngine[q];
-          thread_args->vehiclesInEngine.erase(thread_args->vehiclesInEngine.begin()+q);
-          thread_args->simstats.addRemVehi();
-        }
       }
 
     }    
