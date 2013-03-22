@@ -27,9 +27,9 @@ int myNewLaneIs(Position cPos, roadNode *nextRoad,void *arguments);
 double calcDistance(vector<int> Path, Position p1, Position p2, void *arguments);
 void *nextObstacle(vehicle *cv, bool mylane, double &dist, int &retType, void *arguments);
 bool carFits(vehicle *v, vector<vehicle *> vIengine,vector<roadNode> allRoads,void *arguments);
-bool canIovertake(vehicle *v, void *nextObs, int distanceFRONT, void *arguments);
+bool canIovertake(vehicle *v, vehicle *nextVehicle, double distanceFRONT, void *arguments);
 
 
 int DriverDecision(vehicle* v, void *arguments);
-int go(vehicle* v, int c, void *arguments, Position &newPos, double &newspeed);
+int go(vehicle* v, int c, void *arguments, Position &newPos, double &newspeed, double distanceN);
 

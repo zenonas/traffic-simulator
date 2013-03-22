@@ -32,15 +32,15 @@ void *engine(void *arguments)
    	entryQueues.push_back(currentQueue);
   }
 
-  vehicle *v1 = new vehicle(0,1,2,thread_args->mymap);
+  vehicle *v1 = new vehicle(0,3,1,thread_args->mymap);
   vehicle *v2 = new vehicle(1,1,3,thread_args->mymap);
   vehicle *v3 = new vehicle(2,1,3,thread_args->mymap);
   v1->setType(0); 
-  v2->setType(2);
-  v3->setType(1);
-  v1->setDriverType(1);
-  v2->setDriverType(1); 
-  v3->setDriverType(1);
+  v2->setType(0);
+  v3->setType(0);
+  v1->setDriverType(0);
+  v2->setDriverType(0); 
+  v3->setDriverType(2);
   thread_args->VWaitingQ.push(v1); 
   thread_args->VWaitingQ.push(v2);
 
@@ -85,8 +85,8 @@ void *engine(void *arguments)
       vehicle *tempv2 = thread_args->vehiclesInEngine[1];
       vehicle *tempv1 = thread_args->vehiclesInEngine[0];
       thread_args->vehiclesInEngine[0] = tempv3;
-      thread_args->vehiclesInEngine[1] = tempv2;
-      thread_args->vehiclesInEngine[2] = tempv1;
+      thread_args->vehiclesInEngine[2] = tempv2;
+      thread_args->vehiclesInEngine[1] = tempv1;
     }
 
     for(int q=0; q<thread_args->vehiclesInEngine.size(); q++){

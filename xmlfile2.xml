@@ -13,7 +13,7 @@
 <Point name="x">0</Point>
 <Point name="y">0</Point>
 <Type name="type">2</Type>
-<Timer name="timer">30</Timer>
+<Timer name="timer">3000</Timer>
 </Node>
 <Length name="length">1500</Length>
 <MaxSpeed name="maxSpeed">22</MaxSpeed>
