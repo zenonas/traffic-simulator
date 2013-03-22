@@ -160,7 +160,7 @@ int calcDistance(vector<int> Path, Position p1, Position p2, void *arguments) {
 }
 
 
-void *nextObstacle(vehicle *cv, int &dist, int &retType, void *arguments) {
+void *nextObstacle(vehicle *cv, bool mylane, int &dist, int &retType, void *arguments) {
 	void *obs;
 	struct thread_arguments *thread_args;
 	thread_args = (struct thread_arguments *)arguments;
@@ -186,6 +186,10 @@ void *nextObstacle(vehicle *cv, int &dist, int &retType, void *arguments) {
 		roadNode *road = thread_args->mymap.getroadNode(cvPath[p]);
 		vector<vehicle *> roadNodeVehicles = carsInRoadNode(thread_args->vehiclesInEngine, *road);
 		correctLane = myNewLaneIs(cv->getCurrentPosition(), road, thread_args);
+		if (!mylane) { 
+			if (correctLane == 1) correctLane = 0;
+				else correctLane = 1;
+		}
 		if (cv->getCurrentPosition().roadNodeID == cvPath[p] && roadNodeVehicles.size() > 1) {
 			for (int y=0; y<roadNodeVehicles.size(); y++) {
 				if (cv->vehi_id != roadNodeVehicles[y]->vehi_id && roadNodeVehicles[y]->getCurrentPosition().lane == correctLane) {
@@ -301,8 +305,8 @@ bool canIovertake(vehicle *v, void *nextObs, int distanceFRONT, void *arguments)
 	vehicle *VehicleOL;
 	vehicle *thirdVehicle;
 	trafficLight *thirdTL;
-	OLobstacle = nextObstacle(nextVehicle,distanceOL, retType,thread_args);
-	thirdObstacle = nextObstacle(nextVehicle,distanceTHIRD,retTypeTHIRD,thread_args);
+	OLobstacle = nextObstacle(nextVehicle, false,distanceOL, retType,thread_args);
+	thirdObstacle = nextObstacle(nextVehicle, true,distanceTHIRD,retTypeTHIRD,thread_args);
 	if (retType == 1) {
 		VehicleOL = (vehicle *)OLobstacle;
 	} else if (retType == 2) {
@@ -367,7 +371,7 @@ int DriverDecision(vehicle* v, void *arguments)
 	int distance;
 	int NextType;
 	void *obstacle;
-	obstacle = nextObstacle(v, distance, NextType, thread_args); 
+	obstacle = nextObstacle(v, true,distance, NextType, thread_args); 
 	int re;
 	//vehicle *nextVehicle;
 	trafficLight *nextTL;
