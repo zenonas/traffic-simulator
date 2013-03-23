@@ -39,7 +39,7 @@ void *engine(void *arguments)
   v2->setType(0);
   v3->setType(0);
   v1->setDriverType(0);
-  v2->setDriverType(0); 
+  v2->setDriverType(1); 
   v3->setDriverType(2);
   thread_args->VWaitingQ.push(v1); 
   thread_args->VWaitingQ.push(v2);

@@ -423,9 +423,9 @@ int DriverDecision(vehicle* v, void *arguments)
 					v->setCurrentSpeed(max);
 				else
 					v->setCurrentSpeed(newspeed);
-				/*
+				
 				if(newPos.p + d > thread_args->mymap.getroadNode(v->getCurrentPosition().roadNodeID)->getLength())
-					newPos.p = thread_args->mymap.getroadNode(v->getCurrentPosition().roadNodeID)->getLength() - d;*/
+					newPos.p = thread_args->mymap.getroadNode(v->getCurrentPosition().roadNodeID)->getLength() - d;
 				v->setCurrentPosition(newPos);
 
 			}else{	
@@ -447,8 +447,8 @@ int DriverDecision(vehicle* v, void *arguments)
 				else
 					v->setCurrentSpeed(newspeed);
 
-				/*if(newPos.p + d > thread_args->mymap.getroadNode(v->getCurrentPosition().roadNodeID)->getLength())
-					newPos.p = thread_args->mymap.getroadNode(v->getCurrentPosition().roadNodeID)->getLength() - d;*/
+				if(newPos.p + d > thread_args->mymap.getroadNode(v->getCurrentPosition().roadNodeID)->getLength())
+					newPos.p = thread_args->mymap.getroadNode(v->getCurrentPosition().roadNodeID)->getLength() - d;
 				v->setCurrentPosition(newPos);
 
 			}else{	
@@ -532,9 +532,7 @@ else if (c == 3){
 	newspeed = v->getCurrentSpeed();
 	distanceToTravel = newspeed * thread_args->sleep_time;
 }
-if (distanceToTravel > distanceN) {
-	distanceToTravel = distanceN;
-}
+
 if (newspeed <= 0) {
 	newspeed = 0;
 	return 1;

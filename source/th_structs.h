@@ -26,7 +26,7 @@ struct thread_arguments {
       double vehicle_ratios[3];
       double driver_ratios[3];
       bool arg_changed;
-      int sleep_time;
+      double sleep_time;
       int tick_count;
       queue<vehicle *> VWaitingQ;
       map mymap;

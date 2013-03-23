@@ -55,7 +55,7 @@ void updateVehicles(WINDOW *vehiclestats, void *arguments) {
         mvwprintw(vehiclestats,2+i,80,"roadNode: %d",vehiclesInEngine[i]->getCurrentPosition().roadNodeID);
         mvwprintw(vehiclestats,2+i,93,"Pos: %.f", vehiclesInEngine[i]->getCurrentPosition().p);
         mvwprintw(vehiclestats,2+i,105,"Lane: %d", vehiclesInEngine[i]->getCurrentPosition().lane);
-        mvwprintw(vehiclestats,2+i,117,"%d s",vehiclesInEngine[i]->getTimer()*thread_args->sleep_time);
+        mvwprintw(vehiclestats,2+i,117,"%.f s",vehiclesInEngine[i]->getTimer()*thread_args->sleep_time);
 
         //mvwprintw(vehiclestats,2+i,51,"%d",vehiclesInEngine[i]->getCurrentSpeed()); //path
         //vwprintw(vehiclestats,2+i,16,"%d",vehiclesInEngine[i]->getCurrentSpeed());  //current position in path
@@ -280,14 +280,14 @@ void *inout(void *arguments)
     mvwaddstr(headerwin, 1, midpointx-12,"Traffic Simulation System");
     mvwaddstr(headerwin, 2, 2,"TEAM B: Zinon Kyprianou, Panikos Lazarou, Maria Leventopoulou,");
     mvwaddstr(headerwin, 3, 10,"Adesinmisola Ogunsanya, Kosmas Tsakmakidis");
-    mvwaddstr(headerwin,4,2,"build date: 19/3/2013");
+    mvwaddstr(headerwin,4,2,"build date: 23/3/2013");
     mvwaddstr(headerwin,5,COLS-40,"Simulation Status: Running");
     mvwaddstr(stdstats,1,midpointx, "Total Vehicles in engine:");
     mvwprintw(stdstats,1,midpointx+27, "%d",thread_args->simstats.getTotalVehicles());
     mvwaddstr(stdstats,2,2, "Average time in Engine:");
-    mvwprintw(stdstats,2,27, "%0.00f s",thread_args->simstats.getAvTimeinEngine()*thread_args->sleep_time );
+    mvwprintw(stdstats,2,27, "%.f s",thread_args->simstats.getAvTimeinEngine()*thread_args->sleep_time );
     mvwaddstr(stdstats,1,2, "Sim granularity: ");
-    mvwprintw(stdstats,1,20,"%d s",thread_args->sleep_time);
+    mvwprintw(stdstats,1,20,"%.f s",thread_args->sleep_time);
     mvwaddstr(stdstats,1,25, "Sim updates: ");
     mvwaddstr(stdstats,2,midpointx,"Cars: ");
     mvwprintw(stdstats,2,midpointx+6, "%d",thread_args->simstats.getVehicleTypeNum(0));
@@ -357,8 +357,8 @@ void *inout(void *arguments)
     nodelay(cmdin,TRUE);
     while(!thread_args->finished) {
         
-        mvwprintw(stdstats,2,27, "%0.00f",thread_args->simstats.getAvTimeinEngine()*thread_args->sleep_time);
-        mvwprintw(stdstats,1,20,"%d",thread_args->sleep_time);
+        mvwprintw(stdstats,2,27, "%.f",thread_args->simstats.getAvTimeinEngine()*thread_args->sleep_time);
+        mvwprintw(stdstats,1,20,"%.f",thread_args->sleep_time);
         mvwprintw(stdstats,3,27, "%.00f",thread_args->simstats.getAvSpeed());
         updateTrafficLights(trafficlstats, thread_args);
         mvwprintw(stdstats,2,midpointx+6, "%d",thread_args->simstats.getVehicleTypeNum(0));
