@@ -27,7 +27,7 @@ vehicle::vehicle(int id, int entryP, int exitP, map mymap){
 	CurrentPosition.lane = decideLane(mymap);
 	//cout << "I return pos lane: " << CurrentPosition.lane << endl;
 	Timer = 0;
-	crashed = false;
+	updated = false;
 }
 
 vehicle::~vehicle(){
