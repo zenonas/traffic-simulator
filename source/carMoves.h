@@ -31,5 +31,5 @@ bool canIovertake(vehicle *v, vehicle *nextVehicle, double distanceFRONT, void *
 
 
 int DriverDecision(vehicle* v, void *arguments);
-int go(vehicle* v, int c, void *arguments, Position &newPos, double &newspeed, double distanceN);
+int go(vehicle* v, int c, void *arguments, Position &newPos, double &newspeed, double distanceN, bool overtaking);
 

@@ -81,14 +81,28 @@ void *engine(void *arguments)
       thread_args->vehiclesInEngine[0] = tempv3;
       thread_args->vehiclesInEngine[1] = tempv2;
       //thread_args->vehiclesInEngine[1] = tempv1;
-    }
+    } 
+    bool vehiclesInEngineUpdated = false;
+    while(!vehiclesInEngineUpdated && thread_args->vehiclesInEngine.size() > 0){
+      for(int q=0; q<thread_args->vehiclesInEngine.size(); q++){
+        if (!thread_args->vehiclesInEngine[q]->updated){
+          re = DriverDecision(thread_args->vehiclesInEngine[q],thread_args);
+          if (re == -1) {
+            delete thread_args->vehiclesInEngine[q];
+            thread_args->vehiclesInEngine.erase(thread_args->vehiclesInEngine.begin()+q);
+            thread_args->simstats.addRemVehi();        
+          }
+        }
+      } 
 
-    for(int q=0; q<thread_args->vehiclesInEngine.size(); q++){
-      if (!thread_args->vehiclesInEngine[q]->updated){
-        re = DriverDecision(thread_args->vehiclesInEngine[q],thread_args);
+      for(int q=0; q<thread_args->vehiclesInEngine.size(); q++){
+        if (!thread_args->vehiclesInEngine[q]->updated){
+          vehiclesInEngineUpdated = false;
+          break;
+        }
+        vehiclesInEngineUpdated = true;
       }
-
-    }    
+    }
 
 // traffic lights handling
 for(int i=0; i<thread_args->mymap.trafficlights.size(); i++) {

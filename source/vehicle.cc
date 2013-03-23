@@ -66,16 +66,19 @@ void vehicle::setType(int type){
 	Type=type;
 	if (type == 0){
 		setMaxSpeed(45);
+		VLength = 4;
 		//after 5 sec will  have 72km/h
 		setAcceleration(4);
 	}
 	else if (type == 1){
 		setMaxSpeed(27);
+		VLength = 12;
 		//after 5 sec will  have 54km/h
 		setAcceleration(2);
 	}
 	else if (type == 2){
 		setMaxSpeed(20);
+		VLength = 16;
 		//after 5 sec will  have 36km/h
 		setAcceleration(1);	
 	}
@@ -87,6 +90,14 @@ void vehicle::setMaxSpeed(int speed){
 
 int vehicle::getMaxSpeed(){
 	return MaxSpeed;
+}
+
+void vehicle::setVLength(int length){
+	VLength = length;
+}
+
+int vehicle::getVLength(){
+	return VLength;
 }
 
 int vehicle::getType(){

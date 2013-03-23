@@ -34,6 +34,8 @@ public:
    double getCurrentSpeed();
    void setMaxSpeed(int speed);
    int getMaxSpeed();
+   void setVLength(int length);
+   int getVLength();
    void setDriverType(int type);
    int getDriverType();
    void setAcceleration(double x);
@@ -55,6 +57,7 @@ public:
 
 private:
    int Type, DriverType, Acceleration, MaxSpeed;
+   int VLength;
    double CurrentSpeed;
    int CartesianPosition[2];
    int Timer;

@@ -241,7 +241,7 @@ void *nextObstacle(vehicle *cv, bool mylane, double &dist, int &retType, void *a
 		retType = 2;
 		obs = tlObs;
 	} else {
-		dist = 0;
+		dist = -1;
 		retType = 0;
 		obs = NULL;
 	}
@@ -275,14 +275,16 @@ bool carFits(vehicle *v, vector<vehicle *> vIengine,vector<roadNode> allRoads,vo
 			}
 		}
 		int spaceAvailable = closestP;
-		int safeDist = 1;
-
+		int gap;
+		if (v->getDriverType() == 0) gap = v->getVLength() + 2;
+		else if (v->getDriverType() == 1) gap = v->getVLength() + 3;
+		else if (v->getDriverType() == 2) gap = v->getVLength() + 1;
 		if (v->getType() == 0) {
-			spaceAvailable = spaceAvailable - safeDist - 10;		
+			spaceAvailable = spaceAvailable - gap - v->getVLength();
 		} else if (v->getType() == 1) {
-			spaceAvailable = spaceAvailable - safeDist - 15;		
+			spaceAvailable = spaceAvailable - gap - v->getVLength();
 		} else if (v->getType() == 2) {
-			spaceAvailable = spaceAvailable - safeDist - 20;		
+			spaceAvailable = spaceAvailable - gap - v->getVLength();
 		}
 
 		if (spaceAvailable >= 0) {
@@ -365,9 +367,11 @@ int DriverDecision(vehicle* v, void *arguments)
 {	
 	struct thread_arguments *thread_args;
 	thread_args =(struct thread_arguments *)arguments;
+	//start:;
 	double distance;
 	int NextType;
 	void *obstacle;
+	bool overtaking = false;
 	obstacle = nextObstacle(v, true,distance, NextType, thread_args); 
 	int re;
 	vehicle *nextVehicle;
@@ -390,12 +394,12 @@ int DriverDecision(vehicle* v, void *arguments)
 	double newspeed;
 	if (NextType == 0) {
 		if (v->getCurrentSpeed() == max){
-			re = go(v, 3, thread_args, newPos, newspeed,distance);
+			re = go(v, 3, thread_args, newPos, newspeed,distance,overtaking);
 			v->setCurrentSpeed(newspeed);
 			v->setCurrentPosition(newPos);
 		}
 		else{
-			re = go(v, 1, thread_args, newPos, newspeed,distance);
+			re = go(v, 1, thread_args, newPos, newspeed,distance,overtaking);
 			if (newspeed > max )
 				v->setCurrentSpeed(max);
 			else
@@ -405,8 +409,10 @@ int DriverDecision(vehicle* v, void *arguments)
 		v->updated = true;
 	} else if (NextType == 1) {
 		nextVehicle = (vehicle *)obstacle;
+		distance -= nextVehicle->getVLength();
 		if (canIovertake(v,nextVehicle,distance,thread_args)) {
 			max = nextVehicle->getCurrentSpeed()*1.3;
+			overtaking = true;
 		}
 		double targetspeed = nextVehicle->getCurrentSpeed();
 		double d = ( (targetspeed*targetspeed) - (v->getCurrentSpeed()*v->getCurrentSpeed()) )/(2*v->getAcceleration());
@@ -415,9 +421,9 @@ int DriverDecision(vehicle* v, void *arguments)
 		if (nextVehicle->updated){
 			if(distance  > d){	
 				if (v->getCurrentSpeed() == max)
-					re= go(v, 3, thread_args, newPos, newspeed,distance);
+					re= go(v, 3, thread_args, newPos, newspeed,distance,overtaking);
 				else
-					re =go(v, 1, thread_args, newPos, newspeed,distance);
+					re =go(v, 1, thread_args, newPos, newspeed,distance,overtaking);
 
 				if (newspeed > max )	
 					v->setCurrentSpeed(max);
@@ -429,35 +435,13 @@ int DriverDecision(vehicle* v, void *arguments)
 				v->setCurrentPosition(newPos);
 
 			}else{	
-				re = go(v, 2, thread_args, newPos, newspeed,distance);
+				re = go(v, 2, thread_args, newPos, newspeed,distance,overtaking);
 				v->setCurrentSpeed(newspeed);
 				v->setCurrentPosition(newPos);
 			}
 			v->updated = true;
-		} else if (!nextVehicle->updated) {
-			int re = DriverDecision(nextVehicle, thread_args);
-			if(distance  > d){	
-				if (v->getCurrentSpeed() == max)
-					re= go(v, 3, thread_args, newPos, newspeed,distance);
-				else
-					re =go(v, 1, thread_args, newPos, newspeed,distance);
-
-				if (newspeed > max )	
-					v->setCurrentSpeed(max);
-				else
-					v->setCurrentSpeed(newspeed);
-
-				if(newPos.p + d > thread_args->mymap.getroadNode(v->getCurrentPosition().roadNodeID)->getLength())
-					newPos.p = thread_args->mymap.getroadNode(v->getCurrentPosition().roadNodeID)->getLength() - d;
-				v->setCurrentPosition(newPos);
-
-			}else{	
-				re = go(v, 2, thread_args, newPos, newspeed,distance);
-				v->setCurrentSpeed(newspeed);
-				v->setCurrentPosition(newPos);
-			}
-			v->updated = true;
-		}
+		} else if (!nextVehicle->updated) 
+			return 3;
 	} else if (NextType == 2) {
 
 		nextTL = (trafficLight *)obstacle;
@@ -465,9 +449,9 @@ int DriverDecision(vehicle* v, void *arguments)
 		//cout << "d= " << d << " - distance= " << distance << endl;
 		if(distance  > d){	
 			if (v->getCurrentSpeed() == max)
-				re= go(v, 3, thread_args, newPos, newspeed,distance);
+				re= go(v, 3, thread_args, newPos, newspeed,distance,overtaking);
 			else
-				re =go(v, 1, thread_args, newPos, newspeed,distance);
+				re =go(v, 1, thread_args, newPos, newspeed,distance,overtaking);
 
 			if (newspeed > max)
 				v->setCurrentSpeed(max);
@@ -479,10 +463,10 @@ int DriverDecision(vehicle* v, void *arguments)
 		}else{	
 
 			
-			cout << "SPEED: " << v->getCurrentSpeed() << endl;
+			//cout << "SPEED: " << v->getCurrentSpeed() << endl;
 			//cout << "POS: " << v->getCurrentPosition().p << endl;
 
-			re = go(v, 2, thread_args, newPos, newspeed,distance);
+			re = go(v, 2, thread_args, newPos, newspeed,distance,overtaking);
 
 			v->setCurrentSpeed(newspeed);
 			v->setCurrentPosition(newPos);
@@ -505,7 +489,7 @@ int DriverDecision(vehicle* v, void *arguments)
 
 
 
-int go(vehicle* v, int c, void *arguments, Position &newPos, double &newspeed, double distanceN){
+int go(vehicle* v, int c, void *arguments, Position &newPos, double &newspeed, double distanceN, bool overtaking){
 
 struct thread_arguments *thread_args;
 thread_args =(struct thread_arguments *)arguments;
@@ -521,21 +505,28 @@ vector<int> vPath = v->getPath();
 // ACCELERATION
 if (c == 1){
 	newspeed = v->getCurrentSpeed() + v->getAcceleration() * thread_args->sleep_time;
-	distanceToTravel = fabs(newspeed * thread_args->sleep_time + (v->getAcceleration()* thread_args->sleep_time*thread_args->sleep_time)/2);
+	distanceToTravel = fabs((v->getCurrentSpeed() * thread_args->sleep_time) + (v->getAcceleration()* thread_args->sleep_time*thread_args->sleep_time)/2);
 }
 // DECELERATION
 else if (c == 2){
 	newspeed = v->getCurrentSpeed() - v->getAcceleration() * thread_args->sleep_time;
-	distanceToTravel = fabs(newspeed * thread_args->sleep_time - (v->getAcceleration()* thread_args->sleep_time*thread_args->sleep_time)/2);
+	distanceToTravel = fabs((v->getCurrentSpeed() * thread_args->sleep_time) - (v->getAcceleration()* thread_args->sleep_time*thread_args->sleep_time)/2);
 }
 else if (c == 3){
 	newspeed = v->getCurrentSpeed();
-	distanceToTravel = newspeed * thread_args->sleep_time;
+	distanceToTravel = v->getCurrentSpeed() * thread_args->sleep_time;
 }
 
 if (newspeed <= 0) {
 	newspeed = 0;
 	return 1;
+}
+int gap;
+if (v->getDriverType() == 0) gap = 2;
+else if (v->getDriverType() == 1) gap = 3;
+else if (v->getDriverType() == 2) gap = 1;
+if (distanceToTravel > distanceN && !overtaking && distanceN != -1) {
+	distanceToTravel = fabs(distanceN - gap);
 }
 
 int z=0;
