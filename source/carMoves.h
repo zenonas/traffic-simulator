@@ -18,6 +18,7 @@ Copyright (c) King's College London
 #include <iostream>
 #include <math.h>
 #include <stdlib.h>
+#include <time.h>
 
 using namespace std;
 

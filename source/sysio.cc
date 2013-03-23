@@ -296,6 +296,7 @@ void *inout(void *arguments)
     mvwaddstr(stdstats,2,midpointx+20,"Lorries: ");
     mvwprintw(stdstats,2,midpointx+30, "%d",thread_args->simstats.getVehicleTypeNum(2));
     mvwaddstr(stdstats,3,midpointx,"Drivers(Normal:    Cautious:    Aggressive:   )");
+    mvwaddstr(stdstats,4,midpointx,"Total Number of Crashed Vehicles: ");
     mvwprintw(stdstats,3,midpointx+16,"%d",thread_args->simstats.getDriverTypeNum(0));
     mvwprintw(stdstats,3,midpointx+30,"%d",thread_args->simstats.getDriverTypeNum(1));
     mvwprintw(stdstats,3,midpointx+45,"%d",thread_args->simstats.getDriverTypeNum(2));
@@ -365,6 +366,7 @@ void *inout(void *arguments)
         mvwprintw(stdstats,2,midpointx+17, "%d",thread_args->simstats.getVehicleTypeNum(1));
         mvwprintw(stdstats,2,midpointx+30, "%d",thread_args->simstats.getVehicleTypeNum(2));
         mvwprintw(stdstats,1,midpointx+27, "%d",thread_args->simstats.getTotalVehicles());
+        mvwprintw(stdstats,4,midpointx+35, "%d",thread_args->simstats.getTotalCrashedVehicles());
         mvwprintw(stdstats,3,midpointx+16,"%d",thread_args->simstats.getDriverTypeNum(0));
         mvwprintw(stdstats,3,midpointx+30,"%d",thread_args->simstats.getDriverTypeNum(1));
         mvwprintw(stdstats,3,midpointx+45,"%d",thread_args->simstats.getDriverTypeNum(2));

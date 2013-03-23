@@ -143,6 +143,13 @@ int statistics::getRemVehi(){
 	return vehicesRemoved;
 }
 
+void statistics::addCrashedVehicle(){
+	vehiclesCrashed++;
+}
+
+int statistics::getTotalCrashedVehicles(){
+	return vehiclesCrashed;
+}
 
 map* statistics::getMap(){
 	return VehMap;

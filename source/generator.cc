@@ -16,7 +16,6 @@ using namespace std;
 
 void *generator(void *arguments)
 {  
-	pthread_exit(NULL);
    struct thread_arguments *thread_args;
    thread_args = (struct thread_arguments *)arguments;
    
@@ -37,7 +36,6 @@ void *generator(void *arguments)
 		BASED ON THIS DECIDE HOW MANY VEHICLES NEED TO BE CREATE IN THIS ROUND
 	*/
 		int actual_no_to_create = rand() % thread_args->max_no_vehicles + 2;
-		actual_no_to_create = 0;
 		//if (actual_no_to_create > 4) actual_no_to_create = 0; //maybe revise
 		vehicle* temp_array[actual_no_to_create];
 		//cout << "I SHALL CREATE: " << actual_no_to_create << endl;
@@ -92,8 +90,7 @@ void *generator(void *arguments)
 		}	
 	/* STEP 7: WAIT FOR THE NEXT ROUND DEPENDING ON THE SLEEP TIMER */
 		sleep(1);
-		break;
-		if (thread_args->vehiclesInEngine.size() == 20) {
+		if (thread_args->vehiclesInEngine.size() > 3) {
 			pthread_exit(NULL);
 		}
   }

@@ -367,7 +367,6 @@ int DriverDecision(vehicle* v, void *arguments)
 {	
 	struct thread_arguments *thread_args;
 	thread_args =(struct thread_arguments *)arguments;
-	//start:;
 	double distance;
 	int NextType;
 	void *obstacle;
@@ -377,6 +376,12 @@ int DriverDecision(vehicle* v, void *arguments)
 	vehicle *nextVehicle;
 	trafficLight *nextTL;
 	vector<int> vPath = v->getPath();
+	int nextRoadNodeID;
+	for (int np=0; np<vPath.size()-1; np++){
+		if (vPath[np] == v->getCurrentPosition().roadNodeID){
+			nextRoadNodeID = vPath[np+1];
+		}
+	}
 
 	double max;
 	if (v->getDriverType() == 0) {
@@ -393,6 +398,11 @@ int DriverDecision(vehicle* v, void *arguments)
 	newPos.p = v->getCurrentPosition().p; 
 	double newspeed;
 	if (NextType == 0) {
+		if (thread_args->mymap.checkTurn(v->getCurrentPosition().roadNodeID, nextRoadNodeID) && (thread_args->mymap.getroadNode(v->getCurrentPosition().roadNodeID)->getLength()-v->getCurrentPosition().p) < 10) {
+			re = go(v, 2, thread_args, newPos, newspeed,distance,overtaking);
+			v->setCurrentSpeed(newspeed);
+			v->setCurrentPosition(newPos);
+		}
 		if (v->getCurrentSpeed() == max){
 			re = go(v, 3, thread_args, newPos, newspeed,distance,overtaking);
 			v->setCurrentSpeed(newspeed);
@@ -413,11 +423,45 @@ int DriverDecision(vehicle* v, void *arguments)
 		if (canIovertake(v,nextVehicle,distance,thread_args)) {
 			max = nextVehicle->getCurrentSpeed()*1.3;
 			overtaking = true;
-		}
-		double targetspeed = nextVehicle->getCurrentSpeed();
-		double d = ( (targetspeed*targetspeed) - (v->getCurrentSpeed()*v->getCurrentSpeed()) )/(2*v->getAcceleration());
-		//double d = (max *max )/(2*v->getAcceleration());
+		} /*else {
+			
+			int crash_value = rand() % 100 + 1;
+			if (v->getDriverType() == 0) {
+				if (crash_value < 2) {
+					for (int l=0; l<thread_args->vehiclesInEngine.size(); l++){
+						if (v->vehi_id == thread_args->vehiclesInEngine[l]->vehi_id){
+							delete thread_args->vehiclesInEngine[l];
+							thread_args->vehiclesInEngine.erase(thread_args->vehiclesInEngine.begin()+l);
+          					thread_args->simstats.addCrashedVehicle();
+          				}
+          				if (nextVehicle->vehi_id == thread_args->vehiclesInEngine[l]->vehi_id){
+							delete thread_args->vehiclesInEngine[l];
+							thread_args->vehiclesInEngine.erase(thread_args->vehiclesInEngine.begin()+l);
+          					thread_args->simstats.addCrashedVehicle();        
+          				}
+          			}
+				}
+			} else if (v->getDriverType() == 2) {
+				if (crash_value < 4) {
+					for (int l=0; l<thread_args->vehiclesInEngine.size(); l++){
+						if (v->vehi_id == thread_args->vehiclesInEngine[l]->vehi_id){
+							delete thread_args->vehiclesInEngine[l];
+							thread_args->vehiclesInEngine.erase(thread_args->vehiclesInEngine.begin()+l);
+          					thread_args->simstats.addCrashedVehicle();
+          				}
+          				if (nextVehicle->vehi_id == thread_args->vehiclesInEngine[l]->vehi_id){
+							delete thread_args->vehiclesInEngine[l];
+							thread_args->vehiclesInEngine.erase(thread_args->vehiclesInEngine.begin()+l);
+          					thread_args->simstats.addCrashedVehicle();        
+          				}
+          			}
+				}
+			}
+		}*/
 
+		double targetspeed = nextVehicle->getCurrentSpeed();
+		//double d = ( (targetspeed*targetspeed) - (v->getCurrentSpeed()*v->getCurrentSpeed()) )/(2*v->getAcceleration());
+		double d = (max *max )/(2*v->getAcceleration());
 		if (nextVehicle->updated){
 			if(distance  > d){	
 				if (v->getCurrentSpeed() == max)
@@ -440,7 +484,7 @@ int DriverDecision(vehicle* v, void *arguments)
 				v->setCurrentPosition(newPos);
 			}
 			v->updated = true;
-		} else if (!nextVehicle->updated) 
+		} else if (!nextVehicle->updated)
 			return 3;
 	} else if (NextType == 2) {
 
