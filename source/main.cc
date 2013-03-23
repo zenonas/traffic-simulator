@@ -14,7 +14,7 @@ Copyright (c) King's College London
 #include <stdlib.h>
 #include <time.h>
 #include "generator.cc"
-#include "engine.cc"
+#include "engine.h"
 #include "sysio.h"
 #include "map.h"
 #include <string.h>
@@ -39,7 +39,7 @@ int main (int argc, char *argv[])
    th_args.driver_ratios[1] = 0.2; //cautious
    th_args.driver_ratios[2] = 0.15; //aggressive (nai stin ellada imaste)
    th_args.arg_changed = false;
-   th_args.sleep_time = 0.5; // this may change
+   th_args.sleep_time = 5.0; // this may change
    th_args.tick_count = 0;
    th_args.engine_change = false;
    th_args.debug = false;

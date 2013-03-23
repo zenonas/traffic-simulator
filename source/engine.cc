@@ -1,21 +1,15 @@
 /* Traffic Simulation System
 Group Project 7CCSMGPR - Team B
 Created: 15/2/2013
-Updated: 17/3/2013
+Updated: 23/3/2013
 File: engine.cc
 Description: This file specifies the engine thread of the system. Please treat as a "main" file and include any additional stuff you create rather than appending here.
 
 Copyright (c) King's College London
 
 */
-#include "th_structs.h"
-#include "map.h"
-#include "carMoves.h"
-#include "roadNode.h"
-#include "graphNode.h"
-#include "statistics.h"
-#include <vector>
-#include <iostream>
+
+#include "engine.h"
 
 using namespace std;
 
@@ -32,16 +26,16 @@ void *engine(void *arguments)
    	entryQueues.push_back(currentQueue);
   }
 
-  vehicle *v1 = new vehicle(0,3,1,thread_args->mymap);
+  //vehicle *v1 = new vehicle(0,3,1,thread_args->mymap);
   vehicle *v2 = new vehicle(1,1,3,thread_args->mymap);
   vehicle *v3 = new vehicle(2,1,3,thread_args->mymap);
-  v1->setType(0); 
+  //v1->setType(0); 
   v2->setType(0);
   v3->setType(0);
-  v1->setDriverType(0);
+  //v1->setDriverType(0);
   v2->setDriverType(1); 
   v3->setDriverType(2);
-  thread_args->VWaitingQ.push(v1); 
+  //thread_args->VWaitingQ.push(v1); 
   thread_args->VWaitingQ.push(v2);
 
    
@@ -81,12 +75,12 @@ void *engine(void *arguments)
 
     if (thread_args->tick_count == 5) {
       thread_args->vehiclesInEngine.push_back(v3);
-      vehicle *tempv3 = thread_args->vehiclesInEngine[2];
-      vehicle *tempv2 = thread_args->vehiclesInEngine[1];
-      vehicle *tempv1 = thread_args->vehiclesInEngine[0];
+      vehicle *tempv3 = thread_args->vehiclesInEngine[1];
+      vehicle *tempv2 = thread_args->vehiclesInEngine[0];
+      //vehicle *tempv1 = thread_args->vehiclesInEngine[0];
       thread_args->vehiclesInEngine[0] = tempv3;
-      thread_args->vehiclesInEngine[2] = tempv2;
-      thread_args->vehiclesInEngine[1] = tempv1;
+      thread_args->vehiclesInEngine[1] = tempv2;
+      //thread_args->vehiclesInEngine[1] = tempv1;
     }
 
     for(int q=0; q<thread_args->vehiclesInEngine.size(); q++){

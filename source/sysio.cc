@@ -53,7 +53,7 @@ void updateVehicles(WINDOW *vehiclestats, void *arguments) {
             mvwprintw(vehiclestats,2+i,60+(3*vp)," %d", vehiclePath[vp]);
         }        
         mvwprintw(vehiclestats,2+i,80,"roadNode: %d",vehiclesInEngine[i]->getCurrentPosition().roadNodeID);
-        mvwprintw(vehiclestats,2+i,93,"Pos: %.f", vehiclesInEngine[i]->getCurrentPosition().p);
+        mvwprintw(vehiclestats,2+i,93,"Pos: %.1f", vehiclesInEngine[i]->getCurrentPosition().p);
         mvwprintw(vehiclestats,2+i,105,"Lane: %d", vehiclesInEngine[i]->getCurrentPosition().lane);
         mvwprintw(vehiclestats,2+i,117,"%.f s",vehiclesInEngine[i]->getTimer()*thread_args->sleep_time);
 
@@ -285,9 +285,9 @@ void *inout(void *arguments)
     mvwaddstr(stdstats,1,midpointx, "Total Vehicles in engine:");
     mvwprintw(stdstats,1,midpointx+27, "%d",thread_args->simstats.getTotalVehicles());
     mvwaddstr(stdstats,2,2, "Average time in Engine:");
-    mvwprintw(stdstats,2,27, "%.f s",thread_args->simstats.getAvTimeinEngine()*thread_args->sleep_time );
+    mvwprintw(stdstats,2,27, "%.0f s",thread_args->simstats.getAvTimeinEngine()*thread_args->sleep_time );
     mvwaddstr(stdstats,1,2, "Sim granularity: ");
-    mvwprintw(stdstats,1,20,"%.f s",thread_args->sleep_time);
+    mvwprintw(stdstats,1,20,"%.1f s",thread_args->sleep_time);
     mvwaddstr(stdstats,1,25, "Sim updates: ");
     mvwaddstr(stdstats,2,midpointx,"Cars: ");
     mvwprintw(stdstats,2,midpointx+6, "%d",thread_args->simstats.getVehicleTypeNum(0));
@@ -358,8 +358,8 @@ void *inout(void *arguments)
     while(!thread_args->finished) {
         
         mvwprintw(stdstats,2,27, "%.f",thread_args->simstats.getAvTimeinEngine()*thread_args->sleep_time);
-        mvwprintw(stdstats,1,20,"%.f",thread_args->sleep_time);
-        mvwprintw(stdstats,3,27, "%.00f",thread_args->simstats.getAvSpeed());
+        mvwprintw(stdstats,1,20,"%.1f",thread_args->sleep_time);
+        mvwprintw(stdstats,3,27, "%.1f",thread_args->simstats.getAvSpeed());
         updateTrafficLights(trafficlstats, thread_args);
         mvwprintw(stdstats,2,midpointx+6, "%d",thread_args->simstats.getVehicleTypeNum(0));
         mvwprintw(stdstats,2,midpointx+17, "%d",thread_args->simstats.getVehicleTypeNum(1));
@@ -368,7 +368,7 @@ void *inout(void *arguments)
         mvwprintw(stdstats,3,midpointx+16,"%d",thread_args->simstats.getDriverTypeNum(0));
         mvwprintw(stdstats,3,midpointx+30,"%d",thread_args->simstats.getDriverTypeNum(1));
         mvwprintw(stdstats,3,midpointx+45,"%d",thread_args->simstats.getDriverTypeNum(2));
-        mvwprintw(stdstats,4,20,"%d", thread_args->simstats.getRemVehi());
+        mvwprintw(stdstats,4,23,"%d", thread_args->simstats.getRemVehi());
         mvwprintw(stdstats,4,58,"%d", thread_args->simstats.getMostCommonEntryP());
         mvwprintw(stdstats,4,63,"%d", thread_args->simstats.getMostCommonExitP()); 
         mvwprintw(stdstats,1,40, "%d",thread_args->tick_count);
