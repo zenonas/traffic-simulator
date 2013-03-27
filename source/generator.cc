@@ -90,7 +90,7 @@ void *generator(void *arguments)
 		}	
 	/* STEP 7: WAIT FOR THE NEXT ROUND DEPENDING ON THE SLEEP TIMER */
 		sleep(1);
-		if (thread_args->vehiclesInEngine.size() > 3) {
+		if (thread_args->vehiclesInEngine.size() > 20) {
 			pthread_exit(NULL);
 		}
   }

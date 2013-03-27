@@ -423,12 +423,20 @@ int DriverDecision(vehicle* v, void *arguments)
         if (canIovertake(v,nextVehicle,distance,thread_args)) {
             max = nextVehicle->getCurrentSpeed()*1.3;
             overtaking = true;
-        } 
+            int am_i_crashing = rand() % 10000 + 1;
+            if (v->getDriverType() == 0 && am_i_crashing < 1) {
+            	v->crashed = true;
+            	nextVehicle->crashed = true;
+            } else if (v->getDriverType() == 2 && am_i_crashing > 9980) {
+            	v->crashed = true;
+            	nextVehicle->crashed = true;
+            }
+        }
         double targetspeed = nextVehicle->getCurrentSpeed();
         //double d = ( (targetspeed*targetspeed) - (v->getCurrentSpeed()*v->getCurrentSpeed()) )/(2*v->getAcceleration());
         double d = (max *max )/(2*v->getAcceleration());
  
-        if (nextVehicle->updated){
+        //if (nextVehicle->updated){
             if(distance  > d){   
                 if (v->getCurrentSpeed() == max)
                     re= go(v, 3, thread_args, newPos, newspeed,distance,overtaking);
@@ -450,7 +458,7 @@ int DriverDecision(vehicle* v, void *arguments)
                 v->setCurrentPosition(newPos);
             }
             v->updated = true;
-        } else nextVehicle->updated = true;
+       // }
     } else if (NextType == 2) {
  
         nextTL = (trafficLight *)obstacle;

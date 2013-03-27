@@ -16,6 +16,7 @@ using namespace std;
 void *engine(void *arguments)
 {
 	sleep(5);
+  srand(time(NULL));
   struct thread_arguments *thread_args;
   thread_args = (struct thread_arguments *)arguments;
   vector<queue <vehicle *> > entryQueues;
@@ -49,9 +50,10 @@ void *engine(void *arguments)
   	 	entryQueues[queueToBe-1].push(currentV);
   	 	thread_args->VWaitingQ.pop();
     }
+
 	//START HANDLING THE ENTRY QUEUES
   	for (int k=0; k<entryQueues.size(); k++) { //iterate through all the entry queues
-      if (thread_args->vehiclesInEngine.size() > 2) break;
+     //
   	  if(!entryQueues[k].empty()) { //this will never be easily empty need to have && carfits() here
         if (thread_args->vehiclesInEngine.size() == 0) { //first time car definitely fits
   			   thread_args->vehiclesInEngine.push_back(entryQueues[k].front());
@@ -61,9 +63,11 @@ void *engine(void *arguments)
             thread_args->vehiclesInEngine.push_back(entryQueues[k].front());
 				    entryQueues[k].pop();
 				}
-		  }
-      
+		  }  
 	 }
+
+
+
     int re;
     vector<roadNode> roads = thread_args->mymap.getunfRoads();
     /*
@@ -76,7 +80,7 @@ void *engine(void *arguments)
       thread_args->vehiclesInEngine[1] = tempv2;
       //thread_args->vehiclesInEngine[1] = tempv1;
     } */
-  bool allUpdated = false;
+  /*bool allUpdated = false;
   while (!allUpdated) {      
     for(int q=0; q<thread_args->vehiclesInEngine.size(); q++){
       if (!thread_args->vehiclesInEngine[q]->updated){
@@ -89,7 +93,20 @@ void *engine(void *arguments)
         allUpdated = false;
       }
     }
-  }  
+  } */
+  for(int q=0; q<thread_args->vehiclesInEngine.size(); q++){
+      //if (!thread_args->vehiclesInEngine[q]->updated){
+        re = DriverDecision(thread_args->vehiclesInEngine[q],thread_args);    
+  }
+  
+  for (int cv=0; cv<thread_args->vehiclesInEngine.size(); cv++){
+    if (thread_args->vehiclesInEngine[cv]->crashed) {
+      delete thread_args->vehiclesInEngine[cv];
+      thread_args->vehiclesInEngine.erase(thread_args->vehiclesInEngine.begin()+cv);
+      thread_args->simstats.addCrashedVehicle();                
+    }
+  }
+    //} 
 // traffic lights handling
 for(int i=0; i<thread_args->mymap.trafficlights.size(); i++) {
   if (thread_args->mymap.trafficlights[i]->getTimer()!=0) {

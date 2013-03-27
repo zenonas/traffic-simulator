@@ -54,6 +54,7 @@ public:
    int decideLane(map mymap);
    int vehi_id;
    bool updated;
+   bool crashed;
 
 private:
    int Type, DriverType, Acceleration, MaxSpeed;
