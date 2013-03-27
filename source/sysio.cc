@@ -37,15 +37,25 @@ void updateVehicles(WINDOW *vehiclestats, void *arguments) {
         wclrtoeol(vehiclestats);
     }
     box(vehiclestats,0,0);
-    for (int i=0; i<vehiclesInEngine.size(); i++) {
+    int vehicles_to_print;
+    if (vehiclesInEngine.size() > LINES-21) vehicles_to_print = LINES-21;
+    else vehicles_to_print = vehiclesInEngine.size();
+    for (int i=0; i<vehicles_to_print; i++) {
+        if (vehiclesInEngine[i]->crashed) wattron(vehiclestats, COLOR_PAIR(5));
         vector<int> vehiclePath = vehiclesInEngine[i]->getPath();
         mvwprintw(vehiclestats,2+i,3,"%d",vehiclesInEngine[i]->vehi_id);
         if (vehiclesInEngine[i]->getType() == 0)
-            mvwaddstr(vehiclestats,2+i,16,"Car");
+            mvwaddstr(vehiclestats,2+i,19,"Car");
         else if (vehiclesInEngine[i]->getType() == 1)
-            mvwaddstr(vehiclestats,2+i,16,"Bus");
+            mvwaddstr(vehiclestats,2+i,19,"Bus");
         else if (vehiclesInEngine[i]->getType() == 2)
-            mvwaddstr(vehiclestats,2+i,16,"Lorry");
+            mvwaddstr(vehiclestats,2+i,19,"Lorry");
+        if (vehiclesInEngine[i]->getDriverType() == 0)
+            mvwaddstr(vehiclestats,2+i,16,"N:");
+        else if (vehiclesInEngine[i]->getDriverType() == 1)
+            mvwaddstr(vehiclestats,2+i,16,"C:");
+        else if (vehiclesInEngine[i]->getDriverType() == 2)
+            mvwaddstr(vehiclestats,2+i,16,"A:");
         mvwprintw(vehiclestats,2+i,31,"%.f",vehiclesInEngine[i]->getCurrentSpeed());
         mvwprintw(vehiclestats,2+i,41,"%d",vehiclesInEngine[i]->getEntryPoint());
         mvwprintw(vehiclestats,2+i,51,"%d",vehiclesInEngine[i]->getExitPoint());
@@ -56,7 +66,7 @@ void updateVehicles(WINDOW *vehiclestats, void *arguments) {
         mvwprintw(vehiclestats,2+i,93,"Pos: %.1f", vehiclesInEngine[i]->getCurrentPosition().p);
         mvwprintw(vehiclestats,2+i,105,"Lane: %d", vehiclesInEngine[i]->getCurrentPosition().lane);
         mvwprintw(vehiclestats,2+i,117,"%.f s",vehiclesInEngine[i]->getTimer()*thread_args->sleep_time);
-
+        if (vehiclesInEngine[i]->crashed) wattroff(vehiclestats, COLOR_PAIR(5));
         //mvwprintw(vehiclestats,2+i,51,"%d",vehiclesInEngine[i]->getCurrentSpeed()); //path
         //vwprintw(vehiclestats,2+i,16,"%d",vehiclesInEngine[i]->getCurrentSpeed());  //current position in path
     }
@@ -84,8 +94,7 @@ void updateTrafficLights(WINDOW *trafficlstats, void *arguments){
             mvwaddstr(trafficlstats,2+i,30,"GREEN");
             wattroff(trafficlstats,COLOR_PAIR(3));
         }
-        mvwprintw(trafficlstats,2+i,40,"%d",thread_args->mymap.trafficlights[i]->getPos().roadNodeID);
-        mvwprintw(trafficlstats,2+i,45,"%d",thread_args->mymap.trafficlights[i]->getPos().p);
+        mvwprintw(trafficlstats,2+i,45,"%d",thread_args->mymap.trafficlights[i]->getPos().roadNodeID);
         mvwprintw(trafficlstats,2+i,55,"%d",thread_args->mymap.trafficlights[i]->getPos().lane);
     }
 
@@ -128,19 +137,84 @@ int maxVehicleChange(WINDOW *cmdbox,void *arguments) {
     struct thread_arguments *thread_args;
     thread_args = (struct thread_arguments *)arguments;
     int midpointx = COLS / 2;
+    for (int y=0; y<LINES-17; y++) {
+        wmove(cmdbox,2+y,2);
+        wclrtoeol(cmdbox);
+    }
+    box(cmdbox,0,0);
     nodelay(cmdbox,FALSE);
     wattron(cmdbox, A_UNDERLINE);
-    mvwaddstr(cmdbox, 1, midpointx-12,"Traffic Simulation System");
-    mvwaddstr(cmdbox,2,midpointx-15,"Change the max number of Vehicles");
+    mvwaddstr(cmdbox,2,midpointx-15,"Set the max number of Vehicles to be generated");
     wattroff(cmdbox, A_UNDERLINE);
     mvwaddstr(cmdbox,3,2, "This controls the maximum number of vehicles the Vehicle generator is allowed to");
-    mvwaddstr(cmdbox,4,2, "create during each of the simulation updates");
-    mvwaddstr(cmdbox,5,2, "Please enter a new maximum number");
+    mvwaddstr(cmdbox,4,2, "create during each of the simulation updates (default is 20)");
+    mvwaddstr(cmdbox,5,2, "Please enter a maximum number");
     wattron(cmdbox, A_UNDERLINE);
     mvwaddstr(cmdbox,5,40, "          ");
     wattroff(cmdbox, A_UNDERLINE);
     int maxInLen = 4;
     char input[maxInLen];
+    bool changed = false;
+    for (int i=0; i<maxInLen; i++){
+        int charIn = mvwgetch(cmdbox,5,41+i);
+        if (charIn != '\n') {
+            input[i] = charIn;
+            changed = true;
+        }
+        else if (charIn == '\n' && i == 0)
+            break;
+        else
+            break;
+    }
+    if (!changed) return 1;
+    else if (changed) {
+        double newNum = atof(input);
+        thread_args->sleep_time = newNum;
+        return 1;
+    }
+}
+
+int setDriverRatio(WINDOW *cmdbox,void *arguments) {
+    struct thread_arguments *thread_args;
+    thread_args = (struct thread_arguments *)arguments;
+    int midpointx = COLS / 2;
+    for (int y=0; y<LINES-17; y++) {
+        wmove(cmdbox,2+y,2);
+        wclrtoeol(cmdbox);
+    }
+    box(cmdbox,0,0);
+    nodelay(cmdbox,FALSE);
+    wattron(cmdbox, A_UNDERLINE);
+    mvwaddstr(cmdbox,2,midpointx-15,"Set the Driver Type ratios");
+    wattroff(cmdbox, A_UNDERLINE);
+    mvwaddstr(cmdbox,3,2, "This controls the percentages of each driver types to be created.");
+    mvwaddstr(cmdbox,4,2, "the sum of the numbers you enter has to be 1");
+    mvwaddstr(cmdbox,5,2, "Please enter a normal driver ratio:");
+    wattron(cmdbox, A_UNDERLINE);
+    mvwaddstr(cmdbox,5,40, "          ");
+    wattroff(cmdbox, A_UNDERLINE);
+    int maxInLen = 5;
+    char input[maxInLen];
+    bool changed = false;
+    for (int i=0; i<maxInLen; i++){
+        int charIn = mvwgetch(cmdbox,5,41+i);
+        if (charIn != '\n') {
+            input[i] = charIn;
+            changed = true;
+        }
+        else if (charIn == '\n' && i == 0)
+            break;
+        else
+            break;
+    }
+    if (!changed) return 1;
+    if (changed) {
+        thread_args->driver_ratios[0] = atof(input);
+    }
+    mvwaddstr(cmdbox,5,2, "Please enter a cautious driver ratio:");
+    wattron(cmdbox, A_UNDERLINE);
+    mvwaddstr(cmdbox,5,40, "          ");
+    wattroff(cmdbox, A_UNDERLINE);
     for (int i=0; i<maxInLen; i++){
         int charIn = mvwgetch(cmdbox,5,41+i);
         if (charIn != '\n')
@@ -148,8 +222,83 @@ int maxVehicleChange(WINDOW *cmdbox,void *arguments) {
         else
             break;
     }
-    int newNum = atoi(input);
-    thread_args->max_no_vehicles = newNum;
+    thread_args->driver_ratios[1] = atof(input);
+    mvwaddstr(cmdbox,5,2, "Please enter an aggressive driver ratio:");
+    wattron(cmdbox, A_UNDERLINE);
+    mvwaddstr(cmdbox,5,40, "          ");
+    wattroff(cmdbox, A_UNDERLINE);
+    for (int i=0; i<maxInLen; i++){
+        int charIn = mvwgetch(cmdbox,5,41+i);
+        if (charIn != '\n')
+            input[i] = charIn;
+        else
+            break;
+    }
+    thread_args->driver_ratios[2] = atof(input);
+    return 1;
+}
+
+int setVehicleRatio(WINDOW *cmdbox,void *arguments) {
+    struct thread_arguments *thread_args;
+    thread_args = (struct thread_arguments *)arguments;
+    int midpointx = COLS / 2;
+    for (int y=0; y<LINES-17; y++) {
+        wmove(cmdbox,2+y,2);
+        wclrtoeol(cmdbox);
+    }
+    box(cmdbox,0,0);
+    nodelay(cmdbox,FALSE);
+    wattron(cmdbox, A_UNDERLINE);
+    mvwaddstr(cmdbox,2,midpointx-15,"Set the Vehicle Type ratios");
+    wattroff(cmdbox, A_UNDERLINE);
+    mvwaddstr(cmdbox,3,2, "This controls the percentages of each Vehicle types to be created.");
+    mvwaddstr(cmdbox,4,2, "the sum of the numbers you enter has to be 1");
+    mvwaddstr(cmdbox,5,2, "Please enter a ratio for Cars:");
+    wattron(cmdbox, A_UNDERLINE);
+    mvwaddstr(cmdbox,5,40, "          ");
+    wattroff(cmdbox, A_UNDERLINE);
+    int maxInLen = 5;
+    char input[maxInLen];
+    bool changed = false;
+    for (int i=0; i<maxInLen; i++){
+        int charIn = mvwgetch(cmdbox,5,41+i);
+        if (charIn != '\n') {
+            input[i] = charIn;
+            changed = true;
+        }
+        else if (charIn == '\n' && i == 0)
+            break;
+        else
+            break;
+    }
+    if (!changed) return 1;
+    if (changed) {
+        thread_args->vehicle_ratios[0] = atof(input);
+    }
+    mvwaddstr(cmdbox,5,2, "Please enter a ratio for Buses:");
+    wattron(cmdbox, A_UNDERLINE);
+    mvwaddstr(cmdbox,5,40, "          ");
+    wattroff(cmdbox, A_UNDERLINE);
+    for (int i=0; i<maxInLen; i++){
+        int charIn = mvwgetch(cmdbox,5,41+i);
+        if (charIn != '\n')
+            input[i] = charIn;
+        else
+            break;
+    }
+    thread_args->vehicle_ratios[1] = atof(input);
+    mvwaddstr(cmdbox,5,2, "Please enter a ratio for lorries:");
+    wattron(cmdbox, A_UNDERLINE);
+    mvwaddstr(cmdbox,5,40, "          ");
+    wattroff(cmdbox, A_UNDERLINE);
+    for (int i=0; i<maxInLen; i++){
+        int charIn = mvwgetch(cmdbox,5,41+i);
+        if (charIn != '\n')
+            input[i] = charIn;
+        else
+            break;
+    }
+    thread_args->vehicle_ratios[2] = atof(input);
     return 1;
 }
 
@@ -157,29 +306,41 @@ int changeSimTime(WINDOW *cmdbox,void *arguments) {
     struct thread_arguments *thread_args;
     thread_args = (struct thread_arguments *)arguments;
     int midpointx = COLS / 2;
+    for (int y=0; y<LINES-17; y++) {
+        wmove(cmdbox,2+y,2);
+        wclrtoeol(cmdbox);
+    }
+    box(cmdbox,0,0);
     nodelay(cmdbox,FALSE);
     wattron(cmdbox, A_UNDERLINE);
-    mvwaddstr(cmdbox, 1, midpointx-12,"Traffic Simulation System");
     mvwaddstr(cmdbox,2,midpointx-15,"Change the simulation granularity");
     wattroff(cmdbox, A_UNDERLINE);
     mvwaddstr(cmdbox,3,2, "This controls the time between each simulation tick. This setting defaults");
-    mvwaddstr(cmdbox,4,2, "to 5 second lapses");
-    mvwaddstr(cmdbox,5,2, "Please enter a new tick time:");
+    mvwaddstr(cmdbox,4,2, "to 5 second lapses (default is 5)");
+    mvwaddstr(cmdbox,5,2, "Please enter a tick time:");
     wattron(cmdbox, A_UNDERLINE);
     mvwaddstr(cmdbox,5,40, "          ");
     wattroff(cmdbox, A_UNDERLINE);
-    int maxInLen = 3;
+    int maxInLen = 5;
     char input[maxInLen];
+    bool changed = false;
     for (int i=0; i<maxInLen; i++){
         int charIn = mvwgetch(cmdbox,5,41+i);
-        if (charIn != '\n')
+        if (charIn != '\n') {
             input[i] = charIn;
+            changed = true;
+        }
+        else if (charIn == '\n' && i == 0)
+            break;
         else
             break;
     }
-    int newNum = atoi(input);
-    thread_args->sleep_time = newNum;
-    return 1;
+    if (!changed) return 1;
+    else if (changed) {
+        double newNum = atof(input);
+        thread_args->sleep_time = newNum;
+        return 1;
+    }
 }
 
 void *inout(void *arguments)
@@ -214,6 +375,7 @@ void *inout(void *arguments)
     init_pair(2, COLOR_WHITE, COLOR_BLUE );
     init_pair(3, COLOR_GREEN,  COLOR_BLUE );
     init_pair(4, COLOR_RED,  COLOR_BLUE );
+    init_pair(5, COLOR_BLACK, COLOR_RED);
     bkgd(COLOR_PAIR(2)); // Green Text on a White Screen
 
     /*  Switch off echoing and enable keypad (for arrow keys)  */
@@ -232,7 +394,7 @@ void *inout(void *arguments)
     roadnodestats = newwin(LINES-18,COLS-4,14,2);
     trafficlstats = newwin(LINES-18,COLS-4,14,2);
     helpbox = newwin(7,COLS-4,1,2);
-    cmdbox = newwin(7,COLS-4,1,2);
+    cmdbox = newwin(LINES-18,COLS-4,14,2);
     headerwin = newwin(7, COLS-4, 1, 2);
     box(vehiclestats,0,0);
     box(roadnodestats,0,0);
@@ -261,8 +423,10 @@ void *inout(void *arguments)
     int cpanel = 0;
     int helppanel = 0;
     int cmdbox_status = 0 ;
-    show_panel(panels[0]);
+    show_panel(panels[4]);
     show_panel(panels[3]);
+
+    
     //Panel code ends here
     
     /*  Make our child window, and add
@@ -280,15 +444,15 @@ void *inout(void *arguments)
     mvwaddstr(headerwin, 1, midpointx-12,"Traffic Simulation System");
     mvwaddstr(headerwin, 2, 2,"TEAM B: Zinon Kyprianou, Panikos Lazarou, Maria Leventopoulou,");
     mvwaddstr(headerwin, 3, 10,"Adesinmisola Ogunsanya, Kosmas Tsakmakidis");
-    mvwaddstr(headerwin,4,2,"build date: 23/3/2013");
-    mvwaddstr(headerwin,5,COLS-40,"Simulation Status: Running");
+    mvwaddstr(headerwin,5,2,"build date: 27/3/2013");
+    mvwaddstr(headerwin,5,COLS-40,"Simulation Status: Setup");
     mvwaddstr(stdstats,1,midpointx, "Total Vehicles in engine:");
     mvwprintw(stdstats,1,midpointx+27, "%d",thread_args->simstats.getTotalVehicles());
     mvwaddstr(stdstats,2,2, "Average time in Engine:");
     mvwprintw(stdstats,2,27, "%.0f s",thread_args->simstats.getAvTimeinEngine()*thread_args->sleep_time );
     mvwaddstr(stdstats,1,2, "Sim granularity: ");
     mvwprintw(stdstats,1,20,"%.1f s",thread_args->sleep_time);
-    mvwaddstr(stdstats,1,25, "Sim updates: ");
+    mvwaddstr(stdstats,1,26, "Sim updates: ");
     mvwaddstr(stdstats,2,midpointx,"Cars: ");
     mvwprintw(stdstats,2,midpointx+6, "%d",thread_args->simstats.getVehicleTypeNum(0));
     mvwaddstr(stdstats,2,midpointx+10,"Buses: ");
@@ -303,8 +467,7 @@ void *inout(void *arguments)
     mvwprintw(stdstats,1,40, "%d",thread_args->tick_count);
     mvwprintw(stdstats,3,27, "%.00f",thread_args->simstats.getAvSpeed());
     mvwaddstr(stdstats,3,2,"Average speed in engine: ");
-    mvwaddstr(stdstats,4,2,"Vehicles Completed:    Most Common Entry/Exit point:    /");
-    mvwprintw(stdstats,4,20,"%d", thread_args->simstats.getRemVehi());
+    mvwaddstr(stdstats,4,2,"Vehicles Completed:     Most Common Entry/Exit point:    ");
     mvwprintw(stdstats,4,58,"%d", thread_args->simstats.getMostCommonEntryP());
     mvwprintw(stdstats,4,63,"%d", thread_args->simstats.getMostCommonExitP());
     mvwaddstr(helpwin,1,2,"For help press 'H'.           Copyright(c) 2013 Kings College London.");
@@ -316,22 +479,18 @@ void *inout(void *arguments)
     mvwaddstr(helpbox, 1, midpointx-12,"Traffic Simulation System");
     mvwaddstr(helpbox,2,midpointx-8,"HELP COMMAND LIST");
     wattroff(helpbox, A_UNDERLINE);
-    mvwaddstr(helpbox,3,2,"1. Set No of Vehicles ");
-    mvwaddstr(helpbox,4,2,"2. Set Vehicle Type Ratio ");
-    mvwaddstr(helpbox,5,2,"3. Set Driver Type Ratio ");
-    mvwaddstr(helpbox,3,35,"4. Pause Simulation ");
-    mvwaddstr(helpbox,4,35,"5. Change Granularity");
-    mvwaddstr(helpbox,5,35,"6. Toggle Traffic Lights");
-    mvwaddstr(helpbox,3,65,"H. Close this menu");
+    mvwaddstr(helpbox,4,2,"1. Pause Simulation ");
+    mvwaddstr(helpbox,5,2,"2. Toggle Traffic Lights");
+    mvwaddstr(helpbox,4,35,"P. Switch Between Vehicle/road views");
+    mvwaddstr(helpbox,5,35,"H. Close this menu");
     mvwaddstr(helpbox,4,65,"Q. Quit the Simulation");
-    mvwaddstr(helpbox,5,65,"P. Switch Between Vehicle/road views");
 
     mvwaddstr(vehiclestats,1,2,"Vehicle ID");
-    mvwaddstr(vehiclestats,1,15,"Type");
+    mvwaddstr(vehiclestats,1,15,"V. Types");
     mvwaddstr(vehiclestats,1,25,"Current Speed");
     mvwaddstr(vehiclestats,1,40,"EntryP");
     mvwaddstr(vehiclestats,1,50,"ExitP");
-    mvwaddstr(vehiclestats,1,60,"Path");
+    mvwaddstr(vehiclestats,1,65,"Path");
     mvwaddstr(vehiclestats,1,80,"Current Position in Path");
     mvwaddstr(vehiclestats,1,116,"Timer");
 
@@ -345,6 +504,7 @@ void *inout(void *arguments)
     mvwaddstr(trafficlstats,1,10,"Cart-Y");
     mvwaddstr(trafficlstats,1,20,"Timer");
     mvwaddstr(trafficlstats,1,30,"State");
+    mvwaddstr(trafficlstats,1,44,"roadNode Lane");
 
     wattroff(vehiclestats, A_UNDERLINE);
     wattroff(trafficlstats, A_UNDERLINE);
@@ -356,6 +516,17 @@ void *inout(void *arguments)
     update_panels();
     doupdate();
     nodelay(cmdin,TRUE);
+    int resultSetup; 
+    resultSetup = maxVehicleChange(cmdbox, thread_args);
+    resultSetup = changeSimTime(cmdbox, thread_args);
+    resultSetup = setDriverRatio(cmdbox, thread_args);
+    resultSetup = setVehicleRatio(cmdbox, thread_args);
+    if (resultSetup == 1) { 
+        thread_args->sim_paused = false;
+        mvwaddstr(headerwin,5,COLS-40,"Simulation Status: Running");
+    }
+    hide_panel(panels[4]);
+    show_panel(panels[0]);
     while(!thread_args->finished) {
         
         mvwprintw(stdstats,2,27, "%.f",thread_args->simstats.getAvTimeinEngine()*thread_args->sleep_time);
@@ -370,7 +541,7 @@ void *inout(void *arguments)
         mvwprintw(stdstats,3,midpointx+16,"%d",thread_args->simstats.getDriverTypeNum(0));
         mvwprintw(stdstats,3,midpointx+30,"%d",thread_args->simstats.getDriverTypeNum(1));
         mvwprintw(stdstats,3,midpointx+45,"%d",thread_args->simstats.getDriverTypeNum(2));
-        mvwprintw(stdstats,4,23,"%d", thread_args->simstats.getRemVehi());
+        mvwprintw(stdstats,4,22,"%d", thread_args->simstats.getRemVehi());
         mvwprintw(stdstats,4,58,"%d", thread_args->simstats.getMostCommonEntryP());
         mvwprintw(stdstats,4,63,"%d", thread_args->simstats.getMostCommonExitP()); 
         mvwprintw(stdstats,1,40, "%d",thread_args->tick_count);
@@ -384,48 +555,15 @@ void *inout(void *arguments)
             ch = mvwgetch(cmdin,1,10);
             if (ch == '\n') break;
             if (ch == '1') {
-                if (cmdbox_status == 0) {
-                    hide_panel(panels[3]);
-                    show_panel(panels[4]);
-                    cmdbox_status = 1;
-                    if (int result = maxVehicleChange(cmdbox, thread_args) == 1) {
-                        hide_panel(panels[4]);
-                        show_panel(panels[3]);    
-                        cmdbox_status = 0;
-                    }
-                } else {
-                    hide_panel(panels[4]);
-                    show_panel(panels[3]);
-                    cmdbox_status = 0;
-                }
-            }
-            if (ch == '2') break; 
-            if (ch == '3') break;
-            if (ch == '4') {
                 if (!thread_args->sim_paused) {
                     thread_args->sim_paused = true;
+                    mvwaddstr(headerwin,5,COLS-40,"Simulation Status: Paused!");
                 } else {
                     thread_args->sim_paused = false;
+                    mvwaddstr(headerwin,5,COLS-40,"Simulation Status: Running");
                 }
             }
-
-            if (ch == '5') {
-                if (cmdbox_status == 0) {
-                    hide_panel(panels[3]);
-                    show_panel(panels[4]);
-                    cmdbox_status = 1;
-                    if (int result = changeSimTime(cmdbox, thread_args) == 1) {
-                        hide_panel(panels[4]);
-                        show_panel(panels[3]);    
-                        cmdbox_status = 0;
-                    }
-                } else {
-                    hide_panel(panels[4]);
-                    show_panel(panels[3]);
-                    cmdbox_status = 0;
-                }
-            }
-            if (ch == '6') ToggleLights(thread_args);
+            if (ch == '2') ToggleLights(thread_args);
             if (ch == 'p' || ch == 'P') { // panel switch
                 if (cpanel == 0) {
                     hide_panel(panels[0]);

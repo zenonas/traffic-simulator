@@ -55,6 +55,7 @@ public:
    int vehi_id;
    bool updated;
    bool crashed;
+   int crash_timer;
 
 private:
    int Type, DriverType, Acceleration, MaxSpeed;

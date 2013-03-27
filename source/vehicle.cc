@@ -28,6 +28,8 @@ vehicle::vehicle(int id, int entryP, int exitP, map mymap){
 	//cout << "I return pos lane: " << CurrentPosition.lane << endl;
 	Timer = 0;
 	updated = false;
+	crash_timer = 0;
+	crashed = false;
 }
 
 vehicle::~vehicle(){

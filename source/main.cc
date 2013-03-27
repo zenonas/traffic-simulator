@@ -43,7 +43,7 @@ int main (int argc, char *argv[])
    th_args.tick_count = 0;
    th_args.engine_change = false;
    th_args.debug = false;
-   th_args.sim_paused = false;
+   th_args.sim_paused = true;
 // Checking for debug mode
    if (argc > 1) {
       if (strcmp(argv[1],"debug") == 0) {

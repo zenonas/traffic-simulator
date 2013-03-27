@@ -19,6 +19,8 @@ void updateVehicles(WINDOW *vehiclestats, void *arguments);
 void updateRoadNodes(WINDOW *roadnodestats, void *arguments);
 void updateTrafficLights(WINDOW *trafficlstats, void *arguments);
 int maxVehicleChange(WINDOW *cmdbox,void *arguments);
+int setVehicleRatio(WINDOW *cmdbox,void *arguments);
+int setDriverRatio(WINDOW *cmdbox,void *arguments);
 int changeSimTime(WINDOW *cmdbox,void *arguments);
 void *inout(void *arguments);
 

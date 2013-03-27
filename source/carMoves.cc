@@ -367,12 +367,17 @@ int DriverDecision(vehicle* v, void *arguments)
 {   
     struct thread_arguments *thread_args;
     thread_args =(struct thread_arguments *)arguments;
+    if (v->crashed) {
+    	v->crash_timer++;
+    	v->setCurrentSpeed(0);
+    	return 3;
+    }
     double distance;
     int NextType;
     void *obstacle;
     bool overtaking = false;
     obstacle = nextObstacle(v, true,distance, NextType, thread_args); 
-    int re;
+    int re = 3;
     vehicle *nextVehicle;
     trafficLight *nextTL;
     vector<int> vPath = v->getPath();
@@ -382,7 +387,7 @@ int DriverDecision(vehicle* v, void *arguments)
             nextRoadNodeID = vPath[np+1];
         }
     }
- 
+	 
     double max;
     if (v->getDriverType() == 0) {
         max = thread_args->mymap.getroadNode(v->getCurrentPosition().roadNodeID)->getMaxSpeed();
@@ -436,29 +441,27 @@ int DriverDecision(vehicle* v, void *arguments)
         //double d = ( (targetspeed*targetspeed) - (v->getCurrentSpeed()*v->getCurrentSpeed()) )/(2*v->getAcceleration());
         double d = (max *max )/(2*v->getAcceleration());
  
-        //if (nextVehicle->updated){
-            if(distance  > d){   
-                if (v->getCurrentSpeed() == max)
-                    re= go(v, 3, thread_args, newPos, newspeed,distance,overtaking);
-                else
-                    re =go(v, 1, thread_args, newPos, newspeed,distance,overtaking);
+        
+        if(distance  > d){   
+   	        if (v->getCurrentSpeed() == max)
+       			re= go(v, 3, thread_args, newPos, newspeed,distance,overtaking);
+            else
+				re =go(v, 1, thread_args, newPos, newspeed,distance,overtaking);
  
-                if (newspeed > max ) 
-                    v->setCurrentSpeed(max);
-                else
-                    v->setCurrentSpeed(newspeed);
+			if (newspeed > max ) 
+				v->setCurrentSpeed(max);
+			else
+            	v->setCurrentSpeed(newspeed);
                  
-                if(newPos.p + d > thread_args->mymap.getroadNode(v->getCurrentPosition().roadNodeID)->getLength())
-                    newPos.p = thread_args->mymap.getroadNode(v->getCurrentPosition().roadNodeID)->getLength() - d;
-                v->setCurrentPosition(newPos);
+			if(newPos.p + d > thread_args->mymap.getroadNode(v->getCurrentPosition().roadNodeID)->getLength())
+            	newPos.p = thread_args->mymap.getroadNode(v->getCurrentPosition().roadNodeID)->getLength() - d;
+			v->setCurrentPosition(newPos);
  
-            }else{  
-                re = go(v, 2, thread_args, newPos, newspeed,distance,overtaking);
-                v->setCurrentSpeed(newspeed);
-                v->setCurrentPosition(newPos);
-            }
-            v->updated = true;
-       // }
+		} else {  
+			re = go(v, 2, thread_args, newPos, newspeed,distance,overtaking);
+            v->setCurrentSpeed(newspeed);
+            v->setCurrentPosition(newPos);
+		}
     } else if (NextType == 2) {
  
         nextTL = (trafficLight *)obstacle;
@@ -488,18 +491,7 @@ int DriverDecision(vehicle* v, void *arguments)
             v->setCurrentSpeed(newspeed);
             v->setCurrentPosition(newPos);
         }
- 
-        v->updated = true;
     }
-    if (re == -1) {
-        for (int l=0; l<thread_args->vehiclesInEngine.size(); l++){
-            if (v->vehi_id == thread_args->vehiclesInEngine[l]->vehi_id){
-                delete thread_args->vehiclesInEngine[l];
-                thread_args->vehiclesInEngine.erase(thread_args->vehiclesInEngine.begin()+l);
-                thread_args->simstats.addRemVehi();        
-            }
-        }
-    } 
     return re;
 }
 
