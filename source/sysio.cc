@@ -2,7 +2,7 @@
 
 Group Project 7CCSMGPR - Team B
 Created: 15/2/2013
-Updated: 23/2/2013
+Updated: 27/2/2013
 File: sysio.cc
 Description: This file specifies the input and output thread of the system
 

@@ -2,7 +2,7 @@
 
 Group Project 7CCSMGPR - Team B
 Created: 5/3/2013
-Updated: 19/3/2013
+Updated: 27/3/2013
 File: carMoves.cc
 Description: This file contains functions used for the movement of vehicles
 Copyright (c) King's College London
