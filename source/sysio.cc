@@ -444,7 +444,7 @@ void *inout(void *arguments)
     mvwaddstr(headerwin, 1, midpointx-12,"Traffic Simulation System");
     mvwaddstr(headerwin, 2, 2,"TEAM B: Zinon Kyprianou, Panikos Lazarou, Maria Leventopoulou,");
     mvwaddstr(headerwin, 3, 10,"Adesinmisola Ogunsanya, Kosmas Tsakmakidis");
-    mvwaddstr(headerwin,5,2,"build date: 27/3/2013");
+    mvwaddstr(headerwin,5,2,"build date: 31/3/2013");
     mvwaddstr(headerwin,5,COLS-40,"Simulation Status: Setup");
     mvwaddstr(stdstats,2,midpointx-15, "Simulation Configuration mode.");
     mvwaddstr(stdstats,3,midpointx-17, "Leave fields blank for default settings!");
