@@ -1,4 +1,5 @@
-/* Traffic Simulation System
+/* 
+Traffic Simulation System
 
 Group Project 7CCSMGPR - Team B
 Created: 16/2/2013
@@ -16,10 +17,11 @@ using namespace std;
 
 vehicle::vehicle(int id, int entryP, int exitP, map mymap){
 	vehi_id = id;
-	setCurrentSpeed(0);
-	setAcceleration(0);
-	setEntryPoint(entryP);
-	setExitPoint(exitP);
+	CurrentSpeed = 0;
+	Acceleration = 0;
+	entryPoint = entryP;
+	exitPoint = exitP;
+
 	calculatePath(mymap);
 	//initialize current pos
 	CurrentPosition.roadNodeID = entryPoint;

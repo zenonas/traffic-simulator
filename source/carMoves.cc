@@ -301,14 +301,15 @@ bool canIovertake(vehicle *v, vehicle *nextVehicle, double distanceFRONT, void *
 	double distanceTHIRD;
 	int retType;
 	int retTypeTHIRD;
-	void *OLobstacle;
-	void *thirdObstacle;
-	vehicle *VehicleOL;
-	vehicle *thirdVehicle;
-	trafficLight *thirdTL;
+	void *OLobstacle = NULL;
+	void *thirdObstacle = NULL;
+	vehicle *VehicleOL = NULL;
+	vehicle *thirdVehicle = NULL;
+	trafficLight *thirdTL = NULL;
 	OLobstacle = nextObstacle(nextVehicle, false,distanceOL, retType,thread_args);
 	thirdObstacle = nextObstacle(nextVehicle, true,distanceTHIRD,retTypeTHIRD,thread_args);
 	if (retType == 1) {
+
 		VehicleOL = (vehicle *)OLobstacle;
 	} else if (retType == 2) {
 		OLobstacle = NULL;
@@ -318,9 +319,11 @@ bool canIovertake(vehicle *v, vehicle *nextVehicle, double distanceFRONT, void *
 	} else if (retTypeTHIRD == 2) {
 		trafficLight *thirdTL = (trafficLight *)thirdObstacle;
 	}
+
 	double timeToAcs = (v->getMaxSpeed() - v->getCurrentSpeed())/v->getAcceleration();
 	double distanceTravelledWhileAccellerating = (timeToAcs *v->getCurrentSpeed()) + ((v->getAcceleration() * timeToAcs * timeToAcs)/2.0);
 	double restOfTheDistance = (thread_args->sleep_time - timeToAcs) * v->getMaxSpeed();
+
 	int gap;
 	if (v->getDriverType() == 0) gap = 10; else gap = 3;
 	double totalDistance = distanceTravelledWhileAccellerating + restOfTheDistance + gap;
@@ -328,8 +331,8 @@ bool canIovertake(vehicle *v, vehicle *nextVehicle, double distanceFRONT, void *
 	if (v->getDriverType() == 1) {
 		return false; 
 	} else if ((v->getDriverType() == 0 && nextVehicle->getDriverType() == 1) || v->getDriverType() == 2) {
-		if (OLobstacle == NULL && thirdObstacle == NULL) return true; // no on coming car and no car infront of the on going vehicle
-		if (OLobstacle == NULL && thirdObstacle != NULL) {
+		if (OLobstacle == NULL && thirdVehicle == NULL) return true; // no on coming car and no car infront of the on going vehicle
+		if (OLobstacle == NULL && thirdVehicle != NULL) {
 			if (retTypeTHIRD == 1) {
 				distanceTHIRD += (thirdVehicle->getCurrentSpeed() * thread_args->sleep_time);
 			} 
@@ -349,7 +352,8 @@ bool canIovertake(vehicle *v, vehicle *nextVehicle, double distanceFRONT, void *
 				} else if (totalDistance >= distanceTHIRD && retTypeTHIRD == 2) {
 					return false;
 				}
-				if (retTypeTHIRD == 1) {
+				if (retTypeTHIRD == 1 && thirdVehicle != NULL) {
+
 					distanceTHIRD += (thirdVehicle->getCurrentSpeed() * thread_args->sleep_time);
 					if (totalDistance < distanceTHIRD) {
 						return true;
@@ -359,7 +363,8 @@ bool canIovertake(vehicle *v, vehicle *nextVehicle, double distanceFRONT, void *
 				}
 			}
 		}
-	} 
+	}
+	return false;
 }
 
 
@@ -425,18 +430,27 @@ int DriverDecision(vehicle* v, void *arguments)
     } else if (NextType == 1) {
         nextVehicle = (vehicle *)obstacle;
         distance -= nextVehicle->getVLength();
+       
         if (canIovertake(v,nextVehicle,distance,thread_args)) {
+
             max = nextVehicle->getCurrentSpeed()*1.3;
+            
             overtaking = true;
+            
             int am_i_crashing = rand() % 10000 + 1;
             if (v->getDriverType() == 0 && am_i_crashing < 1) {
             	v->crashed = true;
             	nextVehicle->crashed = true;
+
             } else if (v->getDriverType() == 2 && am_i_crashing > 9980) {
             	v->crashed = true;
             	nextVehicle->crashed = true;
             }
+            
+         
         }
+        
+
         double targetspeed = nextVehicle->getCurrentSpeed();
         //double d = ( (targetspeed*targetspeed) - (v->getCurrentSpeed()*v->getCurrentSpeed()) )/(2*v->getAcceleration());
         double d = (max *max )/(2*v->getAcceleration());

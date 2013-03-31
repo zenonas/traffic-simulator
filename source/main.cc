@@ -49,6 +49,8 @@ int main (int argc, char *argv[])
       if (strcmp(argv[1],"debug") == 0) {
          cout << "Running Simulation without the UI in debug mode" <<endl;
          th_args.debug = true;
+         th_args.sim_paused = false;
+
       }
    }
 

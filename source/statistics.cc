@@ -19,7 +19,7 @@ Copyright (c) King's College London
 
 statistics::statistics(){
 	VehMap = NULL;
-
+	vehiclesCrashed = 0;
 	vehicesRemoved = 0;
 	vehicletypenum.resize(3);
 	drivertypenum.resize(3);
