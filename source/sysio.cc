@@ -446,30 +446,8 @@ void *inout(void *arguments)
     mvwaddstr(headerwin, 3, 10,"Adesinmisola Ogunsanya, Kosmas Tsakmakidis");
     mvwaddstr(headerwin,5,2,"build date: 27/3/2013");
     mvwaddstr(headerwin,5,COLS-40,"Simulation Status: Setup");
-    mvwaddstr(stdstats,1,midpointx, "Total Vehicles in engine:");
-    mvwprintw(stdstats,1,midpointx+27, "%d",thread_args->simstats.getTotalVehicles());
-    mvwaddstr(stdstats,2,2, "Average time in Engine:");
-    mvwprintw(stdstats,2,27, "%.0f s",thread_args->simstats.getAvTimeinEngine()*thread_args->sleep_time );
-    mvwaddstr(stdstats,1,2, "Sim granularity: ");
-    mvwprintw(stdstats,1,20,"%.1f s",thread_args->sleep_time);
-    mvwaddstr(stdstats,1,26, "Sim updates: ");
-    mvwaddstr(stdstats,2,midpointx,"Cars: ");
-    mvwprintw(stdstats,2,midpointx+6, "%d",thread_args->simstats.getVehicleTypeNum(0));
-    mvwaddstr(stdstats,2,midpointx+10,"Buses: ");
-    mvwprintw(stdstats,2,midpointx+17, "%d",thread_args->simstats.getVehicleTypeNum(1));
-    mvwaddstr(stdstats,2,midpointx+20,"Lorries: ");
-    mvwprintw(stdstats,2,midpointx+30, "%d",thread_args->simstats.getVehicleTypeNum(2));
-    mvwaddstr(stdstats,3,midpointx,"Drivers(Normal:    Cautious:    Aggressive:   )");
-    mvwaddstr(stdstats,4,midpointx,"Total Number of Crashed Vehicles: ");
-    mvwprintw(stdstats,3,midpointx+16,"%d",thread_args->simstats.getDriverTypeNum(0));
-    mvwprintw(stdstats,3,midpointx+30,"%d",thread_args->simstats.getDriverTypeNum(1));
-    mvwprintw(stdstats,3,midpointx+45,"%d",thread_args->simstats.getDriverTypeNum(2));
-    mvwprintw(stdstats,1,40, "%d",thread_args->tick_count);
-    mvwprintw(stdstats,3,27, "%.00f",thread_args->simstats.getAvSpeed());
-    mvwaddstr(stdstats,3,2,"Average speed in engine: ");
-    mvwaddstr(stdstats,4,2,"Vehicles Completed:     Most Common Entry/Exit point:    ");
-    mvwprintw(stdstats,4,58,"%d", thread_args->simstats.getMostCommonEntryP());
-    mvwprintw(stdstats,4,63,"%d", thread_args->simstats.getMostCommonExitP());
+    mvwaddstr(stdstats,2,midpointx-15, "Simulation Configuration mode.");
+    mvwaddstr(stdstats,3,midpointx-17, "Leave fields blank for default settings!");
     mvwaddstr(helpwin,1,2,"For help press 'H'.           Copyright(c) 2013 Kings College London.");
     // PREPARING PANEL TEXT
     wattron(vehiclestats, A_UNDERLINE);
@@ -528,8 +506,26 @@ void *inout(void *arguments)
     hide_panel(panels[4]);
     show_panel(panels[0]);
     while(!thread_args->finished) {
+
+        for (int y=0; y<5; y++) {
+            wmove(stdstats,2+y,2);
+            wclrtoeol(stdstats);
+        }
+        box(stdstats,0,0);
+
+        mvwaddstr(stdstats,1,midpointx, "Total Vehicles in engine:");
+        mvwaddstr(stdstats,2,2, "Average time in Engine:");
+        mvwaddstr(stdstats,1,2, "Sim granularity: ");
+        mvwaddstr(stdstats,1,26, "Sim updates: ");
+        mvwaddstr(stdstats,2,midpointx,"Cars: ");
+        mvwaddstr(stdstats,2,midpointx+10,"Buses: ");
+        mvwaddstr(stdstats,2,midpointx+20,"Lorries: ");
+        mvwaddstr(stdstats,3,midpointx,"Drivers(Normal:     Cautious:    Aggressive:   )");
+        mvwaddstr(stdstats,4,midpointx,"Total Number of Crashed Vehicles: ");
+        mvwaddstr(stdstats,3,2,"Average speed in engine: ");
+        mvwaddstr(stdstats,4,2,"Vehicles Completed:     Most Common Entry/Exit point:    ");
         
-        mvwprintw(stdstats,2,27, "%.f",thread_args->simstats.getAvTimeinEngine()*thread_args->sleep_time);
+        mvwprintw(stdstats,2,27, "%.f s",thread_args->simstats.getAvTimeinEngine()*thread_args->sleep_time);
         mvwprintw(stdstats,1,20,"%.1f",thread_args->sleep_time);
         mvwprintw(stdstats,3,27, "%.1f",thread_args->simstats.getAvSpeed());
         updateTrafficLights(trafficlstats, thread_args);
